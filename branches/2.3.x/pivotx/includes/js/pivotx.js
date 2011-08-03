@@ -646,7 +646,7 @@ function closeEdit() {
  */
 function setMessageLoading() {
 
-    humanMsg.displayMsg("<img src='pics/loadingAnimation.gif' alt='Loading...' width='208' height='13'> Loading...", true);
+    humanMsg.displayMsg("<img src='pics/loadingAnimation.gif' alt='Loading...' width='208' height='13'>", true, true);
 
 }
 
