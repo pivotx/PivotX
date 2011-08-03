@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    
+    <channel>
+        <title>%sitename% » %title%</title>
+        <link>%link%</link>
+        <atom:link href="%link_self%" rel="self" type="application/rss+xml" />
+        <description>%description%</description>
+        <language>%lang%</language>
+        <managingEditor>%admin-email% (%admin-nick%)</managingEditor>
+        <copyright>Copyright %year%</copyright>
+        <generator>%version%</generator>
+        <pubDate>%date_rfc%</pubDate>
+        <ttl>60</ttl>
+        <image>
+            <link>%link%</link>
+            <title>%sitename% » %title%</title>
+            <url>%image%</url>
+        </image>
+        
+        ------
+        
+        <item>
+            <title>%title%</title>
+            <link>%link%</link>
+            <description><![CDATA[ %description% ]]></description>
+            <guid isPermaLink="false">%guid%</guid>
+            <pubDate>%date_rfc%</pubDate>
+        </item>
+        
+        ------
+        
+    </channel>
+</rss>

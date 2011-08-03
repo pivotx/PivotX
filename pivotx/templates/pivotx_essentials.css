@@ -1,0 +1,497 @@
+/**
+ * Various styles that are used by PivotX. 
+ *
+ * Unless you're an advanced CSS user, you will most likely want to 
+ * use this file as is. 
+ *
+ * Include it in your templates using: 
+ * <link href="[[ template_dir base="true" ]]pivotx_essentials.css" rel="stylesheet" type="text/css" media="screen" />
+ *
+ * Note: Do not make changes in this file, because this file will be updated in 
+ * Newer PivotX releases. Instead use your own CSS to override the settings in here.
+ */
+
+
+/* Styles used for Tags */
+#tagcloud {
+margin: 0;
+padding: 0;
+background-image: none;
+background-color: transparent;
+}
+
+.taglinkext, a[rel="tag"] {
+padding: 0 0 0 0;
+line-height: 140%;
+}
+
+.taglinkext:hover {
+}
+
+.tags {
+	display: block;
+	margin-top: 5px;
+}
+
+.tags a, .tags, a[rel=tag] {
+}
+
+ul.taglist li, ul.taggeratilist li {
+margin: 0.5em 0;
+line-height: 1.3em;
+}
+
+ul.taglist a, ul.taggeratilist a {
+font-weight: bold;
+}
+
+/* styles for related Flickr images on tagpages 
+used if you checked the 'show Flickr images' option in Configuration > Tags */
+#flickrpics img {
+	margin-right: 8px;
+	margin-bottom: 4px;
+}
+
+#flickrpics a, #flickrpics a:hover, #tagbuttons a, #tagbuttons a:hover {
+background: none;
+}
+
+#tagbuttons img {
+}
+
+/* Pivot, RSS- and Atom-buttom 
+used if you checked the 'Generate feeds' option in Administration > Weblogs > Edit weblog > XML Feeds */ 
+a.badge, a.badge img {
+border: 0px!important;
+background: none!important;
+margin-bottom: 2px;
+}
+ 
+/* Search forms */
+.searchbox, 
+.result-searchbox, 
+.commentinput, 
+.piv_notify, 
+.piv_discreet {
+	font: 10px Arial, Verdana, sans-serif;
+	border: 1px solid #ccc;
+	padding: 4px 3px 3px 3px;
+	background: #F8F8F8;
+}
+
+.searchbutton,
+.result-searchbutton,
+.commentbutton {
+	font: 10px Arial, Verdana, sans-serif;
+	border: 1px solid #ccc;
+	background: #E2E8E5;
+	height: 21px;
+}
+
+input.dim {
+	background-color: #DDD;
+	color: #999;
+}
+
+.result-searchbox,
+.result-searchbutton {
+	margin-bottom: 10px;
+}
+
+.pivotx-search fieldset,
+.pivotx-search-result fieldset {
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.pivotx-search label, 
+.pivotx-search legend, 
+.pivotx-search-result label, 
+.pivotx-search-result legend {
+	display: none;
+	visibility: hidden;
+}
+
+#search-results li {
+	line-height:1.4em;
+	margin-bottom: 0.5em;
+}
+
+/* Higlight registered visitors */
+.registered {
+	background-color: #F0E68C;
+}
+
+/* Images and popups inserted by [[image]] and [[popup]] in pages and entries */
+
+.pivotx-popupimage {
+	border: 1px solid #999;
+	margin: 0;
+}
+
+
+.pivotx-wrapper a img {
+	border: 1px solid #999;
+	margin: 0;
+	padding: 2px;
+}
+
+.pivotx-wrapper a:hover img {
+	border: 1px solid #333;
+	margin: 0;
+}
+
+.pivotx-image {
+	border: 1px solid #ccc;
+	margin: 0;
+}
+
+.pivotx-wrapper {
+	text-align: center;
+}
+
+.pivotx-popuptext{
+	padding: 0;
+	margin: 0;
+}
+
+.align-left {
+	float:left;
+	margin-right: 10px;
+	margin-bottom: 5px;
+}
+
+.align-right {
+	float:right;
+	margin-left: 10px;
+	margin-bottom: 5px;
+}
+
+.pivotx-message { /* wil ik nog mooierder maken */
+	border: 1px solid #888;
+	margin: 12px 0px;
+	padding: 6px;
+}
+
+/* comment stuff */
+
+.commentblock {
+    clear: left;
+    margin: 0 0 25px;
+    padding: 25px 0 0;
+}
+
+.comment {
+	margin: 15px 0 0 0;	
+}
+
+.comment-text {
+	background-color: #f8f8f8;
+	margin: 0 0 0px 75px;
+	min-height:36px;
+	padding: 15px 15px 5px 15px;
+}
+
+img.gravatar {
+	float: left;
+	width: 64px;
+	height: 64px; 
+}
+
+.comment small {
+	color: #000;
+	font-size: 11px;
+}
+
+.commentform, 
+.commentform a:link {
+	font-size: 11px;
+	color: #424440;
+}
+
+.commentinput {
+	width: 170px;
+	margin: 0 0 6px 0;
+}
+
+.commentform label {
+	display: block;
+	float: left;
+	clear: none;
+	width: 80px;
+}
+
+.commentform_row {
+	clear: both;
+}
+
+#spamquiz .commentform_row label {
+	width: auto;
+	float: none;
+	display: inline;
+}
+
+#spamquiz, .privacy_options {
+	clear: both;
+	margin: 12px 0;
+}
+
+.privacy_options .commentform_row {
+	padding: 0 0 4px 0;
+}
+
+.privacy_options .commentform_row label {
+	width: 210px;
+	float: none;
+	display: inline;
+}
+
+/* Markitup editor 
+these styles override the settings given with the MarkItUp editor
+You can make the commentfield bigger or smaller with it */
+
+/*.markItUp {
+	margin:5px 0;
+	width:395px!important;
+}
+
+#piv_comment { /* has to be exactly 12 pixels less then .markItUp
+	width: 383px!important;
+}
+*/
+
+.scheduler-wrapper {
+	display:none; 
+	visibility:hidden;
+}
+
+/* Styles for widgets 
+Only used when activated widgets in PivotX > Extensions */ 
+
+
+/* Light gray widget */
+body .widget-lg, 
+body .widget-lg div, 
+body .widget-lg p, 
+body .widget-lg li, 
+body .widget-dg, 
+body .widget-dg div, 
+body .widget-dg p, 
+body .widget-dg li,
+body .widget-min, 
+body .widget-min div, 
+body .widget-min p, 
+body .widget-min li {
+	font-size: 11px;
+	font-family: arial, verdana, helvetica, sans-serif;
+	line-height: 14px;
+	font-weight: normal;
+	text-decoration: none;
+} 
+
+body .widget-lg {
+	background-color: #FFF;
+	border: 1px solid #CCC;
+	margin: 0 0 12px 0;
+}
+
+body .widget-lg div {
+	background: #EEE url(../pics/widget_lg_bg.png) repeat-x top;
+	margin: 0;
+	padding: 6px;
+}
+
+body .widget-lg li {
+	padding: 0 0 0 6px;
+}
+
+body .widget-lg a {
+	color: #028;
+	text-decoration: none;
+	background-image: none;
+}
+
+body .widget-lg a:hover {
+	color: #000;
+	text-decoration: underline;
+	background-image: none;
+}
+
+body .widget-lg .date {
+	font-size: 10px;
+	color: #666;
+	background-image: none;
+	display: inline;
+} 
+
+/* Dark gray widget style */
+body .widget-dg {
+	background-color: #333;
+	border: 1px solid #000;
+	margin: 8px 0;
+	padding: 2px;
+	color: #EEE;
+}
+
+body .widget-dg div {
+	background: #444 url(../pics/widget_dg_bg.png) repeat-x top;
+	margin: 0;
+	padding: 5px 8px;
+}
+
+body .widget-dg a {
+	color: #9CF;
+	text-decoration: none;
+	background-image: none;
+}
+
+body .widget-dg a:hover {
+	color: #FFF;
+	text-decoration: underline;
+	background-image: none;
+}
+
+body .widget-dg .date {
+	font-size: 10px;
+	color: #BBB;
+	background-image: none;
+	display: inline;
+} 
+
+/* Lists in light gray & dark gray widgets */
+body .widget-lg ul, 
+body .widget-dg ul,
+body .widget-min ul {
+	margin: 0;
+	padding: 0;
+list-style: none;
+} 
+
+body .widget-lg li, 
+body .widget-dg li,
+body .widget-min li {
+	margin: 6px 0 6px 0px;
+	list-style: none ;
+}
+
+body .widget-lg ul.iconlist li,
+body .widget-dg ul.iconlist li, 
+body .widget-min ul.iconlist li {
+	list-style: none;
+	background-position: 0 2px;
+	background-repeat: no-repeat;
+	min-height: 18px;
+	padding-left: 20px;
+}
+
+/* Example CSS code for Digg style navigation (provided by the
+paging extension. Original CSS code found at
+http://www.nowcss.com/navigation/create-digg-style-pagination. 
+Only used when using [[ paging action="digg" ]] in templates.
+*/
+
+#pages {
+	clear: both;
+	margin: 20px 0;
+	padding: 0;
+	min-height: 24px;
+}
+
+#pages ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0; 
+}
+
+#pages li {
+	float: left;
+	display: inline;
+	margin: 0 2px 0 0;
+	padding: 0px;
+	display: block;
+	line-height: 1.2em;
+}
+
+#pages li a {
+	color: #888;
+	background-color: #EEE;
+	padding: 4px;
+	border: 1px solid #BBB;
+	text-decoration: none;
+	float: left;
+	background-image: none;
+	line-height: 1.2em;
+}
+
+#pages li a:hover {
+	color: #333;
+	background: #FFF;
+	border: 1px solid #666;
+}
+
+#pages li.nolink {
+	color: #BBB;
+	border: 1px solid #CCC;
+	padding: 4px;
+}
+
+#pages li.current {
+	color: #FFF;
+	border: 1px solid #888;
+	padding: 4px;
+	background: #888;
+}
+
+#pages li.skip {
+	color: #666;
+	border: 0px;
+	padding: 1px;
+}
+
+
+/* For debugging stuffs. */
+.debug-container {
+	position: absolute;
+	display: inline;
+	width: 1px;
+	height: 1px;
+	margin: 2px;
+	padding: 3px;
+	border: 3px solid #FC0;
+	background: #F2F2F2;
+	overflow: hidden;
+	font-size: 10px;
+}
+
+.debug-backtrace {
+	position: absolute;
+	display: inline;
+	width: 1px;
+	height: 1px;
+	margin: 2px;
+	padding: 3px;
+	border: 3px solid #3F0;
+	background-color: #EEE;
+	overflow: hidden;
+	font-size: 10px;
+}
+
+.debug-container pre, 
+.debug-backtrace pre {
+	font-family: Consolas, courier, "Courier New", monospace;
+	font-size: 11px;
+	margin: 3px 0;
+	padding: 0;
+	color: #444;
+}
+
+.debug-container:hover, 
+.debug-backtrace:hover  {
+	display: inline;
+	width: 500px;
+	min-height: 300px;
+	z-index: 1000;
+	overflow: scroll;
+	background-color: #F8F8F8;
+}

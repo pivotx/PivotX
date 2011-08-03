@@ -1,0 +1,139 @@
+/* global extension documentation styles */
+html#documentation, html#documentation body, div#docs {
+	margin: 0;
+	padding: 0;
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 13px;
+	background-color: #FFF;
+}
+
+div, span, ul, li {
+	margin: 0;
+	padding: 0;
+}
+
+div#docs p, div#docs td, div#docs input {
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 12px;
+	line-height: 17px;
+}
+
+html#documentation h1, div#docs h1 {
+	font-family: Georgia, serif;
+	font-weight: normal;
+	font-size: 25px;
+	margin-top: 16px;
+}
+
+html#documentation div#docs {
+    margin: 0 8px 8px 16px;
+    max-width: 700px;
+}
+
+div#docs h1 span {
+	font-size: 25px;
+}
+
+div#docs h2 {
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 15px;
+	color: #69756B;
+}
+
+div#docs h3 {
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 13px;
+	color: #69756B;
+}
+
+div#docs h3 span {
+	font-size: 13px;
+	font-style: italic;
+	font-weight: normal;
+}
+
+div#docs a {
+	color: #EB5E00;
+}
+
+div#docs a:hover {
+	color: #B04600;
+}
+
+div#docs form {
+	margin: 0;
+	padding: 0;
+}
+
+div#docs tt, div#docs pre {
+	font-family: Consolas, "Courier New", monospace;
+	font-size: 11px;
+}
+
+div#docs tt span {
+	font-size: 0px;
+} 
+
+div#docs pre {
+    margin: 0.5em 0;
+    padding: 5px;
+    line-height: 15px;
+    font-size: 12px;
+    background: #eee;
+    color: #444;
+    border: 1px solid #bbb;
+}
+
+div#docs acronym {
+	border-bottom: 1px dashed #888;
+	cursor: help;
+}
+
+html#documentation #header {
+	background: #3F4C4D url(bookmarklet_bg.jpg) top repeat-x;
+	height: 46px;
+	border-bottom: 3px solid #ddd;
+}
+
+html#documentation  #header h1 {
+	color: #fff;
+	margin: 0;
+	padding: 8px 10px;
+}
+
+html#documentation #header h1 a {
+	color: #fff;
+	text-decoration: none;
+}
+
+
+div#docs ul li {
+	line-height: 20px;
+}
+
+div#docs #menu {
+	width: 10em;
+	float: left;
+	clear: both;
+	margin: 0 0.4em 0 0;
+	padding: 3em 0 0;
+} 
+
+div#docs #menu ul li {
+	margin-left: 1em;
+}
+
+
+div#docs  ul li {
+	margin-left: 2em;
+}
+
+#toc {
+    position: absolute;
+    left: 740px;
+    width: 200px;
+    border: 1px solid #CCC;
+    padding: 5px;
+    
+}
+

@@ -1,0 +1,242 @@
+
+.formclass {
+    border: 1px solid #CFCFCF;
+    padding: 0px 0px;
+    background-color: #FFF;
+	border: 1px solid #CFCFCF;
+}
+
+.homeleftcolumn .formclass {
+    border: 1px solid #CFCFCF;
+    padding: 0px 0px;
+    background-color: #FFF;
+	border: 1px solid #CFCFCF;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+
+}
+
+.formclass th {
+    border-bottom: 1px solid #CFCFCF;
+    padding: 4px 8px;
+    color: #666;
+    background-color: #DDD;
+    background: -moz-linear-gradient(-90deg, #DDD, #D0D0D0);
+    background: -webkit-gradient(linear, 0 top, 0 bottom, from(#DDD), to(#D0D0D0));	
+    text-align: left;
+    font-weight: normal;
+}
+
+.formclass td {
+    padding: 4px 2px 4px 8px;
+}
+
+.formclass img {
+    border: 0px;
+}
+
+
+.formclass label.error {
+    background: #FFE url(../../pics/error.png) repeat-y left;
+    color: #C00;
+    padding-left: 20px;
+    font-weight: bold;
+    display: block;
+}
+
+.formclass input[type=text], .formclass input[type=password] {
+    border: 1px inset #BBB;
+    padding: 2px 3px;
+    color: #333;
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 13px;
+    margin: 0px 0px 4px;
+    background: #F8F8F8 url(inputbg.png) repeat-x top center;
+}
+
+.formclass input[type=checkbox] {
+	/* .. */
+}
+
+/* Because IE is stupid, we need these.. */
+#f_popup1, #f_popup2 {
+    border: 0px solid #FFF !important;
+    background-image: none;
+}
+
+
+.formclass input.xl {
+    font-size: 15px;
+}
+
+.formclass textarea {
+    padding: 2px 3px;
+    color: #333;
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 13px;
+    margin: 0px 0px 4px;
+	border:1px solid #BBB;	
+	background:#FFF url(../../pics/bg-container.png) repeat-x top left !important;
+}
+
+.formclass input[readonly="readonly"] {
+    background-color: #CCC !important;
+    color: #666 !important;
+}
+
+.activeinput {
+    background-color: #FFF !important;
+    color: #000 !important;
+}
+
+.formclass select {
+    border: 1px inset #AAA;
+    padding: 1px 0px;
+    background: #F2F2F2;
+    font-family: Tahoma,Arial,sans-serif;
+    font-size: 13px;
+    margin: 0px 0px 4px;
+    color: #333;
+}
+
+.formclass .noborder {
+    background: transparent;
+    margin: 3px 1px 7px;
+    vertical-align: middle;
+    border: 0px !important;
+}
+
+.formclass input.error, .formclass select.error {
+    border: 1px inset #F99;
+    background: #FFD;
+}
+
+.formclass .required {
+    color: #900;
+    font-size: 90%;
+}
+
+/*
+.formclass .submit, .submit {
+    border: 3px double #999;
+    color: #025;
+    background: #C0CCD8 url(img/bg_button.png) repeat-y left;
+    font-weight: bold;
+}*/
+
+
+
+/**
+ * BUTTONS
+ *
+ * The styling of the buttons is taken from an article on Particletree:
+ * http://particletree.com/features/rediscovering-the-button-element/
+ *
+ */
+
+p.buttons {
+    min-height: 30px;
+}
+
+.buttons a, .buttons button, .buttons_small a {
+    display:block;
+    float:left;
+    margin:0 7px 0 0;
+    background-color: #EEE;
+    border:1px solid #CCC;
+    border-top:1px solid #DDD;
+    border-left:1px solid #DDD;
+    white-space: nowrap;
+    font-family:"Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+    font-size:12px;
+    line-height:18px;
+    text-decoration:none;
+    font-weight:bold;
+    color:#565656;
+    cursor:pointer;
+    padding:5px 10px 6px 7px; /* Links */
+    -moz-box-shadow: 1px 1px 1px #DDD;
+    -webkit-box-shadow: 1px 1px 1px #DDD;
+    box-shadow: 1px 1px 1px #DDD;
+}
+
+.buttons_small a {
+    margin: 0;
+    font-size:11px;
+    line-height:16px;
+    font-weight: normal !important;
+    padding:2px 7px 3px 4px; /* Links */
+}
+
+.buttons button{
+    width:auto;
+    overflow:visible;
+    padding:4px 10px 3px 7px; /* IE6 */
+}
+.buttons button[type]{
+    padding:5px 10px 5px 7px; /* Firefox */
+    line-height:17px; /* Safari */
+}
+.buttons button img, .buttons a img, .buttons_small a img {
+    margin:0 3px -3px 0 !important;
+    padding:0;
+    border:none;
+    width:16px;
+    height:16px;
+}
+
+div.plupload, input[type="file"] {
+    cursor: pointer;
+}
+
+/* STANDARD button coloring */
+
+button:hover, .buttons a:hover, .buttons_small a:hover {
+    background-color:#dff4ff;
+    border:1px solid #c2e1ef;
+    color:#336699;
+}
+.buttons a:active, .buttons_small a:active{
+    background-color:#6299c5;
+    border:1px solid #6299c5;
+    color:#fff;
+}
+
+/* POSITIVE button coloring */
+
+button.positive, .buttons a.positive, .buttons_small a.positive{
+    color:#529214;
+}
+button.positive:hover, .buttons a.positive:hover, .buttons_small a.positive:hover {
+    background-color:#E6EFC2;
+    border:1px solid #C6D880;
+    color:#529214;
+}
+.buttons a.positive:active, .buttons_small a.positive:active{
+    background-color:#529214;
+    border:1px solid #529214;
+    color:#fff;
+}
+
+/* NEGATIVE button coloring */
+
+button.negative, .buttons a.negative, .buttons_small a.negative {
+    color:#B23928;
+}
+button.negative:hover, .buttons a.negative:hover, .buttons_small a.negative:hover {
+    background:#fbe3e4;
+    border:1px solid #fbc2c4;
+    color:#d12f19;
+}
+.buttons a.negative:active, .buttons_small a.negative:active {
+    background-color:#d12f19;
+    border:1px solid #d12f19;
+    color:#fff;
+}
+
+/* End of Buttons styles. */
+
+
+

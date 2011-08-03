@@ -1,0 +1,262 @@
+/* 
+Theme Name: Skinny
+Theme URI: pivotx.net
+Description: PivotX default theme
+Version: 1.1
+Date:	2009-03-02
+Author: PivotX Team
+Author URI: pivotx.net
+License: GPL 2.0 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html 
+Required PivotX version: PivotX 2.0
+Used Extensions: Lifestream widget, Delicious widget
+*/ 
+
+/** 
+ * Used colors:
+ * green #5C7F07 (links)
+ * black: #000000	(text color)
+ * dark grey: #333333 (headers)
+ * off white: #f8f8f8 (background color)
+ */
+
+/* some reset stuff */
+body, h1, h2, h3, h4, h5, h6, p, blockquote, ul, ol, li, img, table, tr, th, td, form, fieldset, legend, div, object {
+	margin: 0;
+	padding: 0;
+	background-color: transparent;
+	border: 0;
+	font:normal 12px Arial, Verdana, sans-serif;
+	text-align :left;
+	vertical-align: top;
+}
+
+input, select, textarea, button {
+	font: normal 100% Arial, Verdana, sans-serif;
+}
+
+table, td, th {
+	border-collapse: collapse;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+	margin-bottom: 10px;
+}
+
+.clearfix:after { 
+	content: "."; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility:hidden; 
+}
+
+* html .clearfix {
+	height: 1%;
+}
+
+/* end reset */
+
+body {
+	background-color: #f8f8f8;
+	font-family: Arial, Verdana, sans-serif;
+	color: #000;
+}
+
+/* general styling */
+
+p, li {
+	line-height: 140%;
+}
+
+pre, 
+code,
+tt {
+	font-family: consolas, 'courier new', courier, sans-serif;
+	line-height: 140%;
+}
+
+code {
+	display: block;
+	padding: 5px;
+	border: 1px solid #e6e6e6;
+}
+
+ol {
+	list-style-type: decimal;
+	padding: 0 0 0 17px;
+}
+
+ul {
+	padding: 0 0 0 14px;
+	margin: 0 0 10px 0;
+}
+
+a {
+	color: #5C7F07;
+}
+
+a:hover {
+	color: #000;
+	text-decoration: underline;
+}
+
+h1 {
+	font-size: 32px;
+}
+
+h2 {
+	font-size: 22px;
+	color: #333;
+}
+
+h3 {
+	font-size: 20px;
+	color: #333;
+}
+
+h4 {
+	font-size: 16px;
+}
+
+h1 a, h2 a, h3 a, h4 a {
+	color: #5C7F07;
+	text-decoration: none;
+}
+
+
+/* Exceptions */
+
+#siteinfo h1,
+#siteinfo h2 {
+	text-align: center;
+}
+
+#siteinfo h1 a,
+#siteinfo h2 a {
+	color: #fff;
+	text-decoration: none;
+}
+
+#siteinfo h1 a:hover,
+#siteinfo h2 a:hover {
+	color: #fff;
+	text-decoration: underline;
+}
+
+#footer p {
+	color: #999;
+	text-align: center;
+}
+
+#footer p a {
+	color: #999;
+}
+
+/* used in entries */
+
+.entry {
+	padding: 25px;
+}
+
+.widget-lg ul {
+	padding: 0;
+}
+
+.meta {
+	font-size: 11px;
+	margin: 5px 0 0 0;
+}
+
+.meta a,
+#footer p a {
+	text-decoration: none;
+}
+
+.meta a:hover,
+#footer p a:hover {
+	text-decoration: underline;
+}
+
+.pagenav {
+	clear: both;
+	text-align: center;
+	font-size: 10px;
+	line-height: 140%;
+	padding: 0 0 25px 0;
+}
+
+/* layout */
+
+#wrapper {
+	margin: 0 auto 25px auto;
+	width: 750px;
+	background-color: #fff;
+	border-left: 1px solid #e6e6e6;
+	border-right: 1px solid #e6e6e6;
+	border-bottom: 1px solid #e6e6e6;
+}
+
+#header {
+	height: 170px;
+	background: url(images/header.jpg) no-repeat bottom center /* this is your header image */
+}
+
+#siteinfo {
+	padding: 50px 0 0 0;
+}
+
+#main {
+	float: left;
+	width: 500px;
+	border-right: 1px solid #e6e6e6;
+	overflow-x: hidden;
+}
+
+#sidebar {
+	float: left;
+	width: 249px;
+
+}
+
+.sidebar-block {
+	padding: 0 25px 15px 25px;
+}
+
+#footer {
+	clear: both;
+	border-top: 1px solid #e6e6e6;
+	margin: 0 25px 0 25px;
+	padding: 10px 0;
+}
+
+/* Search bar */
+
+.pivotx-search {
+	padding: 25px;
+}
+
+#search-results-list {
+	padding: 25px;
+}
+
+#active {
+	font-weight: bold;
+}
+
+/* Override for #pages in pivotx_essentials.ccs */
+#pages {
+	margin-left: 100px;
+}
+
+#pages li a {
+	background-color: #f4f4f4;
+	border: 1px solid #5C7F07 !important;
+}
+
+#pages li a:hover {
+	color: #5C7F07;
+}
+
+#pages li.current {
+	background-color: #5C7F07;
+}
