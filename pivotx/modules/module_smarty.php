@@ -163,6 +163,7 @@ class PivotxSmarty extends Smarty {
         $this->register_function('uid', 'smarty_uid'); 
         $this->register_function('upload_dir', 'smarty_upload_dir');
         $this->register_function('user', 'smarty_user');
+        $this->register_function('user_list', 'smarty_user_list');
         $this->register_function('via', 'smarty_via');
         $this->register_function('weblog_list', 'smarty_weblog_list');
         $this->register_function('webloghome', 'smarty_log_dir');
@@ -4689,6 +4690,87 @@ function smarty_user($params, &$smarty) {
     }
 
     return $output;
+}
+
+
+/**
+ * Returns a list of user.
+ *
+ * @param array $params
+ * @return string
+ */
+function smarty_user_list($params) {
+    global $PIVOTX;
+    
+    $params = cleanParams($params);
+    
+    $format = getDefault($params['format'], "%nickname%<br />");
+    $list_separator = getDefault($params['list_separator'], ", ");
+    if (!empty($params['show_level'])) {
+        $show_level = explode(',',$params['show_level']);
+        $show_level = array_map("trim", $show_level);
+    } 
+    if (!empty($params['ignore'])) {
+        $ignore = explode(',',$params['ignore']);
+        $ignore = array_map("trim", $ignore);
+    }
+    $output= '';
+    
+    // Get all users
+    $users = $PIVOTX['users']->getUsers();
+    foreach ($users as $user) {
+
+        if (!empty($params['show_level']) && !in_array($user['userlevel'], $show_level)) {
+            continue;
+        }
+        if (!empty($params['ignore']) && in_array($user['username'],$ignore)) { 
+            continue;
+        }
+
+        // OK, let's display this user.
+
+        if (strpos($format, '%userleveltext%')) {
+            $user_lev = array(
+                PIVOTX_UL_NOBODY => __('Inactive user'),
+                PIVOTX_UL_MOBLOGGER => __('Moblogger'),
+                PIVOTX_UL_NORMAL => __('Normal'),
+                PIVOTX_UL_ADVANCED => __('Advanced'),
+                PIVOTX_UL_ADMIN => __('Administrator'),
+                PIVOTX_UL_SUPERADMIN => __('Superadmin')
+            );
+            $userleveltext = $user_lev[$user['userlevel']];
+        }
+
+        if (strpos($format, '%entrycount%')) { 
+            $entrycount = $PIVOTX['db']->get_entries_count(array('user' => $user['username']));
+        }
+
+        if (strpos($format, '%categories%')) { 
+            $categories = implode($list_separator,$PIVOTX['categories']->allowedCategories($user['username']));
+        }
+
+        // Comment from John Schop:
+        // These next two lines could probably be replaced by one single function, but I can't figure it out. 
+        // $PIVOTX['languages']->getName($user['language']) does not seem to work, cause it always returns English.
+        $languages = $PIVOTX['languages']->getLangs();
+        $language = $languages[$user['language']];
+
+        $this_output = str_replace("%username%", $user['username'], $format);
+        $this_output = str_replace("%email%", $user['email'], $this_output);
+        $this_output = str_replace("%userlevel%", $user['userlevel'], $this_output);
+        $this_output = str_replace("%userleveltext%", $userleveltext, $this_output);
+        $this_output = str_replace("%entrycount%", $entrycount, $this_output);
+        $this_output = str_replace("%nickname%", $user['nickname'], $this_output);
+        $this_output = str_replace("%language%", $language, $this_output);
+        $this_output = str_replace("%image%", $user['image'], $this_output);
+        $this_output = str_replace("%text_processing%", $user['text_processing'], $this_output);
+        $this_output = str_replace("%categories%", $categories, $this_output);
+
+        $output .= "\n".$this_output;
+    }    
+
+    return $output;
+
 }
 
 
