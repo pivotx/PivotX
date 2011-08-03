@@ -455,7 +455,7 @@ function addDBSelectionToForm(&$form) {
         'size' => 30,
         'extra' => 'autocomplete="off"',
         'isrequired' => 0,
-        'validation' => '', // we have to allow for 'empty passwords' with MySQL.
+        'validation' => 'ifany|minlen=2', // we have to allow for 'empty passwords' with MySQL.
         'text' => makeJtip(__('Password'), __('Your MySQL password'))
     ));
 
@@ -483,8 +483,8 @@ function addDBSelectionToForm(&$form) {
         'value' => 'localhost',
         'error' => __('Error'),
         'size' => 30,
-        'isrequired' => 0,
-        'validation' => 'ifany|minlen=2',
+        'isrequired' => 1,
+        'validation' => 'string|minlen=2',
         'text' => makeJtip(__('Hostname'), __('Your MySQL hostname. If you do not know, this is most likely "localhost".'))
     ));
 
@@ -496,8 +496,8 @@ function addDBSelectionToForm(&$form) {
         'value' => 'pivotx_',
         'error' => __('Error'),
         'size' => 30,
-        'isrequired' => 0,
-        'validation' => 'ifany|minlen=2',
+        'isrequired' => 1,
+        'validation' => 'string|minlen=2',
         'text' => makeJtip(__('Table Prefix'), __('The prefix to use for the database tables. By changing this, you can run multiple installations of PivotX from one MySQL database. If you don\'t intend to do so (yet), just leave this set to "pivotx_".'))
     ));
 }
@@ -1950,8 +1950,7 @@ EOM;
         'error' => __('Error'),
         'rows' => 4,
         'cols' => 53,
-        'isrequired' => 1,
-        'validation' => 'string|maxlen=400'
+        'validation' => 'maxlen=400'
     ));
 
     // Make the list of weblogs and pages for 'root' and '404' select boxes ..
@@ -2003,8 +2002,7 @@ EOM;
         'value' => '',
         'error' => __('That\'s not a proper filename!'),
         'size' => 50,
-        'isrequired' => 1,
-        'validation' => 'string|minlen=2|maxlen=80',
+        'validation' => 'maxlen=180',
         'text' => makeJtip(__('Site Favicon'), __('This determines the favicon that is used on the website. Use an absolute path to the image\'s filename for best results.'))
 
     ));
@@ -2691,7 +2689,7 @@ EOM;
         'name' => 'moblog_active',
         'label' => __('Activate'),
         'value' => '',
-        'isrequired' => 1,
+        'isrequired' => 0,
     ));
 
 
@@ -2701,8 +2699,8 @@ EOM;
         'label' => __('Mail server'),
         'error' => __('Please give a proper domain name!'),
         'size' => 20,
-        'isrequired' => 1,
-        'validation' => 'string|minlen=4'
+        'isrequired' => 0,
+        'validation' => 'ifany|minlen=4'
     ));
 
 
@@ -2713,8 +2711,8 @@ EOM;
         'value' => '',
         'error' => __('That\'s not a proper username!'),
         'size' => 50,
-        'isrequired' => 1,
-        'validation' => 'string'
+        'isrequired' => 0,
+        'validation' => 'ifany|minlen=2'
     ));
 
     $form->add( array(
@@ -2724,8 +2722,8 @@ EOM;
         'error' => __('Please give a proper password!'),
         'size' => 20,
         'extra' => 'autocomplete="off"',
-        'isrequired' => 1,
-        'validation' => 'string'
+        'isrequired' => 0,
+        'validation' => 'ifany|minlen=2'
     ));
 
 
@@ -2737,7 +2735,7 @@ EOM;
         'error' => __('Please select a user'),
         'firstoption' => __('Select a user'),
         'options' => $PIVOTX['users']->getUserNicknames(),
-        'isrequired' => 1,
+        'isrequired' => 0,
         'validation' => 'any',
         'text' => makeJtip(__('Default author'),
             __('The user that the posted entries will belong to.'))
@@ -2756,7 +2754,7 @@ EOM;
         'error' => __('Please select a category'),
         'firstoption' => __('Select a category'),
         'options' => $catoptions,
-        'isrequired' => 1,
+        'isrequired' => 0,
         'validation' => 'any',
         'text' => makeJtip(__('Default category'),
             __('The category that normal messages will be posted to.'))
@@ -2790,8 +2788,8 @@ EOM;
         'error' => __('Error'),
         'rows' => 3,
         'cols' => 50,
-        'isrequired' => 1,
-        'validation' => 'string|minlen=1|maxlen=500'
+        'isrequired' => 0,
+        'validation' => 'minlen=1|maxlen=500'
     ));
 
     $form->use_javascript(true);
