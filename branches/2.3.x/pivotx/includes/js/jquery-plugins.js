@@ -2568,7 +2568,7 @@ var humanMsg = {
 		)
 	},
 
-	displayMsg: function(msg, dontlog) {
+	displayMsg: function(msg, dontlog, allowhtml) {
 		if (msg == ''){
 			return;
 		}
@@ -2576,7 +2576,9 @@ var humanMsg = {
 		clearTimeout(humanMsg.t2);
 
         // Added by bob: We need to un-entity the string. 
-        msg = $('<div/>').html(msg).text();
+        if (allowhtml != true) {
+            msg = $('<div/>').html(msg).text();
+        }
 
 		// Inject message
 		jQuery('#'+humanMsg.msgID+' p').html( msg);

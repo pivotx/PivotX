@@ -1333,9 +1333,11 @@ EOM;
         $config_values = $PIVOTX['config']->getConfigArray();
 
         // Set some defaults for the form, in case they aren't yet set.
-        foreach ($ext_config as $key=>$value) {
-            if (!isset($config_values[$key])) {
-                $config_values[$key] = $value;
+        if (!empty($ext_config)) {
+            foreach ($ext_config as $key=>$value) {
+                if (!isset($config_values[$key])) {
+                    $config_values[$key] = $value;
+                }
             }
         }
 
