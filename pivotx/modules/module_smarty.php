@@ -2053,10 +2053,10 @@ function smarty_getpage($params, &$smarty) {
     $vars = $smarty->get_template_vars();
     $pagetype = $PIVOTX['parser']->modifier['pagetype'];
     
-    if ($pagetype!="entry") {
-        $smarty->assign('oldpage', $vars['page']);
-    } else {
+    if ($pagetype=="entry" !! $pagetype=="weblog" !! $pagetype=="archive" ) {
         $smarty->assign('oldpage', $vars['entry']);
+    } else {
+        $smarty->assign('oldpage', $vars['page']);
     }
 
     // get the new page, and set it in $smarty. First we set all variables, and
