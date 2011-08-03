@@ -35,6 +35,10 @@
     </div>    
 
 <p class="buttons">
+    <button onclick="saveConfig();" type="button" class="disabled" id="saveButton">
+        <img src="./pics/tick.png" alt=""/>
+        [[t]]Save changes[[/t]]
+    </button>   
     <a href="index.php?page=weblogs">
         <img src="pics/world.png" alt=""/>
         [[t]]Back to Weblogs[[/t]]
@@ -47,6 +51,9 @@
 
 // We make an array, that contains the current values of the forms.
 var currentvalues = new Array();
+
+// Store the values that need to be updated. 
+var updatequeue = new Array();
 
 jQuery(function($) {
 
@@ -66,8 +73,9 @@ jQuery(function($) {
 });
 
 
+
 /**
- * After editing a field, send it to ajaxhelper.
+ * After editing a field, add it to the queue to be updated.
  */
 function updateWeblog(field) {
 
@@ -76,35 +84,64 @@ function updateWeblog(field) {
 
     var key = $(field).attr('name');
     var value = $(field).fieldValue();
-    var weblog = $('#internalname').val();
-    var csrfcheck =  $.cookie("pivotxsession")
-    var error = $(field).hasClass('error');
-    
-    // Only send the ajaxy request if the value has changed.
-    if ( !error && (String(value) != String(currentvalues[key])) ) {
-        
-        setMessageLoading();
+    var error = $(field).hasClass('error'); 
 
+    // Only save it later, if the value has changed.
+    if ( !error && (encodeURIComponent(String(value)) != String(currentvalues[key])) ) {
+        updatequeue[ key ] = encodeURIComponent(value);
+        $('#saveButton').removeClass('disabled');
+        setOnUnload("[[t escape=js]]You have unsaved changes. Do you wish to continue?[[/t]]");
+    }
+
+    if (key=="front_template") { loadSubWeblogs(); }
+
+}
+
+
+
+
+/**
+ * Save the updated values in the configuration..
+ */ 
+function saveConfig() {
+    
+    var values = "";
+    
+    // Iterate through the values, building querystring..   
+    for ( key in updatequeue ) {
+        //console.log(key + ' = ' + updatequeue[key] );
+        values += key + "=" + updatequeue[key] + "&";
+        currentvalues[ key ] = updatequeue[key];
+    }
+
+    // Only save, if there's actually anything to save. 
+    if (values != "") {
+    
+        setMessageLoading();
+            
+        var csrfcheck =  $.cookie("pivotxsession");
+        var weblog = $('#internalname').val();
+        
         $.ajax({
             type: "POST",
             url: "ajaxhelper.php",
-            data: "function=updateWeblog&key=" + encodeURIComponent(key) + "&value=" + encodeURIComponent(value) 
-                + "&weblog=" + escape(weblog)+ "&csrfcheck=" + escape(csrfcheck),
+            data: "function=updateWeblogBatch&" + values + "weblog=" + weblog + "&csrfcheck=" + escape(csrfcheck),
             success: function(fetchedhtml) {
-                currentvalues[ key ] = value;
-                var msg = '[[t escape=js]]The weblog settings for "%key%" were successfully updated.[[/t]]';
-                humanMsg.displayMsg(msg.replace("%key%", key));
-                if (key=="front_template") { loadSubWeblogs(); }
+                humanMsg.displayMsg('[[t escape=js]]The configuration was successfully updated.[[/t]]');
+                updatequeue = new Array();
+                clearOnUnload();
             },
             error: function() {
-                humanMsg.displayMsg('[[t escape=js]]The weblog settings could not be updated.[[/t]]')
+                humanMsg.displayMsg('[[t escape=js]]The configuration could not be updated.[[/t]]');
             }
         });
 
-
     }
-
+    
+    $('#saveButton').addClass('disabled');
+    $('#saveButton').blur();
 }
+
 
 /**
  * Dynamically load the form for the subweblog settings. This is needed, because
