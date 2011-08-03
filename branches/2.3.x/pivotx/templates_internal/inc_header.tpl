@@ -110,7 +110,7 @@
 [[                          /foreach ]]
                     </ul>
 [[                      else ]]
-                    <a href="[[$subitem.href]]" title="[[$subitem.description]]">[[$subitem.name]]</a>
+                    <a href="[[$subitem.href]]" title="[[$subitem.description]]" [[if !empty($subitem.target_blank)]]target="_blank"[[/if]]>[[$subitem.name]]</a>
 [[                      /if ]]
                 </li>
 [[                  /if ]]
