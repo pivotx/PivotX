@@ -2053,7 +2053,7 @@ function smarty_getpage($params, &$smarty) {
     $vars = $smarty->get_template_vars();
     $pagetype = $PIVOTX['parser']->modifier['pagetype'];
     
-    if ($pagetype=="entry" !! $pagetype=="weblog" !! $pagetype=="archive" ) {
+    if ($pagetype=="entry" || $pagetype=="weblog" || $pagetype=="archive" ) {
         $smarty->assign('oldpage', $vars['entry']);
     } else {
         $smarty->assign('oldpage', $vars['page']);
