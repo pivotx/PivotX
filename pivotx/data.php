@@ -282,6 +282,7 @@ function getMenus() {
                 'uri' => 'weblog.'.$cnt,
                 'href' => $wa['link'],
                 'name' => __('view') . ' ' . $wa['name'],
+                'target_blank' => ($PIVOTX['config']->get('front_end_links_same_window') ? false : true), 
                 'description' => $wa['name'] . ' - ' . $wa['payoff']
             );
         }
