@@ -146,7 +146,7 @@
 
                         <p class="buttons" style="margin-left: -2px; margin-right: -4px; height: 70px !important;">
                         
-                            <button type="submit" class="positive">
+                            <button type="submit" class="positive" onclick="clearOnUnload();">
                                 <img src="./pics/tick.png" alt=""/>
                                 [[t]]Post Page[[/t]]
                             </button>
@@ -284,7 +284,7 @@
         <div class="cleaner">&nbsp;</div>
 
             <p class="buttons">
-                <button type="submit" class="positive">
+                <button type="submit" class="positive" onclick="clearOnUnload();">
                     <img src="./pics/tick.png" alt=""/>
                     [[t]]Post Page[[/t]]
                 </button>
@@ -316,4 +316,18 @@
 
 <iframe id="posthere" name="posthere" style='width: 1px; height: 1px; display:none; visibility: hidden;'>This hidden frame is here to allow posting the entry or page and continue editing</iframe>
 
+
+<script type='text/javascript'>
+//<![CDATA[
+
+jQuery(function($) {
+
+    $('input:text,input:checkbox,input:radio,textarea,select').one('change',function() {
+        setOnUnload("[[t escape=js]]You have unsaved changes. Do you wish to continue?[[/t]]");
+    });
+});
+
+
+//]]>
+</script>
 [[include file="inc_footer.tpl" ]]

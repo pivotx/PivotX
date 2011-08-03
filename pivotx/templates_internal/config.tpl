@@ -15,12 +15,22 @@
         [[ /foreach]]
     </div>
 
+<p class="buttons">
+    <button onclick="saveConfig();" type="button" class="disabled" id="saveButton">
+        <img src="./pics/tick.png" alt=""/>
+        [[t]]Save changes[[/t]]
+    </button>
+</p>
+
 
 <script type='text/javascript'>
 //<![CDATA[
 
 // We make an array, that contains the current values of the forms.
 var currentvalues = new Array();
+
+// Store the values that need to be updated. 
+var updatequeue = new Array();
 
 jQuery(function($) {
 
@@ -40,7 +50,7 @@ jQuery(function($) {
 
 
 /**
- * After editing a field, send it to ajaxhelper.
+ * After editing a field, add it to the queue to be updated.
  */
 function updateConfig(field) {
 
@@ -49,40 +59,66 @@ function updateConfig(field) {
 
     var key = $(field).attr('name');
     var value = $(field).fieldValue();
-    var csrfcheck =  $.cookie("pivotxsession");
     var error = $(field).hasClass('error');
 
-    // Only send the ajaxy request if the value has changed.
-    if ( !error && (String(value) != String(currentvalues[key])) ) {
+    // Only save it later, if the value has changed.
+    if ( !error && (encodeURIComponent(String(value)) != String(currentvalues[key])) ) {
+        updatequeue[ key ] = encodeURIComponent(value);
+        $('#saveButton').removeClass('disabled');
+        setOnUnload("[[t escape=js]]You have unsaved changes. Do you wish to continue?[[/t]]");
+    }
 
+}
+
+/**
+ * Save the updated values in the configuration..
+ */ 
+function saveConfig() {
+    
+    var values = "";
+    
+    // Iterate through the values, building querystring..   
+    for ( key in updatequeue ) {
+        //console.log(key + ' = ' + updatequeue[key] );
+        values += key + "=" + updatequeue[key] + "&";
+        currentvalues[ key ] = updatequeue[key];
+
+        if (key == 'offline_online') {
+            if (value == '1') {
+                $('body').removeClass('website-offline');
+            }
+            else {
+                $('body').addClass('website-offline');
+            }
+        }        
+        
+    }
+
+    // Only save, if there's actually anything to save. 
+    if (values != "") {
+    
         setMessageLoading();
+            
+        var csrfcheck =  $.cookie("pivotxsession");
         
         $.ajax({
             type: "POST",
             url: "ajaxhelper.php",
-            data: "function=setConfig&id=" + escape(key) + "&value=" + encodeURIComponent(value)
-                + "&csrfcheck=" + escape(csrfcheck),
+            data: "function=setConfigBatch&" + values + "csrfcheck=" + escape(csrfcheck),
             success: function(fetchedhtml) {
-                currentvalues[ key ] = value;
-                var msg = '[[t escape=js]]The configuration for "%key%" was successfully updated.[[/t]]';
-                humanMsg.displayMsg(msg.replace("%key%", key));
+                humanMsg.displayMsg('[[t escape=js]]The configuration was successfully updated.[[/t]]');
+                updatequeue = new Array();
+                clearOnUnload();
             },
             error: function() {
                 humanMsg.displayMsg('[[t escape=js]]The configuration could not be updated.[[/t]]');
             }
         });
 
-
     }
-
-    if (key == 'offline_online') {
-        if (value == '1') {
-            $('body').removeClass('website-offline');
-        }
-        else {
-            $('body').addClass('website-offline');
-        }
-    }
+    
+    $('#saveButton').addClass('disabled');
+    $('#saveButton').blur();
 }
 
 //]]>

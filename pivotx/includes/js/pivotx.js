@@ -382,6 +382,25 @@ function fileSelectorChangefolder(folder) {
     return false;
 }
 
+/**
+ * Set the 'on unload' handler, to warn the user when leaving a page with
+ * unsaved changes.
+ */
+function setOnUnload(message) {
+    $(window).bind("beforeunload", function(event){
+        return message;
+    }); 
+}
+
+
+/**
+ * Set the 'on unload' handler, to warn the user when leaving a page with
+ * unsaved changes.
+ */
+function clearOnUnload() {
+    $(window).unbind("beforeunload"); 
+}
+
 
 /** 
  * Get the PivotX news to display on the dashboard.
@@ -781,6 +800,8 @@ function saveEntryAndContinue() {
     
     humanMsg.displayMsg("The Entry has been saved.");
 
+    clearOnUnload();
+    
 }
 
 
@@ -799,6 +820,8 @@ function savePageAndContinue() {
     $('#form1').attr('target', '_self');
     
     humanMsg.displayMsg("The Page has been saved.");
+    
+    clearOnUnload();
 
 }
 

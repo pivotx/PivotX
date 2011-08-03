@@ -236,6 +236,30 @@ button.negative:hover, .buttons a.negative:hover, .buttons_small a.negative:hove
     color:#fff;
 }
 
+/* DISABLED button coloring */
+
+button.disabled, .buttons a.disabled, .buttons_small a.disabled {
+    color:#BBB;
+    -moz-box-shadow: 0px 0px 0px rgba(0,0,0,0);
+    -webkit-box-shadow: 0px 0px 0px rgba(0,0,0,0);
+    box-shadow: 0px 0px 0px rgba(0,0,0,0);
+    cursor: default;
+}
+button.disabled:hover, .buttons a.disabled:hover, .buttons_small a.disabled:hover {
+    background-color: #EEE;
+    border:1px solid #CCC;
+    border-top:1px solid #DDD;
+    border-left:1px solid #DDD;
+    color:#BBB;
+}
+.buttons a.disabled:active, .buttons_small a.disabled:active {
+    background-color: #EEE;
+    border:1px solid #CCC;
+    border-top:1px solid #DDD;
+    border-left:1px solid #DDD;
+    color:#BBB;
+}
+
 /* End of Buttons styles. */
 
 

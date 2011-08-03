@@ -133,6 +133,44 @@ class ajaxhelper {
     }
 
 
+
+    /**
+     * Sets a number of config key/value pairs in a batch.
+     *
+     * @return void
+     */
+    public static function ext_setConfigBatch() {
+        global $PIVOTX;
+
+        $PIVOTX['session']->minLevel(PIVOTX_UL_ADMIN);
+
+        // Check against CSRF exploits..
+        $PIVOTX['session']->checkCSRF($_POST['csrfcheck']);
+
+        // debug_printr( $_POST );
+
+        foreach ($_POST as $key=>$value) {
+            
+            // If the id contains '[]' we remove it, since those were added by pivotX to 
+            // allow for multiple select, but should be stored without.
+            $key = str_replace('[]', '', $key);
+           
+            // Skip 'function' and 'csrfcheck' as they are not settings..
+            if ($key=="csrfcheck" || $key=="function" || $key=="") {
+                continue; 
+            }
+
+            $PIVOTX['config']->set($key, $value);
+            
+            $PIVOTX['events']->add('edit_config', safeString($key), safeString($value));
+            
+            echo __("The configuration was succesfully saved.");
+  
+        }
+
+    }
+    
+
     /**
      * Sets a config key/value pair via an AJAX call.
      *
@@ -354,6 +392,8 @@ class ajaxhelper {
     /**
      * Update a weblog's settings..
      *
+     * Note: This function is deprecated. 
+     *
      */
     public static function ext_updateWeblog() {
         global $PIVOTX;
@@ -365,6 +405,35 @@ class ajaxhelper {
 
         $PIVOTX['weblogs']->set($_POST['weblog'], $_POST['key'], $_POST['value']);
 
+        $PIVOTX['events']->add('edit_weblog', "", safeString($_POST['weblog']));
+
+        echo "ok";
+    }
+
+
+    /**
+     * Update a weblog's settings in a batch..
+     *
+     */
+    public static function ext_updateWeblogBatch() {
+        global $PIVOTX;
+
+        $PIVOTX['session']->minLevel(PIVOTX_UL_ADMIN);
+
+        // Check against CSRF exploits..
+        $PIVOTX['session']->checkCSRF($_POST['csrfcheck']);
+
+        foreach ($_POST as $key=>$value) {
+           
+            // Skip 'function' and 'csrfcheck' as they are not settings..
+            if ($key=="csrfcheck" || $key=="function" || $key=="weblog" || $key=="") {
+                continue; 
+            }
+
+            $PIVOTX['weblogs']->set($_POST['weblog'], $key, $value);
+
+        }
+        
         $PIVOTX['events']->add('edit_weblog', "", safeString($_POST['weblog']));
 
         echo "ok";
