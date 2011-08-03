@@ -1,0 +1,130 @@
+/*
+Theme Name: PivotX Mobile
+Theme URI: http://www.pivotx.net
+Version: 1.2
+Date: 2010-03-23
+Author: Peter Boorsma & Bob den Otter
+Author URI: http://www.pivotx.net
+Description: PivotX clean 'n mean mobile theme
+Required PivotX version: PivotX beta12
+Copyright: GNU General Public License, version 2
+Copyright URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+*/
+body, html {
+    background-color: #FFF;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    margin: 0;
+    padding: 2px;
+    color: #444;
+}
+
+p {
+    margin: 8px 0;
+    color: #444;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+a {
+    color: #03C;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #DC131B;
+    text-decoration: underline;
+}
+
+img {
+    border: 0;
+}
+
+h1 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 22px;
+    font-weight: normal;
+    color: #040;
+    line-height: 21px;
+}
+
+h2 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+    color: #040;
+    line-height: 21px;
+    margin: 4px 8px 4px 0;
+}
+
+h3 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    color: #040;
+    line-height: 19px;
+    margin: 8px 8px 4px 0;
+}
+
+h2 a {
+    font-weight: normal;
+    color: #040 !important;
+    text-decoration: none;    
+}
+
+h2 a:hover {
+    color: #FFF;
+    text-decoration: underline;
+}
+
+li {
+    line-height: 15px;
+}
+
+#header {
+    border: 1px solid #628F2C;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    background: #96B86E;
+    background: -moz-linear-gradient(-90deg, #96B86E, #628F2C);
+    background: -webkit-gradient(linear, 0 top, 0 bottom, from(#96B86E), to(#628F2C));
+    margin-bottom: 8px;
+}
+
+#header h1, #header h2 {
+    margin: 8px;
+}
+
+.header a {
+    color: #FFF;
+    text-shadow: 2px 2px 2px #000;
+    font-weight: normal;
+}
+
+.frontphoto {
+    float: right;
+    margin-left: 8px;
+    margin-bottom: 8px;
+    width: 122px;
+}
+
+.frontphoto p {
+    font-size: 10px;
+    margin: 0;
+}
+
+.entryfooter {
+    clear: both;
+    border: 1px solid #BBB;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    background: #EEE;
+    padding: 4px;
+    background: -moz-linear-gradient(-90deg, #EEE, #CCC);
+    background: -webkit-gradient(linear, 0 top, 0 bottom, from(#EEE), to(#CCC));
+    margin: 8px 0;
+}
+

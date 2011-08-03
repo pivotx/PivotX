@@ -1,0 +1,120 @@
+body, html, div {
+    font-size: 12px;
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+    line-height: 1.4em;
+    margin: 0;
+    padding: 0;
+    background-color: #FFF;
+}
+
+p {
+    font-size: 12px;
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+    color: #444;
+}
+
+a, a:visited {
+    color: #039;
+}
+
+h1 {
+    font-size: 32px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #006;
+}
+
+h2 {
+    font-size: 24px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #006;
+}
+
+h1 a, h2 a {
+    /* Don't make headlines look too much like regular links, even 
+       though they're clickable */
+    text-decoration: none;
+}
+
+h3 {
+    font-size: 18px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #006;
+}
+
+
+small { 
+    font-size: 11px;
+    color: #999;
+}
+
+hr {
+    border: 0px solid transparent;
+    border-bottom: 1px solid #DDD;
+}
+
+#header {
+    background-color: #C1D1EF;
+    margin: 0;
+    padding: 10px 30px;
+    border-bottom: 1px solid #006;
+}
+
+#content {
+    float: left;
+    width: 66%;
+}
+
+#sidebar {
+    float: left;
+    width: 33%;
+    border-left: 1px solid #DDD;
+}
+
+#content-inner, #sidebar-inner  {
+    margin: 0;
+    padding: 10px 30px;
+}
+
+
+
+
+#footer {
+    clear: both;
+    background-color: #F2F2F2;
+    margin: 0;
+    padding: 10px;
+    border-top: 1px solid #006;
+}
+
+p.weblogsubtitle {
+    color: #006;
+    font-style: italic;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 20px;
+}
+
+p.date {
+    color: #999;
+    font-style: italic;
+}
+
+p.entryfooter {
+    text-align: right;
+    padding: 10px;
+    border-bottom: 1px solid #DDD;
+    color: #999;
+}
+
+blockquote {
+    border: 1px solid #CCC;
+    background-color: #F2F2F2;
+    padding: 10px;
+    font-style: italic;
+    color: #666;
+}
+
+#active {
+	font-weight: bold;
+}
+
+

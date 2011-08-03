@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>PivotX 404 page</title>
+</head>
+
+<body>
+<h1>PivotX: Oops! Something went wrong!</h1>
+
+<p>You requested a page, but PivotX encountered a fatal error.</p>
+
+<p><strong style='font-size: 115%'>[[ $error ]]</strong><br />
+[[$additionalinfo ]]</p>
+
+<ul>
+    <li>Did you break something? Try logging into <a href="pivotx/index.php">PivotX</a>, 
+    and see if you'll get more details in the Admin Interface.</li>
+    <li>Try <a href="pivotx/index.php?page=configuration#section-4">enabling Debug</a>, 
+    and Check the <a href="pivotx/modules/module_debug.php#bottom">Debug Output</a> for clues what is wrong.</li>
+    <li>If you can't figure it out, drop by the <a href="http://forum.pivotx.net">PivotX Forums</a>. We'll help you! :-)</li>
+</ul>
+
+<p>If you post a message on the forum, please include the following information:</p>
+
+<textarea style='width: 90%; height: 250px;'>
+
+* [[ $error ]] *
+
+PivotX build: [[ $build|strip_tags ]]
+Time taken: [[ $timetaken|strip_tags ]] seconds
+Memory taken: [[ $memtaken ]]
+PHP version: [[ $phpversion ]]
+DB type: [[ $dbtype ]]
+
+-- Backtrace --
+
+[[ $backtrace ]]
+
+
+</textarea>
+
+</body>
+</html>

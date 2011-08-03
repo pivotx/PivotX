@@ -1,0 +1,3 @@
+<Files ~ ".(htaccess|htpasswd|inc|html|htm|php|tpl)$">
+deny from all
+</Files>

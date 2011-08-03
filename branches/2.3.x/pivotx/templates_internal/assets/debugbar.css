@@ -1,0 +1,172 @@
+
+#pxdb-bar, #pxdb-bar *, .pxdb-box, .pxdb-box * {
+    border: 0;
+    background: none;
+    margin: 0;
+    padding: 0;
+    letter-spacing: normal !important;
+    text-align: left !important;
+    font-weight: normal;
+}
+
+#pxdb-bar {
+    /* width: 500px;*/
+    border: 2px solid #999;
+    border-right: 0;
+    background-color: #EEE;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#EEE), to(#CCC));
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, .5);
+    -moz-box-shadow: 2px 2px 10px rgba(0, 0, 0, .5);
+    -webkit-box-shadow: 2px 2px 10px rgba(0, 0, 0, .5);
+    color: #777;
+    font: 12px/15px Arial,Helvetica,sans-serif;
+    height: 24px;
+    position: fixed;
+    right: 0px;
+    top: 10px;
+    z-index: 1000000;
+}
+
+.pxdb-bar-bottom {
+    top: auto !important;
+    bottom: 12px !important;
+}
+
+#pxdb-bar a {
+    color:#777 !important;
+    outline:none;
+    text-decoration:underline;
+    margin: 0;
+    padding: 0;
+}
+
+#pxdb-bar a:hover, #pxdb-bar a:active {
+    color: #333 !important;
+}
+
+#pxdb-bar .active, #pxdb-bar .active a {
+    color: #000 !important;
+}
+
+#pxdb-bar div {
+    float: left;
+    display:none;
+}
+
+.pxdb-box strong {
+    font-weight: bold !important;
+}
+
+#pxdb-bar #pxdb-bar-logo {
+    background-color: #343e3f;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#546265), to(#343e3f));
+    padding: 3px 10px 0 6px;
+    height: 21px;
+}
+
+#pxdb-bar #pxdb-bar-version {
+    background-color: #343e3f;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#546265), to(#343e3f));
+    color: #EEE;
+    padding: 6px 20px 0 0px;
+    height: 18px;
+}
+
+#pxdb-bar .pxdb-bar-divider {
+    color: #999;
+    padding: 5px 2px 0 8px;
+}
+
+#pxdb-bar .pxdb-bar-section {
+    background-position: center left;
+    background-repeat: no-repeat;
+    height: 18px;
+    padding: 6px 0 0 20px;
+    margin: 0 0 0 4px;
+}
+
+#pxdb-bar #pxdb-bar-timetaken {
+    background-image: url(../../pics/clock.png);
+}
+
+#pxdb-bar #pxdb-bar-queries {
+    background-image: url(../../pics/database.png);
+}
+
+#pxdb-bar #pxdb-bar-log {
+    background-image: url(../../pics/application.png);
+}
+
+#pxdb-bar #pxdb-bar-modifiers {
+    background-image: url(../../pics/lightning.png);
+}
+
+#pxdb-bar #pxdb-bar-open {
+    background-image: url(../../pics/add.png);
+
+}
+
+#pxdb-bar #pxdb-bar-close {
+    background-image: url(../../pics/cancel.png);
+    display:none;
+}
+
+#pxdb-bar #pxdb-bar-server {
+    background-image: url(../../pics/computer.png);
+}
+
+#pxdb-bar #pxdb-bar-queries,
+#pxdb-bar #pxdb-bar-log,
+#pxdb-bar #pxdb-bar-modifiers,
+#pxdb-bar #pxdb-bar-open,
+#pxdb-bar #pxdb-bar-close {
+    cursor: pointer;
+}
+
+.pxdb-box {
+    border: 2px solid #999;
+    border-right: 0;
+    width: 700px;
+    max-height: 400px;
+    background-color: #EEE;
+    position: fixed;
+    right: 10px;
+    top: 36px;
+    margin: 0;
+    padding: 0;
+    visibility: hidden;
+    overflow-y: scroll;
+    font: 11px/15px Consolas,"Andale mono","Courier New",Courier,Monaco,monospace;
+    color: #666;
+    z-index: 1000000;
+}
+
+.pxdb-box-bottom {
+    top: auto;
+    bottom: 38px;
+}
+
+.pxdb-box pre {
+    color: #666;
+    font-size: 11px;
+    font: 11px/15px Consolas,"Andale mono","Courier New",Courier,Monaco,monospace;
+    padding: 4px 4px 4px 8px;
+    margin: 0;
+    white-space: pre;
+}
+
+#pxdb-box-log {
+    padding: 0px 4px 4px 8px;
+    width: 688px;
+}
+
+
+.pivotx-visible {
+    visibility: visible;
+}
+
+.pxdb-box .timetaken  {
+    background-color:#DDDDDD;
+    font-size:10px;
+    margin:6px 0 4px;
+}

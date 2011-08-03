@@ -1,0 +1,217 @@
+/* -------------------------------------------------------------------
+// markItUp!
+// By Jay Salvat - http://markitup.jaysalvat.com/
+// ------------------------------------------------------------------*/
+.markitup-h1 a { background-image:url(images/h1.png); }
+.markitup-h2 a { background-image:url(images/h2.png); }
+.markitup-h3 a { background-image:url(images/h3.png); }
+.markitup-h4 a { background-image:url(images/h4.png); }
+.markitup-h5 a { background-image:url(images/h5.png); }
+.markitup-h6 a { background-image:url(images/h6.png); }
+.markitup-p a { background-image:url(images/paragraph.png); }
+.markitup-strong a { background-image:url(images/bold.png);}
+.markitup-em a { background-image:url(images/italic.png);}
+.markitup-del a { background-image:url(images/stroke.png);}
+.markitup-ul a { background-image:url(images/list-bullet.png);}
+.markitup-ol a { background-image:url(images/list-numeric.png);}
+.markitup-li a { background-image:url(images/list-item.png);}
+.markitup-img a { background-image:url(images/picture.png); }
+.markitup-a a { background-image:url(images/link.png);}
+.markitup-table a { background-image:url(images/table.png);}
+.markitup-tr a { background-image:url(images/table-col.png);}
+.markitup-td a { background-image:url(images/table-row.png);}
+.markitup-sub a { background-image:url(images/subscript.png);}
+.markitup-sup a { background-image:url(images/superscript.png);}
+.markitup-clean a { background-image:url(images/clean.png);}
+.markitup-preview a { background-image:url(images/preview.png);}
+.markitup-blockquote a { background-image:url(images/indent.png);}
+.markitup-code a { background-image:url(images/code.png);}
+.markitup-comment a { background-image:url(images/comments.png);}
+
+.markitup-pivotximg a { background-image:url(images/picture_add.png);}
+.markitup-pivotxpopup a { background-image:url(images/popup.png);}
+.markitup-pivotxdownload a { background-image:url(images/download.png);}
+.markitup-pivotxtag a { background-image:url(images/tag.png);}
+
+.markitup-pivotxtemplates  { 
+    background-image: none !important;
+    width: 58px !important;
+}
+
+.markitup-pivotxtemplates a { 
+    background-image:url(images/pivotx.png) !important;
+    width: 58px !important;
+}
+
+.markitup-pivotxtemplates ul li { 
+    line-height: 14px !important;
+    font-family: Tahoma,Arial,sans-serif;
+    font-size: 11px;    
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.markitup-pivotxtemplates ul li a { 
+    background-image: none !important;
+    width: 320px !important;
+    margin: 0 !important;
+    padding: 1px 3px !important;
+}
+
+
+/* -------------------------------------------------------------------
+// Mark It Up! Universal MarkUp Engine, JQuery plugin
+// By Jay Salvat - http://markitup.jaysalvat.com/
+// ------------------------------------------------------------------*/
+.markItUp * {
+	margin:0px; padding:0px;
+}
+.markItUp a:link,
+.markItUp a:visited {
+	color:#000;
+	text-decoration:none;
+    margin: 0 4px 0px 0;
+    padding: 0 4px 0 0;
+}
+
+
+
+.markItUp  {
+	width:450px;
+	margin:5px 0 5px 0;
+}
+.markItUpContainer  {
+	border:1px solid #AAA;	
+	background:#FFF url(images/bg-container.png) repeat-x top left;
+	padding:5px 0px 0px 0px;
+	font:11px Verdana, Arial, Helvetica, sans-serif;
+}
+
+.markItUpHeader {
+    margin: 0 5px 0 5px;
+}
+
+.markItUpHeader ul {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.markItUpEditor {
+	font:12px Consolas, 'Courier New', Courier, monospace;
+	padding:5px 5px 5px 5px;
+	border-top :1px solid #AAA;
+	border-left: 0px solid #FFF;
+	border-right: 0px solid #FFF;
+	border-bottom: 0px solid #FFF;
+	width:438px !important;
+	height:200px;
+	background-image:url(images/bg.png);
+	background-repeat:repeat-x;
+	clear:both; display:block;
+	line-height:18px;
+	overflow:auto;
+    margin: 0 !important;
+}
+.markItUpPreviewFrame	{
+	overflow:auto;
+	background-color:#FFFFFF;
+	border:1px solid #3366CC;
+	width:99.9%;
+	height:300px;
+}
+.markItUpFooter {
+	width:100%;
+	background-color: #EEE;
+	height: 9px;
+}
+.markItUpResizeHandle {
+	overflow:hidden;
+	width:22px; height:9px;
+	margin-left:auto;
+	margin-right:auto;
+	background-image:url(images/grippie.png);
+	background-position: center;
+	background-repeat: no-repeat;
+	cursor:n-resize;
+}
+/***************************************************************************************/
+/* first row of buttons */
+.markItUpHeader ul li	{
+	list-style:none !important;
+	float:left;
+	position:relative;
+	margin: 0 !important;
+    padding-bottom: 3px;
+}
+.markItUpHeader ul li ul{
+	display:none;
+}
+.markItUpHeader ul li:hover > ul{
+	display:block;
+}
+.markItUpHeader ul .markItUpDropMenu {
+	background:transparent url(images/menu.png) no-repeat 115% 50%;
+	margin-right:5px;
+}
+.markItUpHeader ul .markItUpDropMenu li {
+	margin-right:0px;
+}
+.markItUpHeader ul .markItUpSeparator {
+	margin:0 5px 0 2px !important;
+	width:1px;
+	height:16px;
+	overflow:hidden;
+	background-color:#CCC;
+	
+}
+.markItUpHeader ul ul .markItUpSeparator {
+	width:auto; height:1px;
+	margin:0px;
+}
+/* next rows of buttons */
+.markItUpHeader ul ul {
+	display:none;
+	position:absolute;
+	top:18px; 
+	left:0px;	
+	background:#F8F8F8;
+	border:1px solid #AAA;
+	height:inherit;
+	z-index: 1000;
+}
+.markItUpHeader ul ul li {
+	float:none;
+	border-bottom:1px solid #AAA;
+}
+.markItUpHeader ul ul .markItUpDropMenu {
+	background:#F5F5F5 url(images/submenu.png) no-repeat 100% 50%;
+}
+/* next rows of buttons */
+.markItUpHeader ul ul ul {
+	position:absolute;
+	top:-1px; left:150px;
+}
+.markItUpHeader ul ul ul li {
+	float:none;
+}
+.markItUpHeader ul a {
+	display:block;
+	width:16px; height:16px;
+	text-indent:-1000px;
+	background-repeat:no-repeat;
+	padding:3px 2px;
+	margin:0px !important;
+}
+.markItUpHeader ul ul a {
+	display:block;
+	padding-left:0px;
+	text-indent:0;
+	width:120px; 
+	padding:5px 5px 5px 25px;
+	background-position:2px 50%;
+}
+.markItUpHeader ul ul a:hover  {
+	color:#000;
+	background-color:#CCC;
+}
+

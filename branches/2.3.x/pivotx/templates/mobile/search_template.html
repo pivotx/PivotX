@@ -1,0 +1,29 @@
+[[ include file="`$templatedir`/_sub_header.html" ]]
+
+    <!-- entry '[[title]]' -->
+    <div class="bericht">
+
+[[ if $modifier.pagetype=="search" ]]
+        <div class="titelholder"><h2>[[t]]Search Results[[/t]]</h2></div>
+        [[search]]
+
+        <p>[[searchheading
+            result0="No results for '%query%'."
+            result1="There's one result for '%query%'."
+            resultmore="There are %num% result for '%query%'."
+        ]]</p>
+
+        [[searchresults	prefix="<ul>" postfix="</ul>" titletrimlength=50 excerptlength=200 ]]
+            <li>
+                <a href="%link%">%title%</a> (%percentage%%)<br />
+                %excerpt%
+            </li>
+        [[/searchresults]]
+[[ else ]]
+        [[ content ]]
+[[ /if ]]
+
+    </div>
+
+
+[[ include file="`$templatedir`/_sub_footer.html" ]]

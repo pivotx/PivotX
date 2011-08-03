@@ -1,0 +1,61 @@
+# This instruction sets 'index.php' as the default directory index, but on a 
+# small number of servers this is disabled. If you're having issues with 
+# mod_rewrite, try commenting out the following line:
+DirectoryIndex index.php index.html index.htm
+
+# Some extra settings that are disabled by default since the
+# php_flag directive is disallowed on many servers. 
+# 1) Ensuring that short hand "<?" won't start PHP parsing ...
+# 2) Turn off register_globals
+# 3) Turn off magic_quotes
+#php_flag short_open_tag off
+#php_flag register_globals 0
+#php_flag magic_quotes_gpc 0
+
+RewriteEngine On
+# RewriteBase /
+
+# Standard PivotX rules for non-crufty URLs. The rules always work, but non-crufty
+# URL must be enabled in the PivotX configuration too before they are actually used. 
+# If you have enabled localized rewrite prefixes (for page, entry, category, archive
+# and so) you need to update/duplicate the rules below accordingly.
+RewriteRule ^archive/(.*)/trackback/?$ index.php?trackback&uri=$1&rewrite=archive [L,QSA]
+RewriteRule ^archive/(.*)$ index.php?uri=$1&rewrite=archive [L,QSA]
+RewriteRule ^entry/(.*)/trackback/?$ index.php?trackback&e=$1&rewrite=entry [L,QSA]
+RewriteRule ^entry/(.*)$ index.php?e=$1&rewrite=entry [L,QSA]
+# Note: The two following rules match any date from year 1000 up to year 3000
+# pretty strictly to avoid matching page URIs starting with numbers ...
+RewriteRule ^([1-2][0-9]{3})[/-]([0-1][0-9][/-][0-3][0-9](/.*)?)/trackback/?$ index.php?trackback&uri=$1/$2&rewrite=archive [L,QSA]
+RewriteRule ^([1-2][0-9]{3})[/-]([0-1][0-9][/-][0-3][0-9](/.*)?)$ index.php?uri=$1/$2&rewrite=archive [L,QSA]
+RewriteRule ^page/(.*)$ index.php?uri=$1&rewrite=page [L,QSA]
+RewriteRule ^tag/(.*)$ index.php?t=$1&rewrite=tag [L,QSA]
+RewriteRule ^tags(/([^/]*)/?)?$ index.php?x=tagpage&w=$2 [L,QSA]
+RewriteRule ^search/(.*)$ index.php?q=$1&rewrite=search [L,QSA]
+RewriteRule ^search$ index.php?rewrite=search [L,QSA]
+RewriteRule ^visitor(/([^/]*)/?)?$ index.php?x=visitorpage&w=$2 [L,QSA]
+RewriteRule ^category/(.*)$ index.php?c=$1&rewrite=category [L,QSA]
+RewriteRule ^weblog/(.*)$ index.php?w=$1 [L,QSA]
+RewriteRule ^author/(.*)$ index.php?u=$1&rewrite=author [L,QSA]
+RewriteRule ^browse/(.*)$ index.php?o=$1&rewrite=offset [L,QSA]
+RewriteRule ^rss(/.*)?$ index.php?feed=rss$1&rewrite=feed [L,QSA]
+RewriteRule ^atom(/.*)?$ index.php?feed=atom$1&rewrite=feed [L,QSA]
+
+# Some rules to make old Pivot URLs redirect to the new PivotX URLs.  You can
+# remove this block if you are using a fresh install of PivotX, but if you are
+# upgrading from Pivot these rules will make sure that you don't loose any
+# visitors. (The rules might have to be adopted if you used non-standard
+# locations for archive files and such.)
+RewriteRule ^archives/archive_(.*)\.php index.php?a=$1 [R=301,L]
+RewriteCond %{QUERY_STRING} id=([1-9][0-9]*)
+RewriteRule ^pivot/entry.php index.php?e=%1 [R=301,L]
+RewriteCond %{QUERY_STRING} c=([^&]*)
+RewriteRule ^pivot/archive.php index.php?c=%1 [R=301,L]
+RewriteCond %{QUERY_STRING} tag=([^&]*)
+RewriteRule ^pivot/tags.php index.php?t=%1 [R=301,L]
+RewriteRule ^rss\.xml$ rss [R=301,L]
+RewriteRule ^atom\.xml$ atom [R=301,L]
+
+# Fallback for non-existing pages: Show the PivotX 404 page instead.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(([a-z0-9_-]+)(/([a-z0-9_-]*))?)$ index.php?uri=$1&rewrite=page [L,QSA]
