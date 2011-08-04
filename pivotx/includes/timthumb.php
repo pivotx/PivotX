@@ -55,7 +55,7 @@ define ('CACHE_SIZE', 1000);				// number of files to store before clearing cach
 define ('CACHE_CLEAR', 20);					// maximum number of files to delete on each cache clear
 define ('CACHE_USE', TRUE);					// use the cache files? (mostly for testing)
 define ('CACHE_MAX_AGE', 864000);			// time to cache in the browser
-define ('VERSION', '1.34');					// version number (to force a cache refresh)
+define ('VERSION', '1.35');					// version number (to force a cache refresh)
 define ('DIRECTORY_CACHE', '../' . $sites_path . 'db/cache/thumbnails/');		// cache directory
 define ('MAX_WIDTH', 1500);					// maximum image width
 define ('MAX_HEIGHT', 1500);				// maximum image height
@@ -336,14 +336,6 @@ if (file_exists ($src)) {
     // output image to browser based on mime type
     show_image ($mime_type, $canvas);
 
-    // remove image from memory
-    imagedestroy ($canvas);
-
-	// if not in cache then clear some space and generate a new file
-	clean_cache ();
-
-	die ();
-
 } else {
 
     if (strlen ($src)) {
@@ -361,7 +353,7 @@ if (file_exists ($src)) {
  * @param <type> $mime_type
  * @param <type> $image_resized 
  */
-function show_image ($mime_type, $image_resized) {
+function show_image ($mime_type, $canvas) {
 
     global $quality;
 
@@ -369,15 +361,21 @@ function show_image ($mime_type, $image_resized) {
 
 	switch ($mime_type) {
 		case 'jpg':
-			imagejpeg ($image_resized, $cache_file, $quality);
+			imagejpeg ($canvas, $cache_file, $quality);
 			break;
 
 		default:
 		case 'png':
-			imagepng ($image_resized, $cache_file, floor ($quality * 0.09));
+			imagepng ($canvas, $cache_file, floor ($quality * 0.09));
 			break;
 
 	}
+	
+    // remove image from memory
+    imagedestroy ($canvas);
+
+	// if not in cache then clear some space and generate a new file
+	clean_cache ();
 
 	show_cache_file ($mime_type);
 
@@ -641,7 +639,7 @@ function get_cache_file ($mime_type) {
 
     if (!$cache_file) {
 		// filemtime is used to make sure updated files get recached
-        $cache_file = DIRECTORY_CACHE . '/' . md5 ($_SERVER ['QUERY_STRING'] . VERSION . filemtime ($src)) . '.' . $mime_type;
+		$cache_file = DIRECTORY_CACHE . '/' . md5 ($_SERVER ['QUERY_STRING'] . VERSION . filemtime ($src) . $_SERVER['DOCUMENT_ROOT']) . '.' . $mime_type;
     }
 
     return $cache_file;
