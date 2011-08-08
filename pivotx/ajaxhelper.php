@@ -150,14 +150,14 @@ class ajaxhelper {
         // debug_printr( $_POST );
 
         foreach ($_POST as $key=>$value) {
-            
-            // If the id contains '[]' we remove it, since those were added by pivotX to 
-            // allow for multiple select, but should be stored without.
-            $key = str_replace('[]', '', $key);
-           
+
             // Skip 'function' and 'csrfcheck' as they are not settings..
             if ($key=="csrfcheck" || $key=="function" || $key=="") {
                 continue; 
+            }
+
+            if (is_array($value)) {
+                $value = implode(',', $value);
             }
 
             $PIVOTX['config']->set($key, $value);
@@ -428,6 +428,10 @@ class ajaxhelper {
             // Skip 'function' and 'csrfcheck' as they are not settings..
             if ($key=="csrfcheck" || $key=="function" || $key=="weblog" || $key=="") {
                 continue; 
+            }
+
+            if (is_array($value)) {
+                $value = implode(',', $value);
             }
 
             $PIVOTX['weblogs']->set($_POST['weblog'], $key, $value);
