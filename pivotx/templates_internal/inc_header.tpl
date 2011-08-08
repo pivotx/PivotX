@@ -15,7 +15,7 @@
 
     <!-- jquery and the likes -->
     <script src="[[$paths.jquery_url]]" type="text/javascript"></script>
-    <script src="includes/js/jquery-ui-1.8.14.custom.min.js" type="text/javascript"></script>
+    <script src="includes/js/jquery-ui-1.8.15.custom.min.js" type="text/javascript"></script>
     <script src="includes/js/jquery-plugins.js" type="text/javascript"></script>
     <script type="text/javascript">
     jQuery(document).ready(function(){
@@ -23,7 +23,7 @@
     });
     </script>
 
-    <link rel="stylesheet" href="templates_internal/ui-theme/jquery-ui-1.8.14.custom.css" type="text/css" />
+    <link rel="stylesheet" href="templates_internal/ui-theme/jquery-ui-1.8.15.custom.css" type="text/css" />
 
 
     <!-- Markitup -->
