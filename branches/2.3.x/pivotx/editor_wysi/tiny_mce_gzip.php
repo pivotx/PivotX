@@ -13,7 +13,7 @@
     // Set the error reporting to minimal.
     @error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-    $build = "3.4.3.2";
+    $build = "3.4.4";
 
     // Get input
     $plugins = explode(',', getParam("plugins", ""));
