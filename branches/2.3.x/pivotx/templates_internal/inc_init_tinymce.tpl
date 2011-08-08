@@ -23,7 +23,7 @@ tinyMCE_GZ.init({
                 "input[id|name|type|value|size|maxlength|checked|accept|src|width|height|disabled|readonly|tabindex|accesskey|onfocus|onblur|onchange|onselect]," +
                 "textarea[id|name|rows|cols|disabled|readonly|tabindex|accesskey|onfocus|onblur|onchange|onselect]," + 
                 "select[id|name|type|value|size|maxlength|checked|accept|src|width|height|disabled|readonly|tabindex|accesskey|onfocus|onblur|onchange|onselect|length|options|selectedIndex]," +
-                "iframe[src|width|height|name|align|frameborder]", 
+                "iframe[src|width|height|name|align|frameborder],audio[controls|autoplay],source[src|type]",
         theme_advanced_toolbar_location : "top",
         theme_advanced_toolbar_align : "left",
         theme_advanced_path_location : "bottom",
