@@ -20,8 +20,8 @@
 
 DEFINE('INPIVOTX', TRUE);
 
-$version = "2.3";
-$codename = "beta 2";
+$version = "2.3.0";
+$codename = "";
 $svnrevision = '$Rev$';
 
 $minrequiredphp = "5.2.0";
