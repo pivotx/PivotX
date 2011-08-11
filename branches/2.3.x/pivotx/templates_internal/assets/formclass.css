@@ -244,6 +244,8 @@ button.disabled, .buttons a.disabled, .buttons_small a.disabled {
     -webkit-box-shadow: 0px 0px 0px rgba(0,0,0,0);
     box-shadow: 0px 0px 0px rgba(0,0,0,0);
     cursor: default;
+    opacity:0.5;
+    filter:alpha(opacity=50);
 }
 button.disabled:hover, .buttons a.disabled:hover, .buttons_small a.disabled:hover {
     background-color: #EEE;

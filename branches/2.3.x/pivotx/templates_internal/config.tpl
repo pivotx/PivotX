@@ -15,7 +15,7 @@
         [[ /foreach]]
     </div>
 
-<p class="buttons">
+<p class="buttons" style="clear: both;">
     <button onclick="saveConfig();" type="button" class="disabled" id="saveButton">
         <img src="./pics/tick.png" alt=""/>
         [[t]]Save changes[[/t]]
