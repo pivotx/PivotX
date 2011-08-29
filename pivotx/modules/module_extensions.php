@@ -1076,6 +1076,8 @@ class Extensions {
                     
                     $output .= "<script type='text/javascript'>\n";
                     $output .= "jQuery(function($) {\n";
+                    $output .= "\tjQuery('#$id').html('<img src=\"". $PIVOTX['paths']['pivotx_url'] . 
+                        "pics/loadingAnimation.gif\" alt=\"\"/>');\n";
                     $output .= sprintf("\tjQuery.get('%s%s', ".
                             "function(data){ jQuery('#%s').html(data); } );\n",
                             $PIVOTX['paths']['extensions_url'],
