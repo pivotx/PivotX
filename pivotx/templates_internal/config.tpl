@@ -84,7 +84,7 @@ function saveConfig() {
         currentvalues[ key ] = updatequeue[key];
 
         if (key == 'offline_online') {
-            if (value == '1') {
+            if (updatequeue[key] == '1') {
                 $('body').removeClass('website-offline');
             }
             else {
