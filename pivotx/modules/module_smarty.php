@@ -3041,7 +3041,7 @@ function smarty_nextpage($params, &$smarty) {
     $vars = $smarty->get_template_vars();
 
     // The current page must exist/have an uid
-    if (!isset($vars['page']['uid'])) {
+    if (empty($vars['page']['uid'])) {
         debug("There is no uid for the current page.");
         return;
     }
@@ -3659,7 +3659,7 @@ function smarty_previouspage($params, &$smarty) {
     $vars = $smarty->get_template_vars();
 
     // The current page must exist/have an uid
-    if (!isset($vars['page']['uid'])) {
+    if (empty($vars['page']['uid'])) {
         debug("There is no uid for the current page.");
         return;
     }
