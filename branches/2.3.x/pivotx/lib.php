@@ -574,7 +574,7 @@ function setPaths($sites_path = ''){
     $PIVOTX['paths']['db_url'] = fixpath( $PIVOTX['paths']['pivotx_url'] . $sites_path . 'db/' );
     $PIVOTX['paths']['cache_path'] = fixpath( $PIVOTX['paths']['pivotx_path'] . $sites_path . 'db/cache/' );
 
-    $jquery_filename = getDefault( $PIVOTX['config']->get('jquery_filename'), "jquery-1.6.2.min.js");
+    $jquery_filename = getDefault( $PIVOTX['config']->get('jquery_filename'), "jquery-1.6.4.min.js");
     $PIVOTX['paths']['jquery_url'] = fixpath( $PIVOTX['paths']['pivotx_url'] . 'includes/js/' . $jquery_filename );
 
     $upload_base = getDefault($PIVOTX['config']->get('upload_path'), 'images/%year%-%month%/') ;
