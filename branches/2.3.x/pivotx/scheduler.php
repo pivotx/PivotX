@@ -167,7 +167,7 @@ function cleanCacheFolder($path) {
             cleanCacheDelete($path, $entry, $scheduler['max_age_zip']);
         } else if ( $ext=="mpc") {
             cleanCacheDelete($path, $entry, $scheduler['max_age_feed']);
-        } else if ( $ext=="jpg" || $ext=="png") {
+        } else if ( $ext=="jpg" || $ext=="png" || $ext=="timthumb") {
             cleanCacheDelete($path, $entry, $scheduler['max_age_image']);
         } else {
             cleanCacheDelete($path, $entry, $scheduler['max_age_other']);
