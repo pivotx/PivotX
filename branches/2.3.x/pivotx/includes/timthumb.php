@@ -843,8 +843,13 @@ class timthumb {
 	protected function getLocalImagePath($src){
         global $base_folder; // For PivotX files in images/
 
-		$src = preg_replace('/^\//', '', $src); //strip off the leading '/'
-               
+        // Added for PivotX: allow for base64 encoded src..
+        if ($this->is_base64_encoded($src)) {
+            $src = base64_decode($src);
+        }
+
+        $src = preg_replace('/^\//', '', $src); //strip off the leading '/'
+
         $realDocRoot = realpath($this->docRoot);  //See issue 224. Using realpath as a windows fix.
 		if(! $this->docRoot){
 			$this->debug(3, "We have no document root set, so as a last resort, lets check if the image is in the current dir and serve that.");
@@ -1233,4 +1238,14 @@ class timthumb {
 	protected function is404(){
 		return $this->is404;
 	}
+    
+	/**
+	 * Added for PivotX: Check if a given string is base64 encoded. Added for PivotX.
+	 *
+	 * @param string $str
+	 */
+	protected function is_base64_encoded($str) {   
+		return (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $str));
+	}    
+    
 }
