@@ -1,3 +1,4 @@
+/* "Tahoma" added for PivotX */
 body, td, pre {color:#000; font-family:Tahoma, Arial, Helvetica, sans-serif; font-size:12px; line-height: 17px; margin:8px; }
 body {background:#FFF;}
 body.mceForceColors {background:#FFF; color:#000;}
@@ -21,8 +22,10 @@ cite {border-bottom:1px dashed blue}
 acronym {border-bottom:1px dotted #CCC; cursor:help}
 abbr {border-bottom:1px dashed #CCC; cursor:help}
 
+/* Rule added for PivotX */
 blockquote { border-left: 5px solid #DDD; margin: 10px 10px 10px 0; padding-left: 10px; }
 
+/* Rule added for PivotX */
 pre, code {
     border: 1px solid #BBB;
     background-color: #EEE;
@@ -44,6 +47,7 @@ scrollbar-track-color:#F5F5F5;
 
 img:-moz-broken {-moz-force-broken-image-icon:1; width:24px; height:24px}
 font[face=mceinline] {font-family:inherit !important}
+*[contentEditable]:focus {outline:0}
 
 .mceItemMedia {border:1px dotted #cc0000; background-position:center; background-repeat:no-repeat; background-color:#ffffcc}
 .mceItemShockWave {background-image:url(../../img/shockwave.gif)}
