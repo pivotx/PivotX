@@ -93,7 +93,7 @@ class UploadElement {
         $os = OutputSystem::instance();
 
         $os->addCode('jquery_ui',           OutputSystem::LOC_HEADEND,'script',array('_priority'=>OutputSystem::PRI_HIGH,'
-            src'=>$pivotx_url . 'includes/js/jquery-ui-1.8.15.custom.min.js'));
+            src'=>$pivotx_url . 'includes/js/jquery-ui-1.8.16.custom.min.js'));
         $os->addCode('plupload_browserplus',OutputSystem::LOC_HEADEND,'script',array('src'=>'http://bp.yahooapis.com/2.4.21/browserplus-min.js'));
         $os->addCode('plupload_full',       OutputSystem::LOC_HEADEND,'script',array('src'=>$pivotx_url . 'includes/js/plupload/plupload.full.js'));
 
