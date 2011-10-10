@@ -743,7 +743,15 @@ function smarty_category_list($params, &$smarty) {
 
     $params = cleanParams($params);
 
-    $mycats = $PIVOTX['weblogs']->getCategories($params['weblog']);
+    // Set the categories. Either through the 'category' parameter, or through the current weblog.
+    if (!empty($params['category']) && $params['category']=="*") {
+        $mycats = $PIVOTX['categories']->getCategorynames();
+    } else if (!empty($params['category'])) {
+        $mycats = explode(",",safeString($params['category']));
+        $mycats = array_map("trim", $cats); 
+    } else {
+        $mycats = $PIVOTX['weblogs']->getCategories($params['weblog']);
+    }
 
     $modifier = $PIVOTX['parser']->modifier;
     $modifiercats = explode(",", $modifier['category']);
@@ -768,8 +776,22 @@ function smarty_category_list($params, &$smarty) {
         $only = array();
     }
 
+
+    // See if we need to add the counters.. Mysql only!!
+    if (strpos($format, '%count%')>0 && $PIVOTX['config']->get('db_model')=="mysql" ) {
+
+        $sql = new sql('mysql', $PIVOTX['config']->get('db_databasename'), $PIVOTX['config']->get('db_hostname'),
+        $PIVOTX['config']->get('db_username'), $PIVOTX['config']->get('db_password') );
+  
+        $sql->query("SELECT COUNT(category) AS count, category FROM pivotx_categories GROUP BY category");
+
+        $counters = $sql->fetch_all_rows();
+        $counters = makeValuePairs($counters, 'category', 'count');
+
+    } 
+
     if( is_array( $mycats )) {
-        
+
         // Iterate over the list, formatting output as we go.
         foreach($mycats as $cat) {
 
@@ -777,6 +799,15 @@ function smarty_category_list($params, &$smarty) {
 
             // Skip categories that no longer exists.
             if (count($catinfo) == 0) {
+                continue;
+            }
+
+            // Skip categories that fall outside 'start' or 'end', if they are set..
+            if (isset($params['start']) && ($catinfo['order'] <= $params['start']) ) {
+                continue;
+            }
+            
+            if (isset($params['end']) && ($catinfo['order'] > $params['end']) ) {
                 continue;
             }
             
@@ -799,12 +830,20 @@ function smarty_category_list($params, &$smarty) {
                 $active = "";
             }
 
+            // Set the count..
+            if (isset($counters[$cat])) {
+                $count = $counters[$cat];
+            } else {
+                $count = "-";
+            }
+
             // fix the rest of the string..
             $this_output = str_replace("%url%" , $filelink, $format);
             $this_output = str_replace("%name%" , $catinfo['name'], $this_output);
             $this_output = str_replace("%display%" , $catinfo['display'], $this_output);
             $this_output = str_replace("%internal%" , $catinfo['name'], $this_output);
             $this_output = str_replace("%active%" , $active, $this_output);
+            $this_output = str_replace("%count%" , $count, $this_output);
 
             $output .= "\n".$this_output;
         }
