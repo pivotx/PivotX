@@ -217,6 +217,12 @@ class timthumb {
 		
 		$this->myHost = preg_replace('/^www\./i', '', $_SERVER['HTTP_HOST']);
 		$this->src = $this->param('src');
+
+		// Added for PivotX: allow for base64 encoded src..
+		if ($this->is_base64_encoded($src)) {
+		    $this->src = base64_decode($this->param('src'));
+		}
+
 		$this->url = parse_url($this->src);
 		if(strlen($this->src) <= 3){
 			$this->error("No image specified");
@@ -842,11 +848,6 @@ class timthumb {
 	}
 	protected function getLocalImagePath($src){
         global $base_folder; // For PivotX files in images/
-
-        // Added for PivotX: allow for base64 encoded src..
-        if ($this->is_base64_encoded($src)) {
-            $src = base64_decode($src);
-        }
 
         $src = preg_replace('/^\//', '', $src); //strip off the leading '/'
 
