@@ -133,6 +133,9 @@ function gd_crop($thumb) {
             imagepng($dst, $thumbfilename, ceil( $PIVOTX['image']['qual'] / 10 ));
         }
 
+        // Ensure the created thumb has the correct file permission.
+        chmodFile($thumbfilename);
+
         ImageDestroy($dst);
 
     } else {
