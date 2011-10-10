@@ -776,20 +776,6 @@ function smarty_category_list($params, &$smarty) {
         $only = array();
     }
 
-
-    // See if we need to add the counters.. Mysql only!!
-    if (strpos($format, '%count%')>0 && $PIVOTX['config']->get('db_model')=="mysql" ) {
-
-        $sql = new sql('mysql', $PIVOTX['config']->get('db_databasename'), $PIVOTX['config']->get('db_hostname'),
-        $PIVOTX['config']->get('db_username'), $PIVOTX['config']->get('db_password') );
-  
-        $sql->query("SELECT COUNT(category) AS count, category FROM pivotx_categories GROUP BY category");
-
-        $counters = $sql->fetch_all_rows();
-        $counters = makeValuePairs($counters, 'category', 'count');
-
-    } 
-
     if( is_array( $mycats )) {
 
         // Iterate over the list, formatting output as we go.
@@ -830,21 +816,16 @@ function smarty_category_list($params, &$smarty) {
                 $active = "";
             }
 
-            // Set the count..
-            if (isset($counters[$cat])) {
-                $count = $counters[$cat];
-            } else {
-                $count = "-";
-            }
-
             // fix the rest of the string..
             $this_output = str_replace("%url%" , $filelink, $format);
             $this_output = str_replace("%name%" , $catinfo['name'], $this_output);
             $this_output = str_replace("%display%" , $catinfo['display'], $this_output);
             $this_output = str_replace("%internal%" , $catinfo['name'], $this_output);
             $this_output = str_replace("%active%" , $active, $this_output);
-            $this_output = str_replace("%count%" , $count, $this_output);
-
+            if (strpos($format, '%count%')>0) {
+               $this_output = str_replace("%count%", $PIVOTX['db']->get_entries_count(array('cats' => $catinfo['name'])), $this_output);
+            }      
+            
             $output .= "\n".$this_output;
         }
     }
