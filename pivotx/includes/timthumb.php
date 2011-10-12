@@ -219,7 +219,7 @@ class timthumb {
 		$this->src = $this->param('src');
 
 		// Added for PivotX: allow for base64 encoded src..
-		if ($this->is_base64_encoded($src)) {
+		if ($this->is_base64_encoded($this->src)) {
 		    $this->src = base64_decode($this->param('src'));
 		}
 
