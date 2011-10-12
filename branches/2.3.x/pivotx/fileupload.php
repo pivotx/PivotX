@@ -231,6 +231,8 @@ if (strpos($contentType, "multipart") !== false) {
 // Ensure the uploaded file has the correct file permission.
 chmodFile($targetDir . DIRECTORY_SEPARATOR . $fileName);
 
+// FIXME: Add auto_thumbnail 
+
 // Return JSON-RPC response
 die('{"jsonrpc" : "2.0", "result" : null, "id" : "id"}');
 ?>
