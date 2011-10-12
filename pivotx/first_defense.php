@@ -5,6 +5,11 @@
  * This first version helps battle referer spam,
  * comment-spam and trackback-spam.
  *
+ * The phrases/words that is blocked is listed in the file
+ * db/blocked_phrases.txt - one phrase per line. If the 
+ * phrase is followed by a star, it's only use for blocking
+ * referer spam.
+ *
  */
 
 // ---------------------------------------------------------------------------
@@ -36,17 +41,10 @@ function block_refererspam() {
 
     // load blockarray, if needed.
     if (!isset($blockArray)) {
-
         $blockArray = array();
-
-        if (file_exists(dirname(__FILE__)."/db/ignored_domains.txt.php"))  {
-            $blockArray = array_merge($blockArray, file(dirname(__FILE__)."/db/ignored_domains.txt.php"));
+        if (file_exists(dirname(__FILE__)."/db/blocked_phrases.txt"))  {
+            $blockArray = array_merge($blockArray, file(dirname(__FILE__)."/db/blocked_phrases.txt"));
         }
-
-        if (file_exists(dirname(__FILE__)."/db/ignored_global.txt.php"))  {
-            $blockArray = array_merge($blockArray, file(dirname(__FILE__)."/db/ignored_global.txt.php"));
-        }
-
     }
 
     if (isset($blockArray)) {
@@ -92,20 +90,11 @@ function block_postedspam() {
 
     // load blockarray, if needed.
     if (!isset($blockArray)) {
-
         $blockArray = array();
-
-        if (file_exists(dirname(__FILE__)."/db/ignored_domains.txt.php"))  {
-            $blockArray = array_merge($blockArray, file(dirname(__FILE__)."/db/ignored_domains.txt.php"));
+        if (file_exists(dirname(__FILE__)."/db/blocked_phrases.txt"))  {
+            $blockArray = array_merge($blockArray, file(dirname(__FILE__)."/db/blocked_phrases.txt"));
         }
-
-        if (file_exists(dirname(__FILE__)."/db/ignored_global.txt.php"))  {
-            $blockArray = array_merge($blockArray, file(dirname(__FILE__)."/db/ignored_global.txt.php"));
-        }
-
     }
-
-
 
     if (isset($blockArray)) {
 

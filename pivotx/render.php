@@ -18,6 +18,13 @@ DEFINE('PIVOTX_INWEBLOG', TRUE);
    lib.php to set $pivotx_path? */
 $curr_dir = dirname(__FILE__); 
 
+// First line defense.
+if (file_exists("$curr_dir/first_defense.php")) {
+    include_once("$curr_dir/first_defense.php");
+    block_refererspam();
+    block_postedspam();
+}
+
 /**
  * Check if the website is offline. Falls thru if user is allowed to see it anyway.
  */
