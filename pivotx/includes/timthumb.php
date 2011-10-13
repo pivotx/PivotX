@@ -11,6 +11,9 @@
  * http://www.binarymoon.co.uk/projects/timthumb/
  */
 
+// Disabling all warnings from PHP
+error_reporting(0);
+
 // Added for PivotX: include lib.php, to get the correct paths.
 include_once "../lib.php";
 
@@ -18,13 +21,14 @@ include_once "../lib.php";
 $upload_folder = 'images';
 
 // Added for PivotX: Set base folder taking multisite into account
-$multisite = new MultiSite();
-if ($multisite->isActive()) {
-    $sites_path = $multisite->getPath();
-    $base_folder = 'pivotx/' . $sites_path . $upload_folder;
-} else {
-    $sites_path = '';
-    $base_folder = $upload_folder;
+$sites_path  = '';
+$base_folder = $upload_folder;
+if (class_exists('MultiSite')) {
+    $multisite = new MultiSite();
+    if ($multisite->isActive()) {
+        $sites_path  = $multisite->getPath();
+        $base_folder = 'pivotx/' . $sites_path . $upload_folder;
+    }
 }
 
 // Set the cache folder.  
