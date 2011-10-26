@@ -858,6 +858,13 @@ class Extensions {
 
         $my_hooks = $this->getHooks('configuration_add');
 
+        // Sort the hooks array based on function name
+        $sort_arr = array();
+        foreach ($my_hooks as $hook) {
+            $sort_arr[] = strtolower($hook['parameters'][0]);
+        }
+        array_multisort($sort_arr, $my_hooks);
+
         foreach($my_hooks as $hook) {
 
             if (function_exists($hook['parameters'][0])) {
