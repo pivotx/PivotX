@@ -33,7 +33,7 @@ class pivotx_hashcash
     protected $debug = true;
 
     const MAX_KEY_RETENTION = 3600;     /* maximum age of the keys we keep */
-    const MAX_KEYS = 60;                /* maximum number of keys we keep */
+    const MAX_KEYS = 200;               /* maximum number of keys we keep */
     const MAX_KEYFILESIZE = 524288;     /* maxmum keyfile size, 512kb */
     const MAX_LOGFILESIZE = 524288;     /* maximum logfile size, 512kb */
 
