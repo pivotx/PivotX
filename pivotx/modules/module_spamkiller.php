@@ -30,10 +30,11 @@ class pivotx_hashcash
     protected $current_key = false;
     protected $current_name = false;
 
-    protected $debug = true;
+    protected $debug = false;
 
     const MAX_KEY_RETENTION = 3600;     /* maximum age of the keys we keep */
-    const MAX_KEYS = 200;               /* maximum number of keys we keep */
+    const MAX_KEY_PER_IP = 5;           /* maximum keys per ip we keep */
+    const MAX_KEYS = 200;               /* maximum number of keys we keep (approx. 280 bytes per key) */
     const MAX_KEYFILESIZE = 524288;     /* maxmum keyfile size, 512kb */
     const MAX_LOGFILESIZE = 524288;     /* maximum logfile size, 512kb */
 
@@ -359,6 +360,26 @@ class pivotx_hashcash
 
         if (!is_array(self::$keys)) {
             self::$keys = array();
+        }
+
+        // check our ip limit
+        // @todo Won't work with reverse proxies!
+        $indexes = array();
+        $cnt     = count(self::$keys);
+        for($i=0; $i < $cnt; $i++) {
+            if (self::$keys[$i]['remote_addr'] == $_SERVER['REMOTE_ADDR']) {
+                $indexes[] = $i;
+            }
+        }
+        if (count($indexes)+1 > self::MAX_KEY_PER_IP) {
+            $this->logpost('Ip "'.$_SERVER['REMOTE_ADDR'].'" has too many outstanding hashcashes (#'.count($indexes).'), trimming');
+
+            for($idx=count($indexes)-1; $idx >= self::MAX_KEY_PER_IP-1; $idx--) {
+                array_splice(self::$keys,$indexes[$idx],1);
+            }
+            array_splice($indexes,self::MAX_KEY_PER_IP-1);
+
+            //$this->logpost('Ip "'.$_SERVER['REMOTE_ADDR'].'" has '.count($indexes).' outstanding hashcashes');
         }
 
         // newer keys are always in the front of the array
