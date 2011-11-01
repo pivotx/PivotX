@@ -7,6 +7,7 @@
 
     <link rel="shortcut icon" href="[[ $paths.pivotx_url ]]pics/favicon.ico" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="robots" content="noindex, nofollow" />
 
     <title>PivotX &raquo;
