@@ -1225,6 +1225,9 @@ function smarty_comments($params, $format, &$smarty) {
                     $PIVOTX['extensions']->executeHook('comment_after_parse', $commentinfo);
                     $this_tag = $commentinfo['format'];
 
+                    // Remove any unused formatting tags.
+                    $this_tag = preg_replace("/%[^%]+%/", "", $this_tag);
+
                     // Outputting according to order:
                     if ($order == 'ascending') {
                         $output .= $this_tag."\n";
