@@ -17,7 +17,7 @@
 
 <table class='formclass tabular' cellspacing='0' style='margin: 8px 0px; width: 98%;'>
 <tr>
-<th colspan="4">[[ $item.description ]] [[if $item.sortorder]]([[t]]order[[/t]] [[ $item.sortorder ]])[[/if]]</th>
+<th colspan="4">[[ $item.description ]] [[if $item.sortorder]](&#8470; [[ $key ]] - [[t]]order[[/t]] [[ $item.sortorder ]])[[/if]]</th>
 <th class="toplink"><a href="#logo" title="[[t]]back to top[[/t]]">&uArr;</a></th></tr>
 [[ foreach from=$item.pages key=pagekey item=page name=loop ]]
     <tr class="[[cycle values='odd, even' name=$key ]]">
