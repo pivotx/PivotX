@@ -81,7 +81,9 @@ class OutputSystem {
                 'src' => $PIVOTX['paths']['jquery_url'],
                 '_priority' => self::PRI_HIGH-1
             ),
-            'jQuery.noConflict();'
+            '</script>'."\n".
+            '<script type="text/javascript">'."\n".
+            'jQuery.noConflict();'."\n"
         );
     }
 
