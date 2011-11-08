@@ -205,7 +205,7 @@ jQuery(function($){
 
 [[ else ]]
 
-    [[t]]You're not allowed to upload/duplicate files in this folder. Use your FTP program to do this.[[/t]]
+    <p>[[t]]You're not allowed to upload/duplicate files in this folder. Use your FTP program to do this.[[/t]]</p>
 
 [[ /if ]]
 
