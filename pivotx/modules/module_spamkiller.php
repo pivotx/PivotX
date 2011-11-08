@@ -34,9 +34,9 @@ class pivotx_hashcash
 
     const MAX_KEY_RETENTION = 3600;     /* maximum age of the keys we keep */
     const MAX_KEY_PER_IP = 5;           /* maximum keys per ip we keep */
-    const MAX_KEYS = 200;               /* maximum number of keys we keep (approx. 280 bytes per key) */
+    const MAX_KEYS = 400;               /* maximum number of keys we keep (approx. 280 bytes per key) */
     const MAX_KEYFILESIZE = 524288;     /* maxmum keyfile size, 512kb */
-    const MAX_LOGFILESIZE = 524288;     /* maximum logfile size, 512kb */
+    const MAX_LOGFILESIZE = 1049600;    /* maximum logfile size, 1024kb */
 
     /**
      * Taken from WP-HashCash
@@ -289,7 +289,7 @@ class pivotx_hashcash
     {
         global $PIVOTX;
 
-        $fname = $PIVOTX['paths']['db_path'].'spamkiller.log';
+        $fname = $PIVOTX['paths']['db_path'].'spamkiller.'.date("Y-m").'.log';
 
         $html = '';
 
@@ -328,10 +328,12 @@ class pivotx_hashcash
     {
         global $PIVOTX;
 
-        $fname = $PIVOTX['paths']['db_path'].'spamkiller.log';
+        $fname = $PIVOTX['paths']['db_path'].'spamkiller.'.date("Y-m").'.log';
         if (is_file($fname) && (filesize($fname) > self::MAX_LOGFILESIZE)) {
             @unlink($fname);
         }
+
+        $message .= ' {'.count(self::$keys).'/'.self::MAX_KEYS.'}';
 
         $msg = date('Y-m-d H:i:s').' ['.$_SERVER['REMOTE_ADDR'].'] '.$message.' ('.$_SERVER['HTTP_USER_AGENT'].')';
 
