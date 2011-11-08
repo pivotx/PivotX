@@ -208,18 +208,18 @@ jQuery(function($){
     [[t]]You're not allowed to upload/duplicate files in this folder. Use your FTP program to do this.[[/t]]
 
 [[ /if ]]
-        [[assign var='prepath' value=$paths.upload_base_path]]
-        [[if $smarty.get.page=='fileexplore']]
-            [[assign var='prepath' value=$paths.db_path]]
-        [[elseif $smarty.get.page=='homeexplore']]
-            [[assign var='prepath' value=$paths.home_path]]
-        [[elseif $smarty.get.page=='templates']]
-            [[assign var='prepath' value=$paths.templates_path]]
-        [[/if]]
-        [[upload_create_button browse_button='upload-button' container='upload-container' progress_selector='#divFileProgressContainer' 
-            filters='any' upload_type='files' path=$prepath|cat:$additionalpath upload_dialog='#uploader']]
-    </div>
-</div>
+
+[[assign var='prepath' value=$paths.upload_base_path]]
+[[if $smarty.get.page=='fileexplore']]
+    [[assign var='prepath' value=$paths.db_path]]
+[[elseif $smarty.get.page=='homeexplore']]
+    [[assign var='prepath' value=$paths.home_path]]
+[[elseif $smarty.get.page=='templates']]
+    [[assign var='prepath' value=$paths.templates_path]]
+[[/if]]
+[[upload_create_button browse_button='upload-button' container='upload-container' 
+    progress_selector='#divFileProgressContainer' filters='any' 
+    upload_type='files' path=$prepath|cat:$additionalpath upload_dialog='#uploader']]
 
 <div id="uploader">
     <div class="files default">
