@@ -58,21 +58,8 @@ if (isset($_GET['path']) && ($_GET['path'] != '')) {
     $path = str_replace('..\\','',$path);
     $path = str_replace('..'.DIRECTORY_SEPARATOR,'',$path);
 
-    $cpath = $path;
-    if (substr($cpath,-1) != '/') {
-        $cpath .= '/';
-    }
-
     // Don't ever allow uploading outside the images, templates and db folders.
-    $allowedpaths = array($PIVOTX['paths']['templates_path'], $PIVOTX['paths']['upload_base_path'], $PIVOTX['paths']['db_path']);
-    $allowed = false;
-    foreach ($allowedpaths as $allowedpath) {
-        if (strpos($cpath, $allowedpath) === 0) {
-            $allowed = true;
-            break;
-        }
-    }
-    if (!$allowed) {
+    if (!uploadAllowed($path)) {
         die('{"jsonrpc" : "2.0", "error" : {"code": 104, "message": "Uploading to illegal directory."}, "id" : "id"}');
     }
 
