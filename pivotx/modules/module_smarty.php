@@ -5521,6 +5521,10 @@ function pivotxCacheHandler($action, &$smarty_obj, &$cache_content, $tpl_file=nu
                 
                 // Execute the hooks, if present.
                 $PIVOTX['extensions']->executeHook('after_parse', $html);
+
+                // We need to rewrite before we write to the cache
+                $os   = OutputSystem::instance();
+                $html = $os->rewriteHtml($html);
                 
                 // If speedy_frontend is enabled, we compress our output here.
                 if ($PIVOTX['config']->get('minify_frontend')) {
