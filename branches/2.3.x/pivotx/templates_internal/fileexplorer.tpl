@@ -160,7 +160,7 @@ jQuery(function($){
     </td>
         
     <td class="buttons_small">
-        [[ if $writable && $user.userlevel>=2  ]]
+        [[ if $uploadallowed && $user.userlevel>=2  ]]
         <a href="#"  onclick="return askme('index.php?page=[[$currentpage]]&amp;file=[[ $item.path|escape:"url" ]]', '[[t esacpe=js]]Copy to file name?[[/t]]');">
         <img src='pics/add.png' alt='' />
         [[t]]Duplicate[[/t]]
@@ -179,7 +179,7 @@ jQuery(function($){
 
 
 
-[[ if $writable ]]
+[[ if $uploadallowed ]]
 
     <div id="upload-container">
     <p class="buttons">

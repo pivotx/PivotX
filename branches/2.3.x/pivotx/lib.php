@@ -1314,8 +1314,9 @@ function getFiles($basepath, $additionalpath, $imageurl) {
     $PIVOTX['template']->assign('imageurl', fixpath($imageurl."/".$additionalpath."/", true));
     $PIVOTX['template']->assign('imagepath', str_replace("//", "/", $basepath.$additionalpath."/"));
     $PIVOTX['template']->assign('writable', is_writable($path) );
-
+    $PIVOTX['template']->assign('uploadallowed', uploadAllowed($path) );
 }
+
 
 /**
  * Do basic operations for the file explorers: create files/folder,
@@ -2798,8 +2799,6 @@ function isUrl($url) {
 }
 
 
-
-
 /**
  * Gets the extension (if any) of a filename.
  *
@@ -2851,6 +2850,37 @@ function makeThumbname($filename) {
     }
 
     return $thumbname;
+}
+
+
+/**
+ * Checks whether uploading files to this directory is allowed.
+ *
+ * PivotX should never ever allow uploading outside the images, templates and 
+ * db folders.
+ *
+ * @param string $url
+ * @return boolean
+ */
+function uploadAllowed($path) {
+    global $PIVOTX;
+    // Ensure that the path ends with a slash (since all PivotX paths do so).
+    if (substr($path,-1) != '/') {
+        $path .= '/';
+    }
+    $allowedpaths = array(
+        $PIVOTX['paths']['templates_path'], 
+        $PIVOTX['paths']['upload_base_path'], 
+        $PIVOTX['paths']['db_path']
+    );
+    $allowed = false;
+    foreach ($allowedpaths as $allowedpath) {
+        if (strpos($path, $allowedpath) === 0) {
+            $allowed = true;
+            break;
+        }
+    }
+    return $allowed;
 }
 
 
