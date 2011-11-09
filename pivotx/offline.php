@@ -163,15 +163,29 @@ class PivotxOffline {
 
         $config = self::getOfflineConfiguration($PIVOTX['paths']['db_path']);
 
+        $clear_cache = false;
+
         if ($key == 'online') {
             if ($value == '') {
                 $value = false;
             }
             else {
                 $value = true;
+
+                if (!$config['online']) {
+                    $clear_cache = true;
+                }
             }
         }
         $config[$key] = $value;
+
+        if ($clear_cache) {
+            $deletecounter = wipeSmartyCache();
+
+            $message = sprintf(__('deleted %s cache files in %s seconds.'), $deletecounter, timeTaken() );
+
+            debug($message);
+        }
 
         self::writeConfiguration($PIVOTX['paths']['db_path'],$config);
     }
