@@ -58,4 +58,4 @@ RewriteRule ^atom\.xml$ atom [R=301,L]
 # Fallback for non-existing pages: Show the PivotX 404 page instead.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(([a-z0-9_-]+)(/([a-z0-9_-]*))?)$ index.php?uri=$1&rewrite=page [L,QSA]
+RewriteRule ^(([a-zA-Z0-9_-]+)(/([a-zA-Z0-9_-]*))?)$ index.php?uri=$1&rewrite=page [L,QSA]
