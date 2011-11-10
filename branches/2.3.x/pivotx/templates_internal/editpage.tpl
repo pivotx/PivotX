@@ -2,7 +2,7 @@
 
 <div id="container">
 
-    <form id="form1" name="form1" method="post" action="index.php?page=page&amp;uid=[[ $page.uid ]]" >
+    <form id="form1" name="form1" method="post" action="index.php?page=page&amp;uid=[[ $page.uid ]]" class="edit-page">
 
     <input type="hidden" name="f_image" id="f_image" value="" />
     <input type="hidden" name="f_hasthumb" id="f_hasthumb" value="" />
@@ -12,7 +12,7 @@
         <div class="leftcolumn">
 
             <table border="0" cellspacing="0" class="formclass" width="650">
-                <tr>
+                <tr class="field-title-and-uri">
                     <td width="140"><label><strong>[[t]]Title[[/t]]:</strong></label></td>
                     <td width="510"><input id="title" name="title" type="text" value="[[ $page.title|escape ]]" class="xl lesswide"
                     [[if $page.uid==0]]onkeyup="setSafename('title','uri','permalink');" onchange="setSafename('title','uri','permalink');"[[/if]] />
@@ -26,24 +26,23 @@
                 </tr>
             
 
-                <tr id="permalink-edit">
+                <tr id="permalink-edit" class="field-title-and-uri">
                     <td><label><strong>[[t]]Internal Name[[/t]]:</strong></label></td>
                     <td><input id="uri" name="uri" type="text" value="[[ $page.uri ]]" class="lesswide"
                     onkeyup="setSafename('uri','uri','permalink');" onchange="setSafename('uri','uri','permalink');" />
                     </td>
                 </tr>
-
                     
                 [[ if $config.hide_subtitle ]]
                 <input name="subtitle" type="hidden" value="[[ $page.subtitle ]]" />
                 [[ else]]
-                <tr>
+                <tr class="field-subtitle">
                     <td><strong>[[t]]Subtitle[[/t]]:</strong></td>
                     <td><input name="subtitle" type="text" value="[[ $page.subtitle|escape ]]" /></td>
                 </tr>
                 [[/if]]    
 
-                 <tr>
+                 <tr class="field-template">
                         <td valign="top"><strong>[[t]]Template[[/t]]:</strong></td>
                         <td>
                             <select name="template">
@@ -60,22 +59,25 @@
 
             [[ hook name="page-introduction-before" value=$page ]]
 
-            <p><strong>[[t]]Introduction[[/t]]:</strong></p>
-            <textarea name="introduction" id="introduction" class="Editor" rows='50'
-                cols='4'>[[ $page.introduction|escape:html ]]</textarea>
+            <div class="field-introduction">
+                <p><strong>[[t]]Introduction[[/t]]:</strong></p>
+                <textarea name="introduction" id="introduction" class="Editor" rows='50'
+                    cols='4'>[[ $page.introduction|escape:html ]]</textarea>
+            </div>
     
             [[ hook name="page-body-before" value=$page ]]
 
-            <p><strong>[[t]]Body[[/t]]:</strong></p>
-            <textarea name="body" id="body" class="Editor" rows='50'
-                cols='4'>[[ $page.body|escape:html ]]</textarea>
+            <div class="field-body">
+                <p><strong>[[t]]Body[[/t]]:</strong></p>
+                <textarea name="body" id="body" class="Editor" rows='50'
+                    cols='4'>[[ $page.body|escape:html ]]</textarea>
 
-            <br />
+                <br />
+            </div>
 
             [[ hook name="page-keywords-before" value=$page ]]
 
-            
-            <table border="0" cellspacing="0" class="formclass" width="650">
+            <table border="0" cellspacing="0" class="formclass field-keywords" width="650">
                 <tr>
                     <td width="140"><strong>[[t]]Keywords[[/t]] / [[t]]Tags[[/t]]:</strong></td>
                     <td width="510">
@@ -139,26 +141,26 @@
         <div class="rightcolumn">
 
             <table border="0" cellpadding="0" class="formclass">
-                <tr>
+                <tr class="meta-buttons meta-buttons-right">
                     <td colspan="2" valign="top">
 
                         <p><strong>[[t]]Post or Preview[[/t]]:<strong></p>
 
                         <p class="buttons" style="margin-left: -2px; margin-right: -4px; height: 70px !important;">
                         
-                            <button type="submit" class="positive" onclick="clearOnUnload();">
+                            <button type="submit" class="positive button-post" onclick="clearOnUnload();">
                                 <img src="./pics/tick.png" alt=""/>
                                 [[t]]Post Page[[/t]]
                             </button>
 
-                            <button type="button" onclick="openPagePreview();">
+                            <button type="button" onclick="openPagePreview();" class="button-preview">
                                 <img src="./pics/zoom.png" alt=""/>
                                 [[t]]Preview[[/t]]
                             </button>
 
                             <br />
                             
-                            <button type="button" class="positive" onclick="savePageAndContinue();" style="margin-top: 4px;">
+                            <button type="button" class="positive button-post-and-continue" onclick="savePageAndContinue();" style="margin-top: 4px;">
                                 <img src="./pics/arrow_rotate_clockwise.png" alt=""/>
                                 [[t]]Post and Continue Editing[[/t]]
                             </button>
@@ -171,10 +173,8 @@
                         
                     </td>
                     </tr>
-                    </tr>
                     [[ hook name="page-chapter-before" value=$page ]]
-                    <tr>
-                    <tr>
+                    <tr class="field-chapter">
                         <td valign="top"><strong>[[t]]Chapter[[/t]]:</strong></td>
                         <td>
                             <select name="chapter" style="width: 120px;">
@@ -188,11 +188,11 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
+                <tr class="field-order">
                     <td><strong>[[t]]Order[[/t]]:</strong></td>
                     <td><input name="sortorder" id="sortorder" type="text" value="[[ $page.sortorder ]]" /></td>
                 </tr>
-                <tr>
+                <tr class="field-status">
                     <td><strong>[[t]]Post Status[[/t]]:</strong></td>
                     <td><select name="status">
                         <option value="publish" [[ if $page.status=="publish" ]]selected="selected"[[/if]] >[[t]]Publish[[/t]]</option>
@@ -200,7 +200,7 @@
                         <option value="hold" [[ if $page.status=="hold" ]]selected="selected"[[/if]] >[[t]]Hold[[/t]]</option>
                     </select></td>
                 </tr>
-                <tr>
+                <tr class="field-publish">
                     <td colspan="2"><p><strong>[[t]]Publish on[[/t]]:</strong></p>
                         <input name="publish_date1" type="text" class='date-picker input' id="publish_date1"
                         value="[[ date date=$page.publish_date format='%day%-%month%-%year%' ]]" size="15" />
@@ -209,7 +209,7 @@
                     </td>
                 </tr>
                 [[* 
-                <tr>
+                <tr class="field-allow_comments">
                     <td colspan="2">
                         <table border="0" cellpadding="0" cellspacing="0">
                             <tr>
@@ -228,22 +228,22 @@
                             </td>
                         </tr>
                 *]]
-                        <tr>
+                        <tr class="field-date">
                             <td colspan="2"> <hr size="1" noshade="noshade" /></td>
                         </tr>
-                        <tr>
+                        <tr class="field-date">
                             <td colspan="2"><p><strong>[[t]]Created on[[/t]]:
                             </strong>
                         </p>
-                        <input name="date1" id="date1" type="text" class='input date-picker'
+                        <input name="date1" id="date1" type="text" class='input date-picker field-date'
                         value="[[ date date=$page.date format='%day%-%month%-%year%' ]]" size="15" />
-                        <input name="date2" id="date2" type="text" class='input'
+                        <input name="date2" id="date2" type="text" class='input field-date'
                         value="[[ date date=$page.date format='%hour24%-%minute%' ]]" size="7" />
                     </td>
                 </tr>
 
 
-                <tr>
+                <tr class="field-edit_date">
                     <td colspan="2"><p><strong>[[t]]Last edited on[[/t]]:</strong></p>
                         <input name="edit_date1" type="text" class='input' readonly='readonly'
                         value="[[ date date=$page.edit_date format='%day%-%month%-%year%' ]]" size="15" />
@@ -251,7 +251,7 @@
                         value="[[ date date=$page.edit_date format='%hour24%-%minute%' ]]" size="7" />
                     </td>
                 </tr>
-                <tr>
+                <tr class="field-author">
                     <td><strong>[[t]]Author[[/t]]:</strong></td>
                     <td>
                         [[ if $user.userlevel >= 4 ]]
@@ -267,7 +267,7 @@
                         [[/if]]
                     </td>
                 </tr>
-                <tr>
+                <tr class="field-code">
                     <td><strong>[[t]]Code[[/t]]:</strong></td>
                     <td><input name="code" type="hidden" value="[[ $page.uid ]]" id="uid" />[[ $page.uid ]]</td>
                 </tr>
@@ -283,24 +283,24 @@
 
         <div class="cleaner">&nbsp;</div>
 
-            <p class="buttons">
-                <button type="submit" class="positive" onclick="clearOnUnload();">
+            <p class="buttons meta-buttons meta-buttons-bottom">
+                <button type="submit" class="positive button-post" onclick="clearOnUnload();">
                     <img src="./pics/tick.png" alt=""/>
                     [[t]]Post Page[[/t]]
                 </button>
                 
-                <button type="button" class="positive" onclick="savePageAndContinue();">
+                <button type="button" class="positive button-post-and-continue" onclick="savePageAndContinue();">
                     <img src="./pics/arrow_rotate_clockwise.png" alt=""/>
                     [[t]]Post and Continue Editing[[/t]]
                 </button>
 
-                <button type="button" onclick="openPagePreview();">
+                <button type="button" onclick="openPagePreview();" class="button-preview">
                     <img src="./pics/zoom.png" alt=""/>
                 [[t]]Preview[[/t]]
                 </button>
 
                 [[ if $page.uid ]]
-                <button type="button" class="negative" style="margin-left: 30px;" onclick="deletePage('[[t escape=js]]Are you sure you wish to delete this page?[[/t]]');">
+                <button type="button" class="negative button-delete" style="margin-left: 30px;" onclick="deletePage('[[t escape=js]]Are you sure you wish to delete this page?[[/t]]');">
                     <img src="./pics/delete.png" alt=""/>
                     [[t]]Delete page[[/t]]
                 </button>
