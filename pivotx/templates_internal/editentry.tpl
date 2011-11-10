@@ -2,7 +2,7 @@
 
 <div id="container">
 
-    <form id="form1" name="form1" method="post" action="index.php?page=entry&amp;uid=[[ $entry.code ]]" >
+    <form id="form1" name="form1" method="post" action="index.php?page=entry&amp;uid=[[ $entry.code ]]" class="edit-entry">
 
     <input type="hidden" name="f_image" id="f_image" value="" />
     <input type="hidden" name="f_hasthumb" id="f_hasthumb" value="" />
@@ -12,7 +12,7 @@
         <div class="leftcolumn">
 
             <table border="0" cellspacing="0" class="formclass" width="650">
-                <tr>
+                <tr class="field-title-and-uri">
                     <td width="140"><label><strong>[[t]]Title[[/t]]:</strong></label></td>
                     <td width="510"><input id="title" name="title" type="text" value="[[ $entry.title|escape ]]" class="xl lesswide"
                     [[if $entry.uid==0]]onkeyup="setSafename('title','uri','permalink');" onchange="setSafename('title','uri','permalink');"[[/if]] />
@@ -27,7 +27,7 @@
                     </td>
                 </tr>
                     
-                <tr id="permalink-edit">
+                <tr id="permalink-edit" class="field-title-andu-uri">
                     <td><label><strong>[[t]]Internal Name[[/t]]:</strong></label></td>
                     <td><input id="uri" name="uri" type="text" value="[[ $entry.uri ]]" class="lesswide"
                         onkeyup="setSafename('uri','uri','permalink');" onchange="setSafename('uri','uri','permalink');" />
@@ -37,7 +37,7 @@
                 [[ if $config.hide_subtitle ]]
                 <input name="subtitle" type="hidden" value="[[ $entry.subtitle ]]" />
                 [[ else]]
-                <tr>
+                <tr class="field-subtitle">
                     <td><strong>[[t]]Subtitle[[/t]]:</strong></td>
                     <td><input name="subtitle" type="text" value="[[ $entry.subtitle|escape ]]" /></td>
                 </tr>
@@ -47,22 +47,26 @@
 
             [[ hook name="entry-introduction-before" value=$entry ]]
 
-            <p><strong>[[t]]Introduction[[/t]]:</strong></p>
-            <textarea name="introduction" id="introduction" class="Editor" rows='50'
-                cols='4'>[[ $entry.introduction|escape:html ]]</textarea>
+            <div class="field-introduction">
+                <p><strong>[[t]]Introduction[[/t]]:</strong></p>
+                <textarea name="introduction" id="introduction" class="Editor" rows='50'
+                    cols='4'>[[ $entry.introduction|escape:html ]]</textarea>
+            </div>
     
             [[ hook name="entry-body-before" value=$entry ]]
 
-            <p><strong>[[t]]Body[[/t]]:</strong></p>
-            <textarea name="body" id="body" class="Editor" rows='50'
-                cols='4'>[[ $entry.body|escape:html ]]</textarea>
+            <div class="field-body">
+                <p><strong>[[t]]Body[[/t]]:</strong></p>
+                <textarea name="body" id="body" class="Editor" rows='50'
+                    cols='4'>[[ $entry.body|escape:html ]]</textarea>
 
-            <br />
+                <br />
+            </div>
 
             [[ hook name="entry-keywords-before" value=$entry ]]
 
             <table border="0" cellspacing="0" class="formclass" width="650">
-                <tr>
+                <tr class="field-keywords">
                     <td width="140"><strong>[[t]]Keywords[[/t]] / [[t]]Tags[[/t]]:</strong></td>
                     <td width="510">
                         <input name="keywords" id="keywords" type="text" value="[[ $entry.keywords|escape ]]" />
@@ -71,11 +75,11 @@
                     </td>
                 </tr>
                 [[ if $config.show_via_fields ]]
-                <tr>
+                <tr class="field-vialink">
                     <td><strong>[[t]]Via Link[[/t]]:</strong></td>
                     <td><input name="vialink" type="text" value="[[ $entry.vialink ]]" /></td>
                 </tr>
-                <tr>
+                <tr class="field-viatitle">
                     <td><strong>[[t]]Via Title[[/t]]:</strong></td>
                     <td><input name="viatitle" type="text" value="[[ $entry.viatitle|escape ]]" /></td>
                 </tr>
@@ -83,7 +87,7 @@
                         <input name="vialink" type="hidden" value="[[ $entry.vialink ]]" />
                         <input name="viatitle" type="hidden" value="[[ $entry.viatitle|escape ]]" />
                 [[/if]]
-                <tr>
+                <tr class="field-trackback">
                     <td valign="top"><strong>[[t]]Trackback Ping[[/t]]: </strong></td>
                     <td><textarea name="tb_url" id="tb_url" class="resizable" style="width:500px; height: 40px;" cols='50' rows='4'>[[ $entry.tb_url ]]</textarea></td>
                 </tr>
@@ -140,26 +144,26 @@
         <div class="rightcolumn">
 
             <table border="0" cellpadding="0" class="formclass">
-                <tr>
+                <tr class="meta-buttons meta-buttons-right">
                     <td colspan="2" valign="top">
 
                         <p><strong>[[t]]Post or Preview[[/t]]:</strong></p>
 
                         <p class="buttons" style="margin-left: -2px; margin-right: -4px; height: 70px !important;">
                         
-                            <button type="submit" class="positive" onclick="clearOnUnload();">
+                            <button type="submit" class="positive button-post" onclick="clearOnUnload();">
                                 <img src="./pics/tick.png" alt=""/>
                                 [[t]]Post Entry[[/t]]
                             </button>
 
-                            <button type="button" onclick="openEntryPreview();">
+                            <button type="button" onclick="openEntryPreview();" class="button-preview">
                                 <img src="./pics/zoom.png" alt=""/>
                                 [[t]]Preview[[/t]]
                             </button>
 
                             <br />
 
-                            <button type="button" class="positive" onclick="saveEntryAndContinue();" style="margin-top: 4px;">
+                            <button type="button" class="positive button-post-and-continue" onclick="saveEntryAndContinue();" style="margin-top: 4px;">
                                 <img src="./pics/arrow_rotate_clockwise.png" alt=""/>
                                 [[t]]Post and Continue Editing[[/t]]
                             </button>
@@ -169,27 +173,30 @@
 
                         [[ if $entry.code ]]
                         
-                        <p><strong>[[t]]View Comments and Trackbacks[[/t]]:</strong></p>
-                        
-                        <p class="buttons" style="margin-left: -2px; margin-right: -4px; height: 35px !important;">
+                        <div class="field-comments-and-trackbacks">
+                            <p><strong>[[t]]View Comments and Trackbacks[[/t]]:</strong></p>
                             
-                            <button type="button" onclick="openEntryExtra('comments',[[ $entry.code ]]);">
-                                <img src="./pics/comment_edit.png" alt=""/>
-                                [[t]]Comments[[/t]]
-                            </button>
+                            <p class="buttons" style="margin-left: -2px; margin-right: -4px; height: 35px !important;">
+                                
+                                <button type="button" onclick="openEntryExtra('comments',[[ $entry.code ]]);" class="button-comments">
+                                    <img src="./pics/comment_edit.png" alt=""/>
+                                    [[t]]Comments[[/t]]
+                                </button>
 
-                            <button type="button" onclick="openEntryExtra('trackbacks',[[ $entry.code ]]);">
-                                <img src="./pics/comment_edit.png" alt=""/>
-                                [[t]]Trackbacks[[/t]]
-                            </button>
+                                <button type="button" onclick="openEntryExtra('trackbacks',[[ $entry.code ]]);" class="button-trackbacks">
+                                    <img src="./pics/comment_edit.png" alt=""/>
+                                    [[t]]Trackbacks[[/t]]
+                                </button>
 
-                        </p>
-                        <hr size="1" noshade="noshade" />
+                            </p>
+                            <hr size="1" noshade="noshade" />
+                        </div>
+
                         [[ /if ]]
                     </td>
                 </tr>
                     [[ hook name="entry-category-before" value=$entry ]]
-                <tr>
+                <tr class="field-category">
                     <td valign="top"><strong>[[t]]Category[[/t]]:</strong></td>
                     <td>
                         <select name="categories[]" size="6" multiple="multiple" style="width: 140px;">
@@ -200,7 +207,7 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
+                <tr class="field-status">
                     <td><strong>[[t]]Post Status[[/t]]:</strong></td>
                     <td><select name="status">
                         <option value="publish" [[ if $entry.status=="publish" ]]selected="selected"[[/if]] >[[t]]Publish[[/t]]</option>
@@ -208,7 +215,7 @@
                         <option value="hold" [[ if $entry.status=="hold" ]]selected="selected"[[/if]] >[[t]]Hold[[/t]]</option>
                     </select></td>
                 </tr>
-                <tr>
+                <tr class="field-publish">
                     <td colspan="2"><p><strong>[[t]]Publish on[[/t]]:</strong></p>
                         <input name="publish_date1" type="text" class='date-picker input' id="publish_date1"
                         value="[[ date date=$entry.publish_date format='%day%-%month%-%year%' ]]" size="15" />
@@ -218,7 +225,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <table border="0" cellpadding="0" cellspacing="0">
+                        <table border="0" cellpadding="0" cellspacing="0" class="field-allow_comments">
                             <tr>
                                 <td style="padding: 0 2px;"><strong>[[t]]Allow comments[[/t]]: &nbsp;
 
@@ -234,22 +241,22 @@
                             </table>
                             </td>
                         </tr>
-                        <tr>
+                        <tr class="field-date">
                             <td colspan="2"> <hr size="1" noshade="noshade" /></td>
                         </tr>
-                        <tr>
+                        <tr class="field-date">
                             <td colspan="2"><p><strong>[[t]]Created on[[/t]]:
                             </strong>
                         </p>
-                        <input name="date1" id="date1" type="text" class='input date-picker'
+                        <input name="date1" id="date1" type="text" class='input date-picker field-date'
                         value="[[ date date=$entry.date format='%day%-%month%-%year%' ]]" size="15" />
-                        <input name="date2" id="date2" type="text" class='input'
+                        <input name="date2" id="date2" type="text" class='input field-date'
                         value="[[ date date=$entry.date format='%hour24%-%minute%' ]]" size="7" />
                     </td>
                 </tr>
 
 
-                <tr>
+                <tr class="field-edit_date">
                     <td colspan="2"><p><strong>[[t]]Last edited on[[/t]]:</strong></p>
                         <input name="edit_date1" type="text" class='input' readonly='readonly'
                         value="[[ date date=$entry.edit_date format='%day%-%month%-%year%' ]]" size="15" />
@@ -257,7 +264,7 @@
                         value="[[ date date=$entry.edit_date format='%hour24%-%minute%' ]]" size="7" />
                     </td>
                 </tr>
-                <tr>
+                <tr class="field-author">
                     <td><strong>[[t]]Author[[/t]]:</strong></td>
                     <td>
                         [[ if $user.userlevel >= 4 ]]
@@ -273,7 +280,7 @@
                         [[/if]]
                     </td>
                 </tr>
-                <tr>
+                <tr class="field-code">
                     <td><strong>[[t]]Code[[/t]]:</strong></td>
                     <td><input name="code" type="hidden" value="[[ $entry.code ]]" id="uid" />[[ $entry.code ]]</td>
                 </tr>
@@ -287,24 +294,24 @@
 
         <div class="cleaner">&nbsp;</div>
 
-        <p class="buttons">
-            <button type="submit" class="positive" onclick="clearOnUnload();">
+        <p class="buttons meta-buttons meta-buttons-bottom">
+            <button type="submit" class="positive button-post" onclick="clearOnUnload();">
                 <img src="./pics/tick.png" alt=""/>
                 [[t]]Post Entry[[/t]]
             </button>
 
-            <button type="button" class="positive" onclick="saveEntryAndContinue();">
+            <button type="button" class="positive button-post-and-continue" onclick="saveEntryAndContinue();">
                 <img src="./pics/arrow_rotate_clockwise.png" alt=""/>
                 [[t]]Post and Continue Editing[[/t]]
             </button>
             
-            <button type="button" onclick="openEntryPreview();">
+            <button type="button" onclick="openEntryPreview();" class="button-preview">
                 <img src="./pics/zoom.png" alt=""/>
                 [[t]]Preview[[/t]]
             </button>            
 
             [[ if $entry.code ]]
-            <button type="button" class="negative" style="margin-left: 30px;" onclick="deleteEntry('[[t escape=js]]Are you sure you wish to delete this entry?[[/t]]');">
+            <button type="button" class="negative button-delete" style="margin-left: 30px;" onclick="deleteEntry('[[t escape=js]]Are you sure you wish to delete this entry?[[/t]]');">
                 <img src="./pics/delete.png" alt=""/>
                 [[t]]Delete entry[[/t]]
             </button>
