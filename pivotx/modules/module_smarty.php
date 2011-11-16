@@ -823,7 +823,7 @@ function smarty_category_list($params, &$smarty) {
             $this_output = str_replace("%internal%" , $catinfo['name'], $this_output);
             $this_output = str_replace("%active%" , $active, $this_output);
             if (strpos($format, '%count%')>0) {
-               $this_output = str_replace("%count%", $PIVOTX['db']->get_entries_count(array('cats' => $catinfo['name'])), $this_output);
+               $this_output = str_replace("%count%", $PIVOTX['db']->get_entries_count(array('cats' => $catinfo['name']), 'status'=>'publish'), $this_output);
             }      
             
             $output .= "\n".$this_output;
