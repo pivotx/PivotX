@@ -2087,7 +2087,12 @@ function smarty_getpage($params, &$smarty) {
     // then we parse the introduction and body, and finally we set them again.
     // We do this, because some tags in the intro and body might rely on the
     // context of the template variables.
-    $page = $PIVOTX['pages']->getPageByUri($params['uri']);
+    if (isset($params['uid'])) {
+        $page = $PIVOTX['pages']->getPage($params['uid']);
+    }
+    else {
+        $page = $PIVOTX['pages']->getPageByUri($params['uri']);
+    }
     foreach($page as $key=>$value) {
         $smarty->assign($key, $value);
     }
