@@ -133,6 +133,11 @@ jQuery(function($) {
 // Small function to update the preview of the image..
 function updatePreview(imagename) {
 
+    // If no input is given, check if the image field contains something.
+    if (!imagename) {
+        imagename = trim( $('#f_image').val() );
+    }
+
     if ( (imagename.length < 4) || ( (!imagename.match('.gif')) && (!imagename.match('.jpg')) && (!imagename.match('.jpeg')) && (!imagename.match('.png'))) ) {
         $('#imagepreview').html("");
     } else {
