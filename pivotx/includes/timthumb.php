@@ -851,9 +851,9 @@ class timthumb {
 
 	}
 	protected function getLocalImagePath($src){
-        global $base_folder; // For PivotX files in images/
+		global $base_folder; // For PivotX files in images/
 
-        $src = preg_replace('/^\//', '', $src); //strip off the leading '/'
+		$src = preg_replace('/^\//', '', $src); //strip off the leading '/'
 		$realDocRoot = realpath($this->docRoot);
 		if(! $this->docRoot){
 			$this->debug(3, "We have no document root set, so as a last resort, lets check if the image is in the current dir and serve that.");
@@ -924,6 +924,18 @@ class timthumb {
 				}
 			}
 		}
+
+		// Added for PivotX - a relative search ...
+		$sub_directories = array('../../', '../../../');
+		$root = dirname(__FILE__);
+		foreach ($sub_directories as $sub) {
+			$base = $root . '/' . $sub . '/' . $base_folder . '/';
+			if(file_exists($base . $src)){
+				$this->debug(3, "Found file as: " . $base . $src);
+				return realpath($base . $src);
+			}
+		}
+                
 		return false;
 	}
 	protected function toDelete($name){
