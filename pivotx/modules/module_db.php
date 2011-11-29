@@ -240,7 +240,7 @@ class db {
         }
         // Do not limit number of entries if an interval or a date range is given
         if ((!empty($params['start']) && !empty($params['end'])) || !empty($params['date'])) {
-            if ($params['show'] !== '') {
+            if (!empty($params['show'])) {
                 unset($params['show']);
                 debug("Both an interval or a date range and 'show' given - ignoring 'show'");
             }
