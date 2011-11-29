@@ -2127,6 +2127,10 @@ function cleanAttributes($str) {
  */
 function cleanParams($params) {
 
+    if (empty($params)) {
+        return $params;
+    }
+
     foreach ($params as $key=>$param) {
 
         if (is_array($param)) {
