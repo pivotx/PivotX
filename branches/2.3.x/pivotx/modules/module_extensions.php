@@ -639,6 +639,52 @@ class Extensions {
 
 
     /**
+     * Execute 'AddSearchText' hook.
+     *
+     * This hook gets called just before a page or entry save is performed
+     * (before entry_edit_beforesave / page_edit_beforesave). Its purpose
+     * is to collect all the text that should be searchable in a standard
+     * PivotX search. This function collects all text per page/entry and
+     * collects all unique words and stores them in 'extra_search_text'.
+     * Returned texts is strip-tagged and lowered aswell.
+     *
+     * @param mixed $target
+     * @param string $type
+     */
+    function executeAddSearchText(&$target, $type) {
+        $my_hooks = $this->getHooks($type, '');
+
+        $words = array();
+
+        foreach($my_hooks as $hook) {
+            if (function_exists($hook['parameters'])) {
+                $result = call_user_func($hook['parameters'], $target);
+
+                $keys = array_keys($result);
+            
+                foreach($keys as $k) {
+                    $result[$k] = strip_tags($result[$k]);
+                    $result[$k] = strtolower(trim($result[$k]));
+
+                    $rwords = preg_split("/\W/", $result[$k]);
+
+                    if (!isset($words[$k]) || (!is_array($words[$k]))) {
+                        $words[$k] = array();
+                    }
+                    $words[$k]  = array_unique(array_merge($words[$k],$rwords));
+                }
+            } else {
+                echo("Extensions: While processing hook $type, I couldn't run " . $hook['parameters'] . "(). Not defined.");
+            }
+        }
+
+        if (isset($words['-'])) {
+            $target['extra_search_text'] = implode(' ',$words['-']);
+        }
+    }
+
+
+    /**
      * Execute a 'generic hook'. Basically all hooks of this type work the same:
      * They take some input, call a callback function with that input, and return
      * the output of that function to the caller.
