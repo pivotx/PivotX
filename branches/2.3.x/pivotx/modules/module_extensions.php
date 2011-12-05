@@ -621,6 +621,11 @@ class Extensions {
                 return $this->executeMessages($type);
                 break;
 
+            case "entry_edit_addsearchtext":
+            case "page_edit_addsearchtext":
+                return $this->executeAddSearchText($target, $type);
+                break;
+
             default:
                 return $this->executeGenericHook($target, $type, $action);    
                 break;

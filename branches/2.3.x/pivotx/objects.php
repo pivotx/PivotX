@@ -477,7 +477,9 @@ class Users {
         // Make sure the users are sorted as intended.
         uasort($this->data, array($this, 'sort'));
 
-        saveSerialize($PIVOTX['paths']['db_path'] . "ser_users.php", $this->data);
+        if (count($this->data) > 0) {
+            saveSerialize($PIVOTX['paths']['db_path'] . "ser_users.php", $this->data);
+        }
 
     }
 
