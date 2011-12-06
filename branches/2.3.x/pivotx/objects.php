@@ -162,8 +162,9 @@ class Config {
             ksort($this->data);
         }
 
-        saveSerialize($this->configfile, $this->data);
-
+        if ((defined('PIVOTX_INADMIN') || defined('PIVOTX_INAJAXHELPER')) && (is_array($this->data))) {
+            saveSerialize($this->configfile, $this->data);
+        }
     }
 
     /**
