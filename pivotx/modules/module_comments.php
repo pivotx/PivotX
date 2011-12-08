@@ -109,7 +109,7 @@ function handlePostComment() {
     
     // Check for Hashcash violations..
     if ( ($PIVOTX['config']->get('hashcash')==1) && (!hashcash_check_hidden_tag())) {
-        $weblogmessage = __('The Hashcash code was not valid, so this comment could not be posted. If you believe this is an error, please make sure you have a modern browser, and that Javascript is enabled. If it still doesn\'t work, contact the maintainer of this website.');
+        $weblogmessage = getDefault($PIVOTX['config']->get('hashcash_message'),__('The Hashcash code was not valid, so this comment could not be posted. If you believe this is an error, please make sure you have a modern browser, and that Javascript is enabled. If it still doesn\'t work, contact the maintainer of this website.'));
         unset($_POST['post']);
         $_POST['preview'] = true;
         $spammessage = substr(implode(", ", $temp_comment), 0, 250);
