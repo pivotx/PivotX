@@ -927,9 +927,11 @@ class Weblogs extends BaseConfig {
             }
             
             // Make sure all categories are arrays.
-            foreach ($weblog['sub_weblog'] as $subkey => $subweblog) {
-                if (!is_array($subweblog['categories'])) {
-                    $this->data[$key]['sub_weblog'][$subkey]['categories'] = array($subweblog['categories']);
+            if (is_array($weblog['sub_weblog'])) {
+                foreach ($weblog['sub_weblog'] as $subkey => $subweblog) {
+                    if (!is_array($subweblog['categories'])) {
+                        $this->data[$key]['sub_weblog'][$subkey]['categories'] = array($subweblog['categories']);
+                    }
                 }
             }
  
@@ -1108,17 +1110,19 @@ class Weblogs extends BaseConfig {
         $results = array();
 
         // Group the categories from the subweblogs together..
-        foreach ($this->data[$weblogname]['sub_weblog'] as $key=>$sub) {
+        if (is_array($this->data[$weblogname]['sub_weblog'])) {
+            foreach ($this->data[$weblogname]['sub_weblog'] as $key=>$sub) {
 
-            $cats = $sub['categories'];
-            // $cats might be a string with one cat, if so, convert to array
-            if (is_string($cats)) {
-              $cats= array($cats);
-            }
+                $cats = $sub['categories'];
+                // $cats might be a string with one cat, if so, convert to array
+                if (is_string($cats)) {
+                  $cats= array($cats);
+                }
 
-            // Add them to results
-            foreach($cats as $cat) {
-                $results[] = $cat;
+                // Add them to results
+                foreach($cats as $cat) {
+                    $results[] = $cat;
+                }
             }
         }
 
