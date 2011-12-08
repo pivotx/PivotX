@@ -13,48 +13,220 @@
 // ---------------------------------------------------------------------------
 
 
+
+/**
+ * Base Configuration Class
+ *
+ * Handle the loading and saving configuration data.
+ * It contains defaults flows of reading, verifying/fixing and saving of configuration data.
+ *
+ * Description of the load call:
+ * - __construct
+ *   - loadConfig
+ *     - verifyConfig
+ *     - fixConfig
+ *     - saveConfig
+ *       - organizeConfig
+ *   - organizeConfig
+ *   - initConfig
+ *
+ * Save call:
+ * - saveConfig
+ *   - organizeConfig
+ */
+class BaseConfig {
+
+    var $configfile = '';
+    var $data = array();
+    var $changed = false;
+    var $upgraded = false;
+
+    /**
+     * Constructor
+     *
+     * @param filename      configuration filename
+     * @param db_path       path to pivotx db directory, when false we assume config has been loaded
+     */
+    function __construct($filename, $db_path = false) {
+        if ($db_path === false) {
+            global $PIVOTX;
+
+            $db_path = $PIVOTX['paths']['db_path'];
+        }
+        
+        $this->configfile = $db_path . $filename;
+
+        $this->loadConfig();
+
+        $this->organizeConfig();
+
+        $this->initConfig();
+    }
+
+    /**
+     * Set upgraded
+     */
+    protected function setUpgraded($upgraded=true) {
+        $this->upgraded = $upgraded;
+    }
+
+    /**
+     * Set changed flag
+     */
+    protected function setChanged($changed=true) {
+        $this->changed = $changed;
+    }
+
+    /**
+     * Load and verify config
+     */
+    protected function loadConfig() {
+        $this->data = loadSerialize($this->configfile, true);
+
+        if (!$this->verifyConfig()) {
+            $this->fixConfig();
+
+            $this->saveConfig(true);
+        }
+    }
+
+    /**
+     * Verify configuration (this should be overwritten in subclass)
+     *
+     * @return boolean    true if configuration is ok
+     */
+    protected function verifyConfig() {
+        return true;
+    }
+
+    /**
+     * Fix configuration (this should be overwritten in subclass)
+     *
+     * This is called when verifyConfig() fails.
+     */
+    protected function fixConfig() {
+    }
+
+    /**
+     * Organize configuration
+     *
+     * @param boolean    true, if configuration can be saved
+     *
+     * This is called when just loaded and before configuration is saved.
+     */
+    protected function organizeConfig() {
+        if (is_array($this->data)) {
+            ksort($this->data);
+        }
+
+        return true;
+    }
+
+    /**
+     * Initialise configuration after has been read, fixed and organized.
+     */
+    protected function initConfig() {
+    }
+
+
+    /**
+     * Save configuration if 'safe' to do so
+     */
+    protected function saveConfig($force_changed=false) {
+        if ($force_changed) {
+            $this->setChanged();
+        }
+
+        if ($this->changed) {
+            $writable = $this->organizeConfig();
+            
+            if ((defined('PIVOTX_INADMIN') || defined('PIVOTX_INAJAXHELPER')) && (is_array($this->data)) && ($writable)) {
+                saveSerialize($this->configfile, $this->data);
+            }
+        }
+    }
+
+    /**
+     * Return configuration-array size
+     */
+    public function count() {
+        if (!is_array($this->data)) {
+            return 0;
+        }
+        return count($this->data);
+    }
+
+    /**
+     * Print a comprehensible representation of the users
+     *
+     */
+    function print_r() {
+        echo "<pre>\n";
+        print_r($this->data);
+        echo "</pre>\n";
+    }
+
+    /**
+     * Old save version
+     *
+     * This function force a save anyway.
+     */
+    public function save()
+    {
+        return $this->saveConfig(true);
+    }
+}
+
 /**
  * Takes care of all configuration settings. The configuration is stored in
  * pivotx/db/ser_config.php, but is completely accessible through this object.
  * Saving is automagical and only when something has changed.
  *
  */
-class Config {
+class Config extends BaseConfig {
+    public function __construct($sites_path = '') {
+        $db_path = dirname(__FILE__) . '/' . $sites_path . 'db/';
 
-    var $configfile;
-
-    function Config($sites_path = '') {
-
-        $this->configfile = dirname(__FILE__) . '/' . $sites_path . 'db/ser_config.php';
-
-        $this->data = loadSerialize($this->configfile, true);
-
-        if (count($this->data)<5) {
-            // hmm, couldn't find the data.. Perhaps try to import it from old Pivot 1.x
-            $this->readOld();
-            $this->save();
-        }
-
-        $this->checkConfig();
-
+        parent::__construct('ser_config.php',$db_path);
     }
 
+    public function Config($sites_path = '') {
+        $this->__construct($sites_path);
+    }
 
-    /**
-     * Check if all required fields in the config are set. If not, we add them.
-     *
-     */
-    function checkConfig() {
-
-        $mustsave = false;
+    protected function verifyConfig() {
+        if ($this->count() < 5) {
+            return false;
+        }
 
         $default = getDefaultConfig();
+        foreach($default as $key=>$value) {
+            if (!isset($this->data[$key])) {
+                return false;
+            }
+        }
 
+        if (!isset($this->data['server_spam_key']) || empty($this->data['server_spam_key'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function fixConfig() {
+        if ($this->count() < 5) {
+            $this->readOld();
+
+            $this->setChanged();
+        }
+
+        $default = getDefaultConfig();
         foreach($default as $key=>$value) {
 
             if (!isset($this->data[$key])) {
                 $this->data[$key] = $value;
-                $mustsave = true;
+
+                $this->setChanged();
             }
         }
 
@@ -69,11 +241,8 @@ class Config {
             }
             $server_spam_key .= time();
             $this->data['server_spam_key'] = md5($server_spam_key);
-            $mustsave = true;
-        }
-
-        if ($mustsave) {
-            $this->save();
+            
+            $this->setChanged();
         }
 
         // If there's a file called 'pivotxdebugmode.txt', we'll enable debugging 
@@ -88,8 +257,10 @@ class Config {
      * to date, and sets it in $this->data
      *
      */
-    function readOld() {
+    protected function readOld() {
         global $pivotx_path;
+
+        $this->setUpgraded();
 
         // If the old config file doesn't exist or it isn't readable, we return false..
         if (!file_exists($pivotx_path.'pv_cfg_settings.php') || (!is_readable($pivotx_path.'pv_cfg_settings.php'))) {
@@ -144,27 +315,7 @@ class Config {
             }
         }
 
-
-
-
-
         $this->data = $Cfg;
-
-    }
-
-    /**
-     * Save the config to disk.
-     *
-     */
-    function save() {
-
-        if (is_array($this->data)) {
-            ksort($this->data);
-        }
-
-        if ((defined('PIVOTX_INADMIN') || defined('PIVOTX_INAJAXHELPER')) && (is_array($this->data))) {
-            saveSerialize($this->configfile, $this->data);
-        }
     }
 
     /**
@@ -201,10 +352,9 @@ class Config {
         if (empty($this->data[safeString($key)]) || $value !== $this->data[safeString($key)] ) {
 
             $this->data[safeString($key)] = $value;
-            $this->save();
-            
-        }
 
+            $this->saveConfig(true);
+        }
     }
 
     /**
@@ -222,8 +372,7 @@ class Config {
             unset($this->data[$key]);
         }
 
-        $this->save();
-
+        $this->saveConfig(true);
     }
 
     /**
@@ -239,7 +388,6 @@ class Config {
             return false;
         }
     }
-
 }
 
 /**
@@ -281,29 +429,47 @@ define('PIVOTX_PASSWORD_PORTABLE_HASHES', true);
  * getting info, etc.
  *
  */
-class Users {
+class Users extends BaseConfig {
 
-    /**
-     * Initialisation
-     *
-     */
-    function Users() {
-        global $PIVOTX;
-
-        $this->data = loadSerialize($PIVOTX['paths']['db_path'] . "ser_users.php", true);
-
-        if ($this->count()<1) {
-            // hmm, couldn't find the data.. Perhaps try to import it from old Pivot 1.x
-            $this->readOld();
-            $this->save();
-        }
-
-        // Make sure the users are sorted as intended.
-        uasort($this->data, array($this, 'sort'));
+    public function __construct() {
+        parent::__construct('ser_users.php');
     }
 
-    function readOld() {
+    public function Users() {
+        $this->__construct();
+    }
+
+    protected function verifyConfig() {
+        if ($this->count() < 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function fixConfig() {
+        if (count($this->data) < 5) {
+            $this->readOld();
+
+            $this->setChanged();
+        }
+    }
+
+    protected function organizeConfig() {
+        // Make sure the users are sorted as intended.
+        uasort($this->data, array($this, 'sort'));
+
+        if ($this->count() < 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function readOld() {
         global $pivotx_path;
+
+        $this->setUpgraded();
 
         // If the old config file doesn't exist or it isn't readable, we return false..
         if (!file_exists($pivotx_path.'pv_cfg_settings.php') || (!is_readable($pivotx_path.'pv_cfg_settings.php'))) {
@@ -336,30 +502,6 @@ class Users {
             }
         }
     }
-
-    /**
-     * Get the count of users
-     *
-     * @return int
-     */
-    function count() {
-
-        return ( is_array($this->data) && count($this->data) );
-
-    }
-
-    /**
-     * Print a comprehensible representation of the users
-     *
-     */
-    function print_r() {
-
-        echo "<pre>\n";
-        print_r($this->data);
-        echo "</pre>\n";
-
-    }
-
 
     /**
      * Add a user to Pivot
@@ -397,19 +539,21 @@ class Users {
 
         $this->data[] = $newuser;
 
-        $this->save();
+        $this->saveConfig(true);
 
     }
 
     function deleteUser($username) {
 
-        foreach($this->data as $key=>$user) {
-            if ($username == $user['username']) {
-                unset($this->data[$key]);
+        if ($this->count() > 1) {
+            foreach($this->data as $key=>$user) {
+                if ($username == $user['username']) {
+                    unset($this->data[$key]);
+                }
             }
         }
 
-        $this->save();
+        $this->saveConfig(true);
 
     }
 
@@ -463,27 +607,8 @@ class Users {
 
         }
 
-
-        $this->save();
-
+        $this->saveConfig(true);
     }
-
-    /**
-     * Saves the Users to the filesystem.
-     *
-     */
-    function save() {
-        global $PIVOTX;
-
-        // Make sure the users are sorted as intended.
-        uasort($this->data, array($this, 'sort'));
-
-        if (count($this->data) > 0) {
-            saveSerialize($PIVOTX['paths']['db_path'] . "ser_users.php", $this->data);
-        }
-
-    }
-
 
     /**
      * Check if a given password matches the one stored.
@@ -523,7 +648,6 @@ class Users {
         return false;
 
     }
-
 
     /**
      * Hash a given password (for a given user).
@@ -610,7 +734,6 @@ class Users {
 
     }
 
-
     /**
      * Get a list of the Usernames
      *
@@ -662,7 +785,6 @@ class Users {
 
     }
 
-
     /**
      * Get all users as an array
      *
@@ -673,7 +795,6 @@ class Users {
         return $this->data;
 
     }
-    
     
     /**
      * Determines if $currentuser (or 'the current user', if left empty) is allowed
@@ -743,7 +864,6 @@ class Users {
 
         // Disallow editing
         return false;
-        
     }
     
     /**
@@ -757,40 +877,47 @@ class Users {
         global $PIVOTX;
 
         return strcmp($a['username'],$b['username']);
-
     }
-
 }
 
 /**
  * This class deals with the Weblogs.
  *
  */
-class Weblogs {
+class Weblogs extends BaseConfig {
 
     var $default;
     var $current;
 
-    /**
-     * Initialisation
-     *
-     * @return Weblogs
-     */
-    function Weblogs() {
-        global $PIVOTX;
+    public function __construct() {
+        parent::__construct('ser_weblogs.php');
+    }
 
-        $this->data = loadSerialize($PIVOTX['paths']['db_path'] . "ser_weblogs.php", true);
+    public function Weblogs() {
+        $this->__construct();
+    }
 
-        if ($this->count()<1) {
-            // hmm, couldn't find the data.. Perhaps try to import it from old Pivot 1.x
+    public function verifyConfig() {
+        if ($this->count() < 1) {
+            return false;
+        }
+    }
+
+    public function fixConfig() {
+        if ($this->count() < 1) {
             $this->readOld();
-            $this->save();
+
+            $this->setChanged();
         }
 
-        if ($this->count()<1) {
+        if ($this->count() < 1) {
             // No weblogs, create one from scratch
             $this->add('weblog', __('My weblog'), 'pivotxdefault');
         }
+    }
+
+    protected function initConfig() {
+        global $PIVOTX;
 
         foreach ($this->data as $key => $weblog) {
                    
@@ -818,7 +945,7 @@ class Weblogs {
         }
 
         // Make sure the weblogs are sorted as intended.
-        uasort($this->data, array($this, 'sort'));
+        $this->organizeConfig();
 
         // Set default weblog either as specified by the root in the config
         // or just by selecting the first in the weblo
@@ -830,7 +957,65 @@ class Weblogs {
             reset($this->data);
             $this->default = key($this->data);
         }
+    }
 
+    protected function organizeConfig() {
+        uasort($this->data, array($this, 'sort'));
+
+        return true;
+    }
+
+    /**
+     * Read old weblogs data..
+     */
+    function readOld() {
+
+        $this->setUpgraded();
+
+        $oldweblogs = loadSerialize(dirname(__FILE__)."/pv_cfg_weblogs.php", true);
+
+        // Looping over old weblogs. For each old weblog, add a new one with
+        // defaults values and then override the ones already set in the 
+        // old config. This way we remove settings no longer present in 
+        // PivotX. We also make sure the categories are all 'safe strings'..
+        if(is_array($oldweblogs)) {
+            foreach($oldweblogs as $weblogkey => $weblog) {
+                $newweblogkey = safeString($weblogkey,true);
+                $this->add($newweblogkey, $oldweblogs[$weblogkey]['name'], 'pivotxdefault');
+                foreach ($this->data[$newweblogkey] as $key => $value) {
+                    if (isset($weblog[$key])) {
+                        $this->data[$newweblogkey][$key] = $weblog[$key];
+                    }
+                }
+                foreach($this->data[$newweblogkey]['sub_weblog'] as $subweblogkey => $subweblog) {
+                    foreach($subweblog['categories'] as $categorykey => $category) {
+                        $this->data[$newweblogkey]['sub_weblog'][$subweblogkey]['categories'][$categorykey] = 
+                            safeString($category, true);
+                    }
+                }
+                foreach($this->data[$newweblogkey]['categories'] as $categorykey => $category) {
+                    $this->data[$newweblogkey]['categories'][$categorykey] = safeString($category, true);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Sort the weblogs based on string comparison of name.
+     *
+     * @param array $a
+     * @param array $b
+     * @return int
+     */
+    function sort($a, $b) {
+        global $PIVOTX;
+
+        if ( (empty($a['sortorder']) && empty($b['sortorder'])) || ($a['sortorder'] == $b['sortorder']) ) {
+            return strcmp($a['name'],$b['name']);
+        } else {
+            return ($a['sortorder'] < $b['sortorder']) ? -1 : 1;
+        }
 
     }
 
@@ -875,7 +1060,6 @@ class Weblogs {
         }
 
         return false;
-
     }
 
 
@@ -908,7 +1092,6 @@ class Weblogs {
         }
 
         return array_unique($res);
-
     }
 
     /**
@@ -959,8 +1142,6 @@ class Weblogs {
 
     }
 
-
-
     /**
      * Return a subweblog as an array
      *
@@ -975,11 +1156,6 @@ class Weblogs {
         return $this->data[$weblogname]['sub_weblog'][$subweblogname];
 
     }
-
-
-
-
-
 
     /**
      * Return the subweblogs of a given weblog as an array. It does this
@@ -1052,17 +1228,14 @@ class Weblogs {
             }
         }
         if ($updated) {
-            $this->save();
+            $this->saveConfig(true);
         }
 
         return $results;
 
     }
 
-
-
-
-     /**
+    /**
      * Sets a given weblog as 'current' and returns false if the weblog
      * doesn't exist.
      *
@@ -1089,9 +1262,7 @@ class Weblogs {
 
     }
 
-
-
-     /**
+    /**
      * Sets a given weblog as 'current' based on a given category and returns false
      * if no matching weblog could be set.
      *
@@ -1149,8 +1320,7 @@ class Weblogs {
         
     }
 
-
-     /**
+    /**
      * Gets the currently active weblog.
      *
      * @return
@@ -1164,7 +1334,7 @@ class Weblogs {
 
     }
 
-     /**
+    /**
      * Gets the default weblog.
      *
      * @return
@@ -1174,8 +1344,6 @@ class Weblogs {
         return $this->default;
 
     }
-
-
 
     /**
      * Add a new weblog, based on $theme. returns the internal name used for
@@ -1202,7 +1370,7 @@ class Weblogs {
 
             $this->data[$internal]['name']=$name;
 
-            $this->save();
+            $this->saveConfig(true);
 
         } else if ($theme=="pivotxdefault") {
 
@@ -1213,7 +1381,7 @@ class Weblogs {
             if (empty($weblog['sortorder'])) { $weblog['sortorder'] = 10; }
             $this->data[$internal] = $weblog;
 
-            $this->save();
+            $this->saveConfig(true);
 
 
         } else {
@@ -1226,7 +1394,7 @@ class Weblogs {
 
             $this->data[$internal] = $weblog;
 
-            $this->save();
+            $this->saveConfig(true);
 
         }
 
@@ -1243,7 +1411,7 @@ class Weblogs {
 
         unset($this->data[$weblogname]);
 
-        $this->save();
+        $this->saveConfig(true);
 
     }
 
@@ -1259,52 +1427,6 @@ class Weblogs {
         $filename = dirname("./templates/".$weblog['front_template'])."/".$weblogname.".theme";
 
         saveSerialize($filename, $weblog);
-
-    }
-
-
-    /**
-     * Read old weblogs data..
-     */
-    function readOld() {
-
-        $oldweblogs = loadSerialize(dirname(__FILE__)."/pv_cfg_weblogs.php", true);
-
-        // Looping over old weblogs. For each old weblog, add a new one with
-        // defaults values and then override the ones already set in the 
-        // old config. This way we remove settings no longer present in 
-        // PivotX. We also make sure the categories are all 'safe strings'..
-        if(is_array($oldweblogs)) {
-            foreach($oldweblogs as $weblogkey => $weblog) {
-                $newweblogkey = safeString($weblogkey,true);
-                $this->add($newweblogkey, $oldweblogs[$weblogkey]['name'], 'pivotxdefault');
-                foreach ($this->data[$newweblogkey] as $key => $value) {
-                    if (isset($weblog[$key])) {
-                        $this->data[$newweblogkey][$key] = $weblog[$key];
-                    }
-                }
-                foreach($this->data[$newweblogkey]['sub_weblog'] as $subweblogkey => $subweblog) {
-                    foreach($subweblog['categories'] as $categorykey => $category) {
-                        $this->data[$newweblogkey]['sub_weblog'][$subweblogkey]['categories'][$categorykey] = 
-                            safeString($category, true);
-                    }
-                }
-                foreach($this->data[$newweblogkey]['categories'] as $categorykey => $category) {
-                    $this->data[$newweblogkey]['categories'][$categorykey] = safeString($category, true);
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Get the count of weblogs
-     *
-     * @return int
-     */
-    function count() {
-
-        return ( is_array($this->data) && count($this->data) );
 
     }
 
@@ -1348,7 +1470,7 @@ class Weblogs {
 
             }
 
-            $this->save();
+            $this->saveConfig(true);
 
         } else {
 
@@ -1357,7 +1479,6 @@ class Weblogs {
         }
 
     }
-
 
     /**
      * Gets a property of a given weblog
@@ -1372,14 +1493,19 @@ class Weblogs {
         }
 
         if (empty($this->data[$weblogname])) {
-            debug("Weblog '$weblogname' doesn't exist!");
+            static $noted = array();
+            if (!isset($noted[$weblogname])) {
+                // only show this message once in the lifetime of the request
+                debug("Weblog '$weblogname' doesn't exist!");
+
+                $noted[$weblogname] = true;
+            }
             $weblogname = key($this->data);
         }
 
         return $this->data[$weblogname][$key];
 
     }
-
 
     /**
      * Calculates the link for a given weblog
@@ -1408,19 +1534,83 @@ class Weblogs {
         return $link;
     }
 
-    /**
-     * Save the weblogs to disk
-     *
-     */
-    function save() {
-        global $PIVOTX;
+    function deleteCategoryFromWeblogs($name) {
+        
+        // Remove it from all weblogs as well.
+        $weblogs = $this->data;
 
-        saveSerialize($PIVOTX['paths']['db_path'] . "ser_weblogs.php", $this->data);
+        foreach($weblogs as $weblogkey=>$weblog) {
+            foreach($weblog['sub_weblog'] as $subweblogkey=>$subweblog) {
+                foreach($subweblog['categories'] as $catkey => $cat) {
+                    if ($cat==$name) {
+                        unset($weblogs[$weblogkey]['sub_weblog'][$subweblogkey]['categories'][$catkey]);
+                    }
+                }
+                
+            }
+            foreach($weblogs[$weblogkey]['categories'] as $catkey => $cat) {
+                if ($cat==$name) {
+                    unset($weblogs[$weblogkey]['categories'][$catkey]);
+                }
+            }
+        }
+        
+        $this->data = $weblogs;
 
+        $this->saveConfig(true);
+    }
+}
+
+/**
+ * This class deals with the categories
+ *
+ */
+class Categories extends BaseConfig {
+    public function __construct() {
+        parent::__construct('ser_categories.php');
+    }
+
+    public function Categories() {
+        $this->__construct();
+    }
+
+    protected function verifyConfig() {
+        if ($this->count() < 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function fixConfig() {
+        $save = false;
+
+        if ($this->count() < 1) {
+            // hmm, couldn't find the data.. Perhaps try to import it from old Pivot 1.x
+            $this->readOld();
+            $save = true;
+        }
+
+        if ($this->count()<1) {
+            // if there still are no categories, load the defaults
+            $this->data = getDefaultCategories();
+            $save = true;
+        }
+
+        if ($save) {
+            $this->saveConfig(true);
+        }
+    }
+
+    protected function organizeConfig() {
+        usort($this->data, array($this, 'sort'));
+
+        return true;
     }
 
     /**
-     * Sort the weblogs based on string comparison of name.
+     * Sort the categories based on the order and string comparison
+     * of display name if order is identical.
      *
      * @param array $a
      * @param array $b
@@ -1429,66 +1619,30 @@ class Weblogs {
     function sort($a, $b) {
         global $PIVOTX;
 
-        if ( (empty($a['sortorder']) && empty($b['sortorder'])) || ($a['sortorder'] == $b['sortorder']) ) {
-            return strcmp($a['name'],$b['name']);
+        if ($PIVOTX['config']->get('sort_categories_by_alphabet')==true) {
+            // If we set 'sort_categories_by_alphabet' to true, always sort by alphabet..
+            return strcmp($a['display'],$b['display']);
+        } else if ($a['order'] == $b['order']) {
+            // Else sort by alphabet, if order is the same..
+            return strcmp($a['display'],$b['display']);
         } else {
-            return ($a['sortorder'] < $b['sortorder']) ? -1 : 1;
+            // else sort by order..
+            return ($a['order'] < $b['order']) ? -1 : 1;
         }
 
     }
-
-}
-
-/**
- * This class deals with the categories
- *
- */
-class Categories {
 
     /**
-     * Initialisation
-     *
-     * @return Categories
+     * Old save function
      */
-    function Categories() {
-        global $PIVOTX;
-
-        $this->data = loadSerialize($PIVOTX['paths']['db_path']."ser_categories.php", true);
-
-        if ($this->count()<1) {
-            // hmm, couldn't find the data.. Perhaps try to import it from old Pivot 1.x
-            $this->readOld();
-            $this->saveCategories();
-        }
-
-        if ($this->count()<1) {
-            // if there still are no categories, load the defaults
-            $this->data = getDefaultCategories();
-            $this->saveCategories();
-        }
-
-        // Make sure the categories are sorted as intended.
-        usort($this->data, array($this, 'sort'));
-
+    public function saveCategories() {
+        return $this->saveConfig(true);
     }
 
-
-    /**
-     * Get the count of categories
-     *
-     * @return int
-     */
-    function count() {
-
-        return ( is_array($this->data) && count($this->data) );
-
-    }
-
-
-
-
-    function readOld() {
+    protected function readOld() {
         global $pivotx_path;
+
+        $this->setUpgraded();
 
         // If the old config file doesn't exist or it isn't readable, we return false..
         if (!file_exists($pivotx_path.'pv_cfg_settings.php') || (!is_readable($pivotx_path.'pv_cfg_settings.php'))) {
@@ -1580,7 +1734,7 @@ class Categories {
             if ($name==$val['name']) {
 
                 $this->data[$key] = $cat;
-                $this->saveCategories();
+                $this->saveConfig(true);
                 return;
             }
 
@@ -1589,29 +1743,9 @@ class Categories {
         // Otherwise it must be a new one, let's add it:
         if(!empty($cat['name'])){
             $this->data[] = $cat;
-            $this->saveCategories();
+            $this->saveConfig(true);
         }
 
-
-    }
-
-
-
-    /**
-     * Save the categories to disk
-     *
-     */
-    function saveCategories() {
-        global $PIVOTX;
-
-        // If $this->data is empty, make it an empty array.
-        if (empty($this->data)) {
-            $this->data = array();
-        }
-
-        usort($this->data, array($this, 'sort'));
-
-        saveSerialize($PIVOTX['paths']['db_path'] . "ser_categories.php", $this->data);
 
     }
 
@@ -1808,57 +1942,13 @@ class Categories {
 
             if ($cat['name']==$name) {
                 unset($this->data[$key]);
-                $this->saveCategories();
+                $this->saveConfig(true);
                 break;
             }
 
         }
-        
-        // Remove it from all weblogs as well.
-        $weblogs = $PIVOTX['weblogs']->getWeblogs();
 
-        foreach($weblogs as $weblogkey=>$weblog) {
-            foreach($weblog['sub_weblog'] as $subweblogkey=>$subweblog) {
-                foreach($subweblog['categories'] as $catkey => $cat) {
-                    if ($cat==$name) {
-                        unset($weblogs[$weblogkey]['sub_weblog'][$subweblogkey]['categories'][$catkey]);
-                    }
-                }
-                
-            }
-            foreach($weblogs[$weblogkey]['categories'] as $catkey => $cat) {
-                if ($cat==$name) {
-                    unset($weblogs[$weblogkey]['categories'][$catkey]);
-                }
-            }
-        }
-        
-        $PIVOTX['weblogs']->data = $weblogs;
-        $PIVOTX['weblogs']->save();
-
-    }
-
-    /**
-     * Sort the categories based on the order and string comparison
-     * of display name if order is identical.
-     *
-     * @param array $a
-     * @param array $b
-     * @return int
-     */
-    function sort($a, $b) {
-        global $PIVOTX;
-
-        if ($PIVOTX['config']->get('sort_categories_by_alphabet')==true) {
-            // If we set 'sort_categories_by_alphabet' to true, always sort by alphabet..
-            return strcmp($a['display'],$b['display']);
-        } else if ($a['order'] == $b['order']) {
-            // Else sort by alphabet, if order is the same..
-            return strcmp($a['display'],$b['display']);
-        } else {
-            // else sort by order..
-            return ($a['order'] < $b['order']) ? -1 : 1;
-        }
+        $PIVOTX['weblogs']->deleteCategoryFromWeblogs($name);
 
     }
 
