@@ -2616,8 +2616,9 @@ function smarty_link($params, &$smarty) {
         
     } elseif (isset($PIVOTX['parser']->modifier['category'])) {
         
-        // If a category is set
-        return _smarty_link_category(array( 'category'=>$PIVOTX['parser']->modifier['category'], 'hrefonly'=>true ), $smarty);
+        // If a category is set, and we are not in a subweblog and similar.
+        $params['category'] = $PIVOTX['parser']->modifier['category'];
+        return _smarty_link_category($params, $smarty);
         
     } else {
         
