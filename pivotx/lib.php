@@ -2862,12 +2862,37 @@ function makeThumbname($filename) {
  *
  * PivotX should never ever allow uploading outside the images, templates and 
  * db folders.
+ * Added ability to add extra paths to allow uploading in, but they must always
+ * be below the site-directory.
  *
  * @param string $url
  * @return boolean
  */
 function uploadAllowed($path) {
     global $PIVOTX;
+
+    // Allow extra upload paths if configured
+    $extrapaths = array();
+    if ($PIVOTX['config']->get('extra_upload_paths') != '') {
+        $paths    = explode(';',$PIVOTX['config']->get('extra_upload_paths'));
+        $sitepath = $PIVOTX['paths']['site_path'];
+        foreach($paths as $_path) {
+            $_path = str_replace('../','',$_path);
+            $_path = str_replace('//','',$_path);
+            $_path = str_replace('..\\','',$_path);
+            $_path = str_replace('\\\\','',$_path);
+            if (substr($_path,0,1) == '/') {
+                $_path = substr($_path,1);
+            }
+            if (substr($_path,-1) != '/') {
+                $_path .= '/';
+            }
+            if (($_path != '') && (is_dir($sitepath.$_path))) {
+                $extrapaths[] = $sitepath . $_path;
+            }
+        }
+    }
+
     // Ensure that the path ends with a slash (since all PivotX paths do so).
     if (substr($path,-1) != '/') {
         $path .= '/';
@@ -2877,6 +2902,7 @@ function uploadAllowed($path) {
         $PIVOTX['paths']['upload_base_path'], 
         $PIVOTX['paths']['db_path']
     );
+    $allowedpaths = array_merge($allowedpaths,$extrapaths);
     $allowed = false;
     foreach ($allowedpaths as $allowedpath) {
         if (strpos($path, $allowedpath) === 0) {
