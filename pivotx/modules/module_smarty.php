@@ -2614,6 +2614,11 @@ function smarty_link($params, &$smarty) {
         // If we're in a page (and no page parameter is given).
         return _smarty_link_page($params, $smarty);
         
+    } elseif (isset($PIVOTX['parser']->modifier['category'])) {
+        
+        // If a category is set
+        return _smarty_link_category(array( 'category'=>$PIVOTX['parser']->modifier['category'], 'hrefonly'=>true ), $smarty);
+        
     } else {
         
         // Default is link to entry
