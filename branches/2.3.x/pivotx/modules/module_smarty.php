@@ -1227,7 +1227,7 @@ function smarty_comments($params, $format, &$smarty) {
                     $this_tag = $commentinfo['format'];
 
                     // Remove any unused formatting tags.
-                    $this_tag = preg_replace("/%[^%]+%/", "", $this_tag);
+                    $this_tag = preg_replace("/%[a-z-]+%/i", "", $this_tag);
 
                     // Outputting according to order:
                     if ($order == 'ascending') {
