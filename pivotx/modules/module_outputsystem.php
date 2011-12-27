@@ -29,13 +29,15 @@ class OutputSystem {
     protected static $instance = false;
 
     protected $codes;
+    protected $filters;
     protected $defaults;
 
     /**
      * Construct the class
      */
     protected function __construct() {
-        $this->codes = array();
+        $this->codes   = array();
+        $this->filters = array();
         
         $this->defaults = array(
             'script' => array(
@@ -85,6 +87,17 @@ class OutputSystem {
             '<script type="text/javascript">'."\n".
             'jQuery.noConflict();'."\n"
         );
+
+        $this->addOptionalFilter(
+            'minify',
+            array('Minify','osFilter')
+        );
+        if (($PIVOTX['config']->get('minify_frontend')) && (defined('PIVOTX_INWEBLOG'))) {
+            $this->enableFilter('minify');
+        }
+        if (($PIVOTX['config']->get('minify_backend')) && (defined('PIVOTX_INADMIN'))) {
+            $this->enableFilter('minify');
+        }
     }
 
     /**
@@ -98,6 +111,23 @@ class OutputSystem {
             return +1;
         }
         $ret = strcasecmp($a['tag'],$b['tag']);
+        if ($ret != 0) {
+            return $ret;
+        }
+        return 0;
+    }
+
+    /**
+     * (internal) Compare two filters
+     */
+    public static function _cmpFilters(&$a,&$b) {
+        if ($a['_priority'] < $b['_priority']) {
+            return -1;
+        }
+        if ($a['_priority'] > $b['_priority']) {
+            return +1;
+        }
+        $ret = strcasecmp($a['id'],$b['id']);
         if ($ret != 0) {
             return $ret;
         }
@@ -133,6 +163,7 @@ class OutputSystem {
             $params['_tag']       = $tag;
             $params['_location']  = $location;
             $params['_innerhtml'] = $innerhtml;
+            $params['_callback']  = false;
 
             if (!isset($params['_priority'])) {
                 $params['_priority'] = self::PRI_NORMAL;
@@ -162,6 +193,7 @@ class OutputSystem {
             $params['_tag']       = $tag;
             $params['_location']  = $location;
             $params['_innerhtml'] = $innerhtml;
+            $params['_callback']  = false;
             if (!isset($params['_priority'])) {
                 $params['_priority'] = self::PRI_NORMAL;
             }
@@ -240,6 +272,21 @@ class OutputSystem {
     }
 
     /**
+     * Verify and optionally enable code
+     *
+     * Add a callback which will be called on the html. If true is
+     * returned than the code will be enabled.
+     *
+     * @param string $id           id
+     * @param callback $callback   callback to verify if it should be enabled
+     */
+    public function verifyIfEnableCode($id, $callback) {
+        if (isset($this->codes[$id])) {
+            $this->codes[$id]['_callback'] = $callback;
+        }
+    }
+
+    /**
      * Disable a certain code
      *
      * @param string $id    regex string for codes to disable
@@ -249,123 +296,199 @@ class OutputSystem {
     }
 
     /**
+     * Add a filter
+     *
+     * @param array $filter   
+     */
+    public function addFilter($id, $callback) {
+        $params = array();
+
+        $params['_enabled']  = true;
+        $params['_priority'] = self::PRI_LOW;
+        $params['_callback'] = $callback;
+
+        $this->filters[$id] = $params;
+    }
+
+    /**
+     * Optionally add a filter
+     *
+     * @param array $filter   
+     */
+    public function addOptionalFilter($id, $callback) {
+        if (!isset($this->filters[$id])) {
+            $params = array();
+
+            $params['_enabled']  = false;
+            $params['_priority'] = self::PRI_LOW;
+            $params['_callback'] = $callback;
+
+            $this->filters[$id] = $params;
+        }
+    }
+
+    /**
+     * Enable a filter
+     */
+    public function enableFilter($id) {
+        if (isset($this->filters[$id])) {
+            $this->filters[$id]['_enabled'] = true;
+        }
+    }
+
+    /**
+     * Disable a filter
+     */
+    public function disableFilter($id) {
+        if (isset($this->filters[$id])) {
+            $this->filters[$id] = false;
+        }
+    }
+
+    /**
      * Rewrite html
      *
      * @param string $_html     the input html
      * @return string           the rewritten html
      */
     public function rewriteHtml($_html) {
-        if (count($this->codes) == 0) {
+        if ((count($this->codes) == 0) && (count($this->filters) == 0)) {
             return $_html;
         }
 
-        // sort the codes based on priority
+        // filter codes and sort the codes based on priority
         $codes = array();
         foreach($this->codes as $id=>$params) {
             if ($params['_enabled'] == true) {
                 $codes[] = $params;
             }
+            else if ($params['_callback'] != false) {
+                if (call_user_func($params['_callback'], $_html)) {
+                    $codes[] = $params;
+                    $codes[count($codes)-1]['_enabled'] = true;
+                }
+            }
         }
         usort($codes, array('OutputSystem','_cmpCodes'));
 
-        if (count($codes) == 0) {
+        $filters = array();
+        foreach($this->filters as $id=>$params) {
+            if ($params['_enabled'] == true) {
+                $filters[] = $params;
+            }
+        }
+        usort($filters, array('OutputSystem','_cmpFilters'));
+
+        if ((count($codes) == 0) && (count($filters) == 0)) {
             return $_html;
         }
 
         $html = $_html;
 
-        $line_pre  = "\t";
-        $line_post = "\n";
+        if (count($codes) > 0) {
+            $line_pre  = "\t";
+            $line_post = "\n";
 
-        $part = array();
-        $part[self::LOC_HEADSTART] = '';
-        $part[self::LOC_TITLEEND]  = '';
-        $part[self::LOC_HEADEND]   = '';
-        $part[self::LOC_BODYSTART] = '';
-        $part[self::LOC_BODYEND]   = '';
+            $part = array();
+            $part[self::LOC_HEADSTART] = '';
+            $part[self::LOC_TITLEEND]  = '';
+            $part[self::LOC_HEADEND]   = '';
+            $part[self::LOC_BODYSTART] = '';
+            $part[self::LOC_BODYEND]   = '';
 
-        foreach($codes as $params) {
-            if (isset($params['_tag'])) {
-                $tag = $params['_tag'];
-                $loc = $params['_location'];
-                $def = array();
-                $msc = false;
-                if (isset($this->defaults[$tag])) {
-                    $def = $this->defaults[$tag];
+            foreach($codes as $params) {
+                if (isset($params['_tag'])) {
+                    $tag = $params['_tag'];
+                    $loc = $params['_location'];
+                    $def = array();
+                    $msc = false;
+                    if (isset($this->defaults[$tag])) {
+                        $def = $this->defaults[$tag];
+                    }
+                    if (isset($params['_ms-expression'])) {
+                        $msc = $params['_ms-expression'];
+                    }
+
+                    unset($params['_tag']);
+                    unset($params['_enabled']);
+                    unset($params['_priority']);
+                    unset($params['_location']);
+                    unset($params['_ms-expression']);
+                    unset($params['_callback']);
+
+                    $part[$loc] .= $line_pre;
+                    if ($msc !== false) {
+                        $part[$loc] .= '<!--['.$msc.']>';
+                    }
+                    $part[$loc] .= '<'.$tag;
+
+                    $innerhtml = '';
+                    if (isset($params['_innerhtml'])) {
+                        $innerhtml = $params['_innerhtml'];
+                        unset($params['_innerhtml']);
+                    }
+
+                    $attr = array_merge($def,$params);
+                    foreach($attr as $k=>$v) {
+                        $part[$loc] .= ' '.$k.'="'.htmlspecialchars($v).'"';
+                    }
+
+                    if (empty($innerhtml) && $tag!="script") {
+                        $part[$loc] .= ' />';
+                    } else {
+                        $part[$loc] .= '>'.$innerhtml.'</'.$tag.'>';
+                    }
+
+                    if ($msc !== false) {
+                        $part[$loc] .= '<![endif]-->';
+                    }
+                    $part[$loc] .= $line_post;
                 }
-                if (isset($params['_ms-expression'])) {
-                    $msc = $params['_ms-expression'];
-                }
+                else if (isset($params['_template'])) {
+                    $loc      = $params['_location'];
+                    $template = $params['_template'];
+                    $vars     = $params['_vars'];
+                    
+                    $smarty = new PivotxSmarty;
+                    $smarty->disallowRewriteHtml();
+                    foreach($vars as $k=>$v) {
+                        $smarty->assign($k,$v);
+                    }
 
-                unset($params['_tag']);
-                unset($params['_enabled']);
-                unset($params['_priority']);
-                unset($params['_location']);
-                unset($params['_ms-expression']);
-
-                $part[$loc] .= $line_pre;
-                if ($msc !== false) {
-                    $part[$loc] .= '<!--['.$msc.']>';
+                    $part[$loc] .= $smarty->fetch($template);
                 }
-                $part[$loc] .= '<'.$tag;
-
-                $innerhtml = '';
-                if (isset($params['_innerhtml'])) {
-                    $innerhtml = $params['_innerhtml'];
-                    unset($params['_innerhtml']);
-                }
-
-                $attr = array_merge($def,$params);
-                foreach($attr as $k=>$v) {
-                    $part[$loc] .= ' '.$k.'="'.htmlspecialchars($v).'"';
-                }
-
-                if (empty($innerhtml) && $tag!="script") {
-                    $part[$loc] .= ' />';
-                } else {
-                    $part[$loc] .= '>'.$innerhtml.'</'.$tag.'>';
-                }
-
-                if ($msc !== false) {
-                    $part[$loc] .= '<![endif]-->';
-                }
-                $part[$loc] .= $line_post;
             }
-            else if (isset($params['_template'])) {
-                $loc      = $params['_location'];
-                $template = $params['_template'];
-                $vars     = $params['_vars'];
-                
-                $smarty = new PivotxSmarty;
-                $smarty->disallowRewriteHtml();
-                foreach($vars as $k=>$v) {
-                    $smarty->assign($k,$v);
+
+            // !! this part needs to be improved and soon
+            if ($part[self::LOC_HEADSTART] != '') {
+                if (preg_match('|(<meta http-equiv=[\'"]content-type[^>]+>[ \t\r\n]*)|i',$html)) {
+                    $html = preg_replace('|(<meta http-equiv=[\'"]content-type[^>]+>[ \t\r\n]*)|i','$1'.$part[self::LOC_HEADSTART],$html);
                 }
-
-                $part[$loc] .= $smarty->fetch($template);
+                else if (preg_match('|(<head[^>]*>[ \t\r\n]*)|i',$html)) {
+                    $html = preg_replace('|(<head[^>]*>[ \t\r\n]*)|i', '$1'.$part[self::LOC_HEADSTART], $html, 1);
+                }
+            }
+            if ($part[self::LOC_TITLEEND] != '') {
+                $html = str_replace('</title>', '</title>'.$part[self::LOC_TITLEEND].'', $html);
+            }
+            if ($part[self::LOC_HEADEND] != '') {
+                $html = str_replace('</head>', $part[self::LOC_HEADEND].'</head>', $html);
+            }
+            if ($part[self::LOC_BODYSTART] != '') {
+                $html = preg_replace('|(<body[^>]*>)|i', '$1'.$part[self::LOC_BODYSTART], $html, 1);
+            }
+            if ($part[self::LOC_BODYEND] != '') {
+                $html = str_replace('</body>', $part[self::LOC_BODYEND].'</body>', $html);
             }
         }
 
-        // !! this part needs to be improved and soon
-        if ($part[self::LOC_HEADSTART] != '') {
-            if (preg_match('|(<meta http-equiv=[\'"]content-type[^>]+>[ \t\r\n]*)|i',$html)) {
-                $html = preg_replace('|(<meta http-equiv=[\'"]content-type[^>]+>[ \t\r\n]*)|i','$1'.$part[self::LOC_HEADSTART],$html);
+        if (count($filters) > 0) {
+            foreach($filters as $filter) {
+                $ret = call_user_func($filter['_callback'],$html);
+                if ($ret !== false) {
+                    $html = $ret;
+                }
             }
-            else if (preg_match('|(<head[^>]*>[ \t\r\n]*)|i',$html)) {
-                $html = preg_replace('|(<head[^>]*>[ \t\r\n]*)|i', '$1'.$part[self::LOC_HEADSTART], $html, 1);
-            }
-        }
-        if ($part[self::LOC_TITLEEND] != '') {
-            $html = str_replace('</title>', '</title>'.$part[self::LOC_TITLEEND].'', $html);
-        }
-        if ($part[self::LOC_HEADEND] != '') {
-            $html = str_replace('</head>', $part[self::LOC_HEADEND].'</head>', $html);
-        }
-        if ($part[self::LOC_BODYSTART] != '') {
-            $html = preg_replace('|(<body[^>]*>)|i', '$1'.$part[self::LOC_BODYSTART], $html, 1);
-        }
-        if ($part[self::LOC_BODYEND] != '') {
-            $html = str_replace('</body>', $part[self::LOC_BODYEND].'</body>', $html);
         }
 
         return $html;
