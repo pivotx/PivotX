@@ -2391,7 +2391,7 @@ EOM;
         'type' => 'text',
         'name' => 'upload_path',
         'label' => __('File Upload Path'),
-        'text' => makeJtip(__('File Upload Path'), __('The path to the folder where uploaded files are stored. If you change this, be sure to change it in the file <tt>pivotx/includes/timthumb.php</tt> as well.')),
+        'text' => makeJtip(__('File Upload Path'), __('The path to the folder where uploaded files are stored. If you change this, be sure to change it in the file <tt>pivotx/includes/timthumb-config.php</tt> as well.')),
         'value' => '',
         'error' => __('Error'),
         'size' => 50,
