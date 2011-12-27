@@ -1484,9 +1484,20 @@ function jqueryIncludeCallback(&$html) {
         return;   
     }
    
-    if (!preg_match("#<script [^>]*?/jquery[0-9_\.-]*\.(min.js|js)['\"][^>]*?>\s*</script>#i", $html)) { 
-        OutputSystem::instance()->enableCode('jquery');
+    if (!preg_match("#<script [^>]*?/jquery[0-9_\.-]*\.(min.js|js)['\"][^>]*?".">\s*</script>#i", $html)) { 
+        OutputSystem::instance()->verifyIfEnableCode('jquery','verifyJqueryInHtml');
     }
+}
+
+/**
+ * Returns true if jQuery is not included
+ */
+function verifyJqueryInHtml($html) {
+    if (!preg_match("#<script [^>]*?/jquery[0-9_\.-]*\.(min.js|js)['\"][^>]*?".">\s*</script>#i", $html)) { 
+        return true;
+    }
+
+    return false;
 }
 
 ?>

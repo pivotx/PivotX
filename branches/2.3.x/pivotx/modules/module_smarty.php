@@ -5537,12 +5537,6 @@ function pivotxCacheHandler($action, &$smarty_obj, &$cache_content, $tpl_file=nu
                 // We need to rewrite before we write to the cache
                 $os   = OutputSystem::instance();
                 $html = $os->rewriteHtml($html);
-                
-                // If speedy_frontend is enabled, we compress our output here.
-                if ($PIVOTX['config']->get('minify_frontend')) {
-                    $minify = new Minify($html);
-                    $html = $minify->minifyURLS();
-                }                
                
                 // Put $meta and $html back together..
                 $cache_content = $meta . "}}" . $html;

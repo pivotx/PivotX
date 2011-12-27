@@ -1342,13 +1342,6 @@ EOM;
         // here, and perhaps minify the JS and CSS files.
         if(!$PIVOTX['config']->get('smarty_cache')) {
             $PIVOTX['extensions']->executeHook('after_parse', $html);
-            
-            // If minify_frontend is enabled, we compress our output here.
-            if ($PIVOTX['config']->get('minify_frontend')) {
-                $minify = new Minify($html);
-                $html = $minify->minifyURLS();
-            }
-            
         }
 
         // If debug is enabled, we add a line that states how long it took to render

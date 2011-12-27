@@ -3331,7 +3331,7 @@ class Minify {
      **/			
     function _getHead() {
 
-        preg_match("/<head([^>]+)?>.*?<\/head>/is", $this->html, $matches);
+        preg_match("/<head([^>]+)?".">.*?<\/head>/is", $this->html, $matches);
 
         if(!empty($matches[0])) {
 
@@ -3356,7 +3356,7 @@ class Minify {
     
         $scripts = array();
         
-        $regex = "/<script[^>]+type=(['\"])(text\/javascript)\\1([^>]+)?>(.*)<\/script>/iUs";
+        $regex = "/<script[^>]+type=(['\"])(text\/javascript)\\1([^>]+)?".">(.*)<\/script>/iUs";
         preg_match_all($regex, $this->head, $matches);
 
 
@@ -3523,7 +3523,14 @@ class Minify {
          
     }
         
-    
+    /**
+     * OutputSystem Filter Method
+     */
+    public static function osFilter($html)
+    {
+        $minify = new Minify($html);
+        return $minify->minifyURLS();
+    }
 }
 
 
