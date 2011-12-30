@@ -1138,9 +1138,11 @@ function highlightFirstComment() {
     jQuery('table.moderate-comments tr:visible').each(function(){
         if (code == '') {
             var c = jQuery(this).attr('class');
-            var r = c.match(/comment-([0-9]+)/);
-            if (r && (r.length == 2)) {
-                code = '.' + r[0];
+            if (c) {
+                var r = c.match(/comment-([0-9]+)/);
+                if (r && (r.length == 2)) {
+                    code = '.' + r[0];
+                }
             }
         }
     });
