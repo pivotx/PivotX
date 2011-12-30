@@ -57,7 +57,7 @@ function view_log() {
         $fp = fopen($logfile,"w");
         fputs($fp, '<'.'?php /* pivotx */ die(); ?'.'>');
         fclose($fp);
-        header("location: module_debug.php");
+        header("Location: module_debug.php");
         die();
     }
 

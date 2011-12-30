@@ -74,6 +74,7 @@ if (!isInstalled()) {
         $location = "pivotx/index.php";
     }
     header("Location: ".$location);
+    die();
 }
 
 // No trailing slashes on the URI, plz.
