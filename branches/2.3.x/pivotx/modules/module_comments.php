@@ -464,6 +464,11 @@ function getModerationQueue() {
 function approveComments($comments) {
     global $PIVOTX;
     
+    // Abort immediately if no comments passed. 
+    if (empty($comments)) {
+        return;
+    }
+
     // execute a hook here before a comment is processed
     $PIVOTX['extensions']->executeHook('comment_approve', $comments);
 
@@ -502,16 +507,19 @@ function approveComments($comments) {
 }
 
 
-
-
 /**
  * Delete comments in the moderation queue
  *
  * @param array $comments
  */
 function deleteComments($comments) {
-   global $PIVOTX;
-    
+    global $PIVOTX;
+ 
+    // Abort immediately if no comments passed. 
+    if (empty($comments)) {
+        return;
+    }
+
     // execute a hook here before a comment is processed
     $PIVOTX['extensions']->executeHook('comment_approve', $comments);
 

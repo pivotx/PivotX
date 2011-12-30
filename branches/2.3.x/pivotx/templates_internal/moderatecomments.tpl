@@ -68,7 +68,7 @@
 
             <td rowspan='2' class="buttons_small nowrap" style='border-bottom: 1px solid #BBB; color: #777;'>
                 [[ if $comment.allowedit]]
-                <a href="index.php?page=editcomment&amp;uid=[[ $comment.entry_uid ]]&amp;key=[[ $comment.uid ]]&return=moderatecomments" class="dialog comment" title="[[t]]Edit this comment[[/t]]">
+                <a href="index.php?page=editcomment&amp;uid=[[ $comment.entry_uid ]]&amp;key=[[ $comment.uid ]]&amp;return=moderatecomments" class="dialog comment" title="[[t]]Edit this comment[[/t]]">
                     <img src="pics/comment_edit.png" alt="" />[[t]]Edit[[/t]]
                 </a>
                 [[ else ]]
@@ -78,7 +78,7 @@
                 <br/><br/>
 
                 [[ if $comment.allowedit]]
-                <a href="#" onclick="return confirmme('index.php?page=comments&amp;uid=[[ $comment.entry_uid ]]&amp;del=[[ $comment.uid ]]amp;return=moderatecomments', '[[t escape=js ]]Delete this comment?[[/t]]');" class="negative">
+                <a href="#" onclick="return confirmme('index.php?page=comments&amp;uid=[[ $comment.entry_uid ]]&amp;del=[[ $comment.uid ]]&amp;return=moderatecomments', '[[t escape=js ]]Delete this comment?[[/t]]');" class="negative">
                     <img src="pics/comment_delete.png" width='16' height='16' style='border-width: 0px;' alt="" />[[t]]Delete[[/t]]
                 </a>
                 [[ else ]]
