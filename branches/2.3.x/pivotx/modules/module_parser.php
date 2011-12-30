@@ -188,7 +188,7 @@ class Parser {
             // should redirect (to avoid duplicate content).
             if (($PIVOTX['config']->get('mod_rewrite') > 0) && !$this->modifier['root'] && !isset($_GET['rewrite'])) {
                 header("HTTP/1.1 301 Moved Permanently" ); 
-                header("location: " . $page['link']);
+                header("Location: " . $page['link']);
                 die();
             }
 
@@ -408,7 +408,7 @@ class Parser {
             // If we did find an (old) entry, do a 301 redirect.
             if ( !empty($entry['uid']) && !empty($entry['link']) ) {
                 header("HTTP/1.1 301 Moved Permanently" ); 
-                header("location: " . $entry['link']);
+                header("Location: " . $entry['link']);
                 die();
             }
             
@@ -426,7 +426,7 @@ class Parser {
             // If the site uses mod_rewrite, crufty URLs should redirect (to avoid duplicate content).
             if (($PIVOTX['config']->get('mod_rewrite') > 0) && !isset($_GET['rewrite'])) {
                 header("HTTP/1.1 301 Moved Permanently" ); 
-                header("location: " . $entry['link']);
+                header("Location: " . $entry['link']);
                 die();
             }
 
@@ -434,7 +434,8 @@ class Parser {
             $trackback = getDefault($PIVOTX['config']->get('localised_trackback_name'), "trackback");
             if (isset($_GET[$trackback])) {
                 header("HTTP/1.1 301 Moved Permanently" ); 
-                header("location: " . $entry['link']);
+                header("Location: " . $entry['link']);
+                die();
             }
  
             // If the entry isn't published yet, we shouldn't show it.

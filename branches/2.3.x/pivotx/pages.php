@@ -121,13 +121,13 @@ function pageLogin($template="normal") {
             $PIVOTX['languages']->switchLanguage($currentuser['language']);
 
             if (!empty($returnto_link)) {
-                header("location: " . $returnto_link );
+                header("Location: " . $returnto_link );
                 die();
             } else {
                 if ($template=="normal") {
                     pageDashboard();
                 } else if ($template=="mobile") {
-                    header('location: index.php');
+                    header('Location: index.php');
                 } else {
                     pageBookmarklet();
                 }
@@ -322,7 +322,7 @@ function pageSetupUser() {
         $message = urlencode(__("The user has been added! You can login with your new account now."));
 
         // Reload the page, because we want to make sure the correct language is used.
-        header("location: index.php?page=login&px_message=".$message);
+        header("Location: index.php?page=login&px_message=".$message);
         die();
 
     }
@@ -481,7 +481,7 @@ function pageExtensions() {
         $message = urlencode(__("Your Extension settings have been stored."));
 
         // Reload the page, because we want to make sure the new extensions are loaded and initialized..
-        header("location: index.php?page=extensions&px_message=".$message);
+        header("Location: index.php?page=extensions&px_message=".$message);
         die();
 
     }
@@ -536,7 +536,7 @@ function pageWidgets() {
         $message = urlencode(__("Your Extension settings have been stored."));
 
         // Reload the page, because we want to make sure the new extensions are loaded and initialized..
-        header("location: index.php?page=widgets&px_message=".$message);
+        header("Location: index.php?page=widgets&px_message=".$message);
         die();
 
     }
@@ -796,7 +796,7 @@ function pageEntry() {
         } else {
 
             // Redirect to the listing page
-            header('location: ' . makeAdminPageLink('entries'));
+            header('Location: ' . makeAdminPageLink('entries'));
             exit;
 
         }
@@ -3241,7 +3241,7 @@ function pagem_dashboard() {
 
     // check if the user is logged in.
     if (!$PIVOTX['session']->isLoggedIn()) {
-        header("location: index.php?page=login");
+        header("Location: index.php?page=login");
         die();
     }
 

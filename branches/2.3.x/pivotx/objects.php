@@ -2345,13 +2345,22 @@ class Session {
      * @param int $level
      */
     function minLevel($level) {
+        global $PIVOTX;
 
         $this->isLoggedIn();
 
         if ($level>$_SESSION['user']['userlevel']) {
             debug("logged out because the user's level was too low, or not logged in at all");
-            pageLogout();
-            die();
+            
+            // If $PIVOTX['paths'] is set and the headers aren't sent yet, redirect
+            // to the login page, via the logout page.
+            if (!empty($PIVOTX['paths']['pivotx_url']) && !headers_sent() ) {
+                header("Location: ". $PIVOTX['paths']['pivotx_url']."?page=logout");
+            } else {
+                // otherwise, just display it, as good as we can. 
+                pageLogout();
+            }
+            die();                    
         }
 
     }
