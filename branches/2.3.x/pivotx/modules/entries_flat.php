@@ -525,7 +525,7 @@ automagically be published in this section of your weblog.</p>',
         $filteronextrafields = false;
         $filteroncategory = false;
         $filteronuser = false;
-        $filteronstaus = false;
+        $filteronstatus = false;
 
         $params['orderby'] = getDefault($params['orderby'], 'date'); 
         $params['order'] = getDefault($params['order'], 'asc'); 
@@ -675,8 +675,13 @@ automagically be published in this section of your weblog.</p>',
                 $entries_arr_expanded = true;
            } else {
                 // Converting the date index to the same form as the complete array.
+                // (Filtering only on published status.)
                 reset($this->date_index);
+                $current_date = date("Y-m-d-H-i", getCurrentDate());
                 foreach ($this->date_index as $code => $date) {
+                    if ($filteronstatus && ($params['status'] == 'publish') && ($date > $current_date)) {
+                        continue;
+                    }
                     $entries_arr[] = array('code'=> $code, 'uid'=> $code, 'date'=>$date);
                 }
             }
