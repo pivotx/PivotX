@@ -1643,8 +1643,9 @@ EOM;
             $body = parse_intro_or_body( $entry['body'], false, $entry['convert_lb'] );
             $body = $this->_cleanFeedText($body);
 
+            $year = formatDate( $entry['date'], "%year%");
             $tag =  safeString($PIVOTX['config']->get('sitename'), TRUE) .
-                ",". date("Y") . ":" .  safeString($PIVOTX['weblogs']->get('', 'name'), TRUE)."." . $entry['uid'];
+                ",". $year . ":" . safeString($PIVOTX['weblogs']->get('', 'name'), TRUE)."." . $entry['uid'];
             $tag = str_replace("_", "",strtolower($tag));
 
             $date = formatDate( $entry['date'], "%year%-%month%-%day%T%hour24%:%minute%:00") . $this->_rssOffset();
