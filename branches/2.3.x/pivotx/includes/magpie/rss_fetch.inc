@@ -236,7 +236,12 @@ function error ($errormsg, $lvl=E_USER_WARNING) {
         if ( $errormsg ) {
             $errormsg = "MagpieRSS: $errormsg";
             $MAGPIE_ERROR = $errormsg;
-            trigger_error( $errormsg, $lvl);                
+            if ( MAGPIE_DEBUG ) {
+                trigger_error( $errormsg, $lvl);
+            }
+            else {
+                error_log( $errormsg, 0);
+            }
         }
 }
 
