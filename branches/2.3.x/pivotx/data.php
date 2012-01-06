@@ -463,6 +463,67 @@ function modifyMenu(&$menu, $path, $item) {
 }
 
 /**
+ * Add a menu to pivotx top-menu
+ *
+ * Creates the menu if it doesn't exist.
+ * If top is given as a 'name' (= string) it is converted to a menu-item.
+ * If menu-item is not complete, it is automatically filled:
+ * - missing 'sortorder', defaults to 2500
+ * - missing 'uri', defaults to lowercased name and anything other than alphanumeric characters are stripped
+ * - missing 'description', defaults to name
+ * - missing 'href', is given the value of the first item (href or uri-variant)
+ *
+ * @param array &$menu    the menu to edit
+ * @param mixed $top      either a menu name or an array of a menu-item
+ * @param array $items    the items to add to the top-menu
+ */
+function addtoTopMenu(&$menu, $top, $items)
+{
+    if (is_scalar($top)) {
+        $top = array(
+            'name' => $top,
+            'level' => PIVOTX_UL_NORMAL
+        );
+    }
+
+    if (!isset($top['sortorder'])) {
+        $top['sortorder'] = 2500;
+    }
+    if (!isset($top['uri'])) {
+        $top['uri'] = preg_replace('|[^a-z0-9]|','',strtolower($top['name']));
+    }
+    if (!isset($top['description'])) {
+        $top['description'] = $top['name'];
+    }
+    if (!isset($top['href'])) {
+        foreach($items as $item) {
+            if (isset($item['href'])) {
+                $top['href'] = $item['href'];
+                break;
+            }
+            if (isset($item['uri'])) {
+                $top['href'] = '?page='.$item['uri'];
+                break;
+            }
+        }
+    }
+
+    $have = false;
+    foreach($menu as $sm) {
+        if ($sm['uri'] == $top['uri']) {
+            $have = true;
+            break;
+        }
+    }
+
+    if (!$have) {
+        modifyMenu($menu,false,array('menu'=>array($top)));
+    }
+
+    modifyMenu($menu,$top['uri'],array('menu'=>$items));
+}
+
+/**
  * Compare two menu items
  *
  * @param array &$a
