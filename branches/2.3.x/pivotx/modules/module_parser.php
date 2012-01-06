@@ -1136,6 +1136,10 @@ class Parser {
             } else {
                 $link = smarty_link( array('hrefonly'=>true), $PIVOTX['template']);
             }
+
+            if (isset($this->modifier['canonical_link'])) {
+                $link = $this->modifier['canonical_link'];
+            }
         
             // Set the canonical link..
             $canonical = sprintf("\t<link rel=\"canonical\" href=\"%s%s\" />\n",
