@@ -12,11 +12,7 @@
  *
  * $Rev$
  
-/** PivotX comments -- this is timthumb version 2.8.4 - r200
- *  The intention is to put all necessary (or possible) customization into the config file
- *  What we are still waiting for is
- *  Update for base64 encoded external URL
- */
+/* This is timthumb version 2.8.4 - r200 */
 
 /*
  * --- TimThumb CONFIGURATION ---
