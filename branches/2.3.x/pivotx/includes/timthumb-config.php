@@ -14,9 +14,15 @@ include_once "../lib.php";
 $default_zc    = 1;
 $upload_folder = 'images/';  //  this is relative to the directory containing PivotX - do not start with a slash
 
+$src_string = $_GET['src'];
+
+// Allow for base64 encoded src (as used by the Image Tools extension).
+if (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $src_string)) {
+    $_GET['src'] = $src_string = base64_decode($src_string);
+}
+
 // If the src parameter isn't an URL, we assume it's a PivotX image and
 // we set the timthumb LOCAL_FILE_BASE_DIRECTORY config var.
-$src_string = $_GET['src'];
 if(!preg_match('/^https?:\/\/[^\/]+/i', $src_string)){
     // Remove the path to the upload_folder from the src parameter, if present.
     if (strpos($src_string, $upload_folder) === 0) {
