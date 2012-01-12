@@ -403,13 +403,18 @@ function weighSearchResult(&$result, $params) {
     $weight += $w = weighText($result['keywords'], $complete, $words, 120);
     $text   .= 'keywords=' . $w . ',';
 
-    // Get the 'age' of the entry/page in seconds.
-    $age = date("U") - date("U", strtotime($result['date']));
+    if (isset($result['date'])) {
+        // Subtract 1 weight point for every 300000 seconds. (about 2 point per week, with a maximum of 100 points)
+        $age        = time() - strtotime($result['date']);
+        $agepenalty = min( floor($age / 300000), 100);
+        $weight -= $agepenalty;
+        $text   .= 'age=-' . $agepenalty . ',';
+    }
     
-    // Subtract 1 weight point for every 300000 seconds. (about 2 point per week, with a maximum of 100 points)
-    $agepenalty = min( floor($age / 300000), 100);
-    $weight -= $agepenalty;
-    $text   .= 'age=-' . $agepenalty . ',';
+    // Never allow negative weights
+    if ($weight < 0) {
+        $weight = 0;
+    }
 
     $result['weight'] = $weight;
     $result['weight_explanation'] = substr($text,1,-1);
