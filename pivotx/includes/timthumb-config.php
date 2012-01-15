@@ -6,9 +6,6 @@ error_reporting(0);  // always leave this line active
 // Determince the directory containing PivotX.
 $pivotx_parent_directory = dirname(dirname(dirname(__FILE__))) . '/';
 
-// Include lib.php, to get the correct paths.
-include_once "../lib.php";
-
 // Defaults (or hard code your changes)
 // Zoomcrop value
 $default_zc    = 1;
