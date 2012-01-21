@@ -15,32 +15,31 @@
     [[ $title|strip_tags ]]</title>
 
     <!-- jquery and the likes -->
-    <script src="[[$paths.jquery_url]]" type="text/javascript"></script>
-    <script src="includes/js/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
-    <script src="includes/js/jquery-plugins.js" type="text/javascript"></script>
+    <script type="text/javascript" src="[[$paths.jquery_url]]"></script>
+    <script type="text/javascript" src="includes/js/jquery-ui-1.8.17.custom.min.js"></script>
+    <script type="text/javascript" src="includes/js/jquery-plugins.js"></script>
     <script type="text/javascript">
     jQuery(document).ready(function(){
 	humanMsg.setup('body','[[t escape=js]]Message Log[[/t]]');
     });
     </script>
 
-    <link rel="stylesheet" href="templates_internal/ui-theme/jquery-ui-1.8.16.custom.css" type="text/css" />
-
+    <link rel="stylesheet" type="text/css" href="templates_internal/ui-theme/jquery-ui-1.8.17.custom.css" />
 
     <!-- Markitup -->
     <link rel="stylesheet" type="text/css" href="includes/markitup/markitup.css" />
-    <script src="includes/markitup/jquery.markitup.js" type="text/javascript"></script>
-    <script src="includes/markitup/set.js" type="text/javascript"></script>
+    <script type="text/javascript" src="includes/markitup/jquery.markitup.js"></script>
+    <script type="text/javascript" src="includes/markitup/set.js"></script>
 
     <!-- Thickbox -->
-    <script src="includes/js/thickbox.js" type="text/javascript"></script>
-    <link rel="stylesheet" href="templates_internal/assets/thickbox.css" type="text/css" />
+    <script type="text/javascript" src="includes/js/thickbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="templates_internal/assets/thickbox.css" />
 
     <!-- Formclass library -->
     <link rel="stylesheet" type="text/css" href="templates_internal/assets/formclass.css" />
 
     <!-- PivotX -->
-    <script src="includes/js/pivotx.js" type="text/javascript"></script>
+    <script type="text/javascript" src="includes/js/pivotx.js"></script>
     <link rel="stylesheet" type="text/css" href="templates_internal/assets/pivotx.css"/>
 
     [[ hook name="head-end" ]]
