@@ -2823,7 +2823,7 @@ class Paging {
 
         // Preserving some query parameters
         $query = array();
-        if (isset($_GET['w']) && !isset($_GET['rewrite'])) {
+        if (isset($_GET['w']) && (empty($_GET['rewrite']) || ($_GET['rewrite'] == 'offset'))) {
             $query['w'] = 'w=' . $_GET['w'];
         }
         if (isset($_GET['t'])) {
