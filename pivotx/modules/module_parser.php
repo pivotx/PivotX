@@ -2429,7 +2429,8 @@ function cms_tag_weblog($params, $format){
     // end date, and fetch those entries..
     // That is, unless we sort by 'random'. In this case we shouldn't do this,
     // because it will ignore the amount, which leads to weird results.
-    if ( (!empty($modifier['archive']) || !empty($params['archive'])) && ($order!="random") ) {    
+    // If we set the 'ignorearchive' parameter, we will skip this.
+    if ( (!empty($modifier['archive']) || !empty($params['archive'])) && ($order!="random") && empty($params['ignorearchive']) ) {    
 
         if ($modifier['archive']) {
             list($start, $end) = archivenameToDates($modifier['archive']);
