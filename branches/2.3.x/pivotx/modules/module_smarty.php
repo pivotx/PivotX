@@ -2353,9 +2353,9 @@ function smarty_implode($params, &$smarty) {
     }
 
     if (is_array($params['array'])) {
-        return implode($glue, $params['array']);
+        $output = implode($glue, $params['array']);
     } else {
-        return $params['array'];
+        $output = $params['array'];
     }
     
     if($return && is_string($return)) {
