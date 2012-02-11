@@ -574,7 +574,7 @@ function setPaths($sites_path = ''){
     $PIVOTX['paths']['db_url'] = fixpath( $PIVOTX['paths']['pivotx_url'] . $sites_path . 'db/' );
     $PIVOTX['paths']['cache_path'] = fixpath( $PIVOTX['paths']['pivotx_path'] . $sites_path . 'db/cache/' );
 
-    $jquery_filename = getDefault( $PIVOTX['config']->get('jquery_filename'), "jquery-1.7.min.js");
+    $jquery_filename = getDefault( $PIVOTX['config']->get('jquery_filename'), "jquery-1.7.1.min.js");
     $jquery_ui_filename = getDefault( $PIVOTX['config']->get('jquery_ui_filename'), "jquery-ui-1.8.16.custom.min.js");
     $jquery_plugins_filename = getDefault( $PIVOTX['config']->get('jquery_plugins_filename'), "jquery-plugins.js");
     $PIVOTX['paths']['jquery_url'] = fixpath( $PIVOTX['paths']['pivotx_url'] . 'includes/js/' . $jquery_filename );
