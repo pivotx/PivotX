@@ -509,7 +509,7 @@ class Parser {
         global $PIVOTX;
 
         // Execute a hook, if present.
-        $PIVOTX['extensions']->executeHook('before_parse', $tag);
+        $PIVOTX['extensions']->executeHook('before_parse', $this->modifier);
 
         // The type of page we're rendering
         $this->modifier['pagetype'] = 'tag';
