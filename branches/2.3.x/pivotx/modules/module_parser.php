@@ -556,7 +556,6 @@ class Parser {
         global $PIVOTX;
 
         // Execute a hook, if present.
-        $dummy = array(); // because we pass by reference, PHP complains if the parameter is not a variable..
         $PIVOTX['extensions']->executeHook('before_parse', $this->modifier );
 
         // The type of page we're rendering
@@ -666,8 +665,7 @@ class Parser {
         global $PIVOTX;
 
         // Execute a hook, if present.
-        $dummy = array(); // because we pass by reference, PHP complains if the parameter is not a variable..
-        $PIVOTX['extensions']->executeHook('before_parse', $dummy );
+        $PIVOTX['extensions']->executeHook('before_parse', $this->modifier );
 
         if ($this->modifier['uri'] == "tagpage") {
 
