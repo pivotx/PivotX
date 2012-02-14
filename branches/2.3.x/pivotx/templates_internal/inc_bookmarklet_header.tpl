@@ -8,7 +8,7 @@
 
     <!-- jquery and the likes -->
     <script src="[[$paths.jquery_url]]" type="text/javascript"></script>
-    <script src="[[$paths.pivotx_url]]includes/js/jquery-plugins.js" type="text/javascript"></script>
+    <script src="[[$paths.jquery_plugins_url]]" type="text/javascript"></script>
 
 
 
