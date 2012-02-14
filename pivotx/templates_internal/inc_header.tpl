@@ -16,11 +16,11 @@
 
     <!-- jquery and the likes -->
     <script type="text/javascript" src="[[$paths.jquery_url]]"></script>
-    <script type="text/javascript" src="includes/js/jquery-ui-1.8.17.custom.min.js"></script>
-    <script type="text/javascript" src="includes/js/jquery-plugins.js"></script>
+    <script type="text/javascript" src="[[$paths.jquery_ui_url]]"></script>
+    <script type="text/javascript" src="[[$paths.jquery_plugins_url]]"></script>
     <script type="text/javascript">
     jQuery(document).ready(function(){
-	humanMsg.setup('body','[[t escape=js]]Message Log[[/t]]');
+        humanMsg.setup('body','[[t escape=js]]Message Log[[/t]]');
     });
     </script>
 
