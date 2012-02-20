@@ -2446,6 +2446,8 @@ function smarty_latest_comments($params) {
     $latest_comments_length = getDefault($params['length'], 100);
     $latest_comments_trim = getDefault($params['trim'], 16);
     $latest_comments_count = getDefault($params['count'], 6);
+    $toread_comments_count = $latest_comment_count*2;
+    if ($toread_comments_count < 50) { $toread_comments_count = 50; }
 
     if (!empty($params['category']) && ($params['category']!="*")) {
         $cats = explode(",",safeString($params['category']));
@@ -2462,7 +2464,7 @@ function smarty_latest_comments($params) {
 
     $comments = $PIVOTX['db']->read_latestcomments(array(
         'cats' => $cats,
-        'count' => $latest_comments_count*3,
+        'count' => $toread_comments_count,
         'moderated' => 1
     ));
 
