@@ -892,7 +892,6 @@ class ajaxhelper {
             $path .= $folder;
             $url .= $folder;
 
-
             $incrementalpath="";
             foreach(explode("/", $folder) as $item) {
                 if (!empty($item)) {
@@ -900,12 +899,9 @@ class ajaxhelper {
                     $breadcrumbs[] = sprintf("<a href='#' onclick=\"fileSelectorChangefolder('%s')\">%s</a>", $incrementalpath, $item);
                 }    
             }
-
         }
 
-
         $breadcrumbs = implode(" &raquo; ", $breadcrumbs);
-
 
         $files = array();
         $folders = array();
@@ -920,7 +916,6 @@ class ajaxhelper {
                 continue;
             }        
 
-
             if (is_file($path.$filename)) {
                 $files[$filename]['link'] = $url.urlencode($filename);
                 $files[$filename]['name'] = trimText($filename,50);
@@ -932,11 +927,10 @@ class ajaxhelper {
                 if (in_array($ext, array('gif', 'jpg', 'jpeg', 'png'))) {
                     $dim = getimagesize($path."/".$filename);
                     $files[$filename]['dimension'] = sprintf('%s &#215; %s', $dim[0], $dim[1]);
+                    $files[$filename]['image_type'] = $ext;
                 }
 
                 $files[$filename]['path'] = $folder.$filename;
-
-
             }
 
             if (is_dir($path.$filename)) {
@@ -947,10 +941,7 @@ class ajaxhelper {
                     'path'=> $folder.$filename
                 );
 
-
-
             }        
-
         }
         $d->close();
 
@@ -963,16 +954,27 @@ class ajaxhelper {
 
         foreach($folders as $folder) {    
             printf("<div class='folder'><a href='#' onclick=\"fileSelectorChangefolder('%s'); return false;\">%s</a></div>",
-            addslashes($folder['path']), $folder['name']);
+                addslashes($folder['path']), $folder['name']
+            );
         }
 
         foreach($files as $file) {    
-            printf("<div class='file'><a href='#' onclick=\"fileSelectorChoose('%s'); return false;\">%s</a> <span>(%s%s)</span></div>",
-            addslashes($file['path']),   
-            $file['name'],
-            $file['size'],
-            (!empty($file['dimension'])) ? " - ".$file['dimension']." px" : ""
-        );
+            if ($PIVOTX['config']->get('fileselector_thumbs') && !empty($file['image_type'])) {
+                $height = getDefault($PIVOTX['config']->get('fileselector_thumbs_height'), 40);
+                $link_text = sprintf("<img src='%sincludes/timthumb.php?h=%s&amp;src=%s' alt='%s' title='%s'>",
+                    $PIVOTX['paths']['pivotx_url'], $height, $file['path'], $file['name'], $file['name']
+                );
+                $extra_style = "style='height: ${height}px; margin-bottom: 5px;'";
+            } else {
+                $link_text = $file['name'];
+                $extra_style = "";
+            }
+            printf("<div class='file' $extra_style><a href='#' onclick=\"fileSelectorChoose('%s'); return false;\">%s</a> <span>(%s%s)</span></div>",
+                addslashes($file['path']),   
+                $link_text,
+                $file['size'],
+                (!empty($file['dimension'])) ? " - ".$file['dimension']." px" : ""
+            );
         }
 
         echo "</div>";
