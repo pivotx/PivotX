@@ -117,7 +117,7 @@ function updatePreview(imagename) {
         imagename = trim( $('#f_image').val() );
     }
 
-    if ( (imagename.length < 4) || ( (!imagename.match('.gif')) && (!imagename.match('.jpg')) && (!imagename.match('.jpeg')) && (!imagename.match('.png'))) ) {
+    if ( (imagename.length < 4) || !imagename.match(/\.(gif|png|jpg|jpeg)/i)) {
         $('#imagepreview').html("");
     } else {
         $('#imagepreview').html("<img src='../timthumb.php?src=" + escape(imagename) + "&w=171&h=128' width='171' height='128' alt='preview' />");
