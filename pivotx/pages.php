@@ -546,17 +546,24 @@ function pageWidgets() {
 
     foreach ($list['widget'] as $extension) {
 
-        $description = sprintf("<li class=\"widget\" id=\"widget_%s\"><span rel='%s' id='update-%s'></span><strong>%s</strong><br /><p style='margin: 0;'>%s</p><p style='color: #999; margin: 0; font-size: 11px;'>By: %s",
+        $description = sprintf("<li class=\"widget\" id=\"widget_%s\">" .
+            "<span rel='%s' id='update-%s'></span><strong>%s</strong><br />" . 
+            "<p style='margin: 0;'>%s</p><p style='color: #999; margin: 0; font-size: 11px;'>%s: %s",
             $extension['identifier'],
             $extension['version'],
             $extension['identifier'],
             $extension['extension'],
             $extension['description'],
+            __("By"),
             $extension['author']
         );
 
+        if ($extension['version']!="") {
+            $description .= ', '. __("version"). ': ' . $extension['version'];
+        }
+
         if ($extension['date']!="") {
-            $description .= ", last updated: " . $extension['date'];
+            $description .= ', '.__("last updated").': ' . $extension['date'];
         }
 
         if ($extension['site']!="") {
@@ -568,8 +575,9 @@ function pageWidgets() {
         if ( $extension['active']==1 ) {
 
              // If the extension has its own config screen, we make a direct link to it.
-            if ($extension['config']!="" ) {
-                $description .= ", <a href='index.php?page=configuration#section-".$extension['config'].
+            if ($PIVOTX['extensions']->getAdminScreenName($extension['identifier'])!==false) {
+                $description .= ", <a href='index.php?page=configuration#section-".
+                    $PIVOTX['extensions']->getAdminScreenName($extension['identifier']) .
                     "'>" . __('edit configuration') . "</a>";
             }
 
