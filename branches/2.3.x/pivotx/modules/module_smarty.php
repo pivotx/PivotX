@@ -2281,14 +2281,16 @@ function smarty_download( $params ) {
         // We don't have icons for _all_ filetypes, so we group some together..
         if (in_array($ext, array('gif', 'jpg', 'jpeg', 'png', 'psd', 'eps', 'bmp', 'tiff', 'ai'))) {
             $iconext = "image";
-        } else if (in_array($ext, array('doc', 'docx', 'rtf', 'dot', 'dotx'))) {
+        } else if (in_array($ext, array('doc', 'docx', 'rtf', 'dot', 'dotx', 'odt', 'ott', 'xps'))) {
             $iconext = "doc";
         } else if (in_array($ext, array('mp3', 'aiff', 'ogg', 'wav'))) {
             $iconext = "audio";
-        } else if (in_array($ext, array('wmv', 'mpg', 'mov', 'swf', 'flv'))) {
+        } else if (in_array($ext, array('wmv', 'mpg', 'mov', 'swf', 'flv', 'avi', 'mp4'))) {
             $iconext = "movie";
-        } else if (in_array($ext, array('zip', 'gz', 'tgz', 'rar', 'dmg'))) {
-            $iconext = "zip";            
+        } else if (in_array($ext, array('zip', 'gz', 'tgz', 'rar', 'dmg', '7z'))) {
+            $iconext = "zip";        
+        } else if (in_array($ext, array('ppt', 'pptx', 'pot', 'pps', 'ppsx', 'ppsm', 'odp', 'otp'))) {
+            $iconext = "ppt";  
         } else {
             $iconext = $ext;
         }
