@@ -28,8 +28,12 @@ if(!preg_match('/^https?:\/\/[^\/]+/i', $src_string)){
         list($prepath, $src_string) = explode($upload_folder, $src_string);
         $_GET['src'] = $src_string;
     }
-    // Set base folder taking multisite into account
+    // Set base folder taking multisite into account. We must include the multisite module
+    // since we haven't initialized PivotX. We also have to set $pivotx_path since it's 
+    // used by the module (and expected to be set).
+    include_once($pivotx_parent_directory . 'pivotx/modules/module_multisite.php');
     if (class_exists('MultiSite')) {
+	$pivotx_path = $pivotx_parent_directory . 'pivotx/';
         $multisite = new MultiSite();
         if ($multisite->isActive()) {
             $upload_folder = 'pivotx/' . $multisite->getPath() . $upload_folder;
