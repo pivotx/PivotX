@@ -15,14 +15,14 @@ tinyMCE_GZ.init({
         language : "en", // FIXME: select the right language. 
         mode: "specific_textareas",
         editor_selector: "Editor", 
-        extended_valid_elements : "a[href|target|name|title|rel|class|id],hr[class|width|size|noshade|style],font[face|size|color|style|class]," +
-                "span[id|class|align|style],img[class|src|border|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name]," +
+        extended_valid_elements : "a[href|target|name|title|rel|class|id|style],hr[class|width|size|noshade|style],font[face|size|color|style|class]," +
+                "span[id|class|align|style],img[class|src|border|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name|style]," +
                 "br[class|clear|id|style|title],object[width|height|classid|codebase|id|data|type],param[name|value|_value],embed[name|src|type|wmode|width|height|style|allowScriptAccess|menu|quality|pluginspage],small," + 
-                "iframe[id|class|src|width|height|name|align|frameborder|scrolling]," +
-                "form[name|id|action|method|enctype|accept-charset|onsubmit|onreset|target],option[name|id|value]," + 
-                "input[id|name|type|value|size|maxlength|checked|accept|src|width|height|disabled|readonly|tabindex|accesskey|onfocus|onblur|onchange|onselect]," +
-                "textarea[id|name|rows|cols|disabled|readonly|tabindex|accesskey|onfocus|onblur|onchange|onselect]," + 
-                "select[id|name|type|value|size|maxlength|checked|accept|src|width|height|disabled|readonly|tabindex|accesskey|onfocus|onblur|onchange|onselect|length|options|selectedIndex]," +
+                "iframe[id|class|src|width|height|name|align|frameborder|scrolling|style]," +
+                "form[name|id|action|method|enctype|accept-charset|onsubmit|onreset|target|style],option[name|id|value]," + 
+                "input[id|name|type|value|size|maxlength|checked|accept|src|width|height|disabled|readonly|tabindex|accesskey|onfocus|onblur|onchange|onselect|style]," +
+                "textarea[id|name|rows|cols|disabled|readonly|tabindex|accesskey|onfocus|onblur|onchange|onselect|style]," + 
+                "select[id|name|type|value|size|maxlength|checked|accept|src|width|height|disabled|readonly|tabindex|accesskey|onfocus|onblur|onchange|onselect|length|options|selectedIndex|style]," +
                 "audio[controls|autoplay],source[src|type]",
         theme_advanced_toolbar_location : "top",
         theme_advanced_toolbar_align : "left",
