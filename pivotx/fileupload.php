@@ -170,6 +170,7 @@ if (strpos($contentType, "multipart") !== false) {
     $allowedtypes = array_map('trim', explode(',', $PIVOTX['config']->get('upload_accept')));
     if (!in_array($_FILES['file']['type'], $allowedtypes)) {
         $msg = sprintf(__("Illegal file type %s uploaded. Check your %s setting."), $_FILES['file']['type'], __('Allow filetypes')); 
+        debug($msg);
         die('{"jsonrpc" : "2.0", "error" : {"code": 105, "message": "'.$msg.'"}, "id" : "id"}');
         // Argh! This die statement is *not* reflected in the upload dialog at all. 
     }
