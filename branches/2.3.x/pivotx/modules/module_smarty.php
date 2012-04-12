@@ -776,6 +776,12 @@ function smarty_category_list($params, &$smarty) {
         $only = array();
     }
 
+    // See if we need to return a var, instead..
+    if($params['return'] && is_string($params['return'])) {
+        $smarty->assign($params['return'], $mycats);
+        return "";
+    }
+
     if( is_array( $mycats )) {
 
         // Iterate over the list, formatting output as we go.
