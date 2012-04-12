@@ -1,10 +1,10 @@
 PHP Markdown
 ============
 
-Version 1.0.1g - Tue 3 Jul 2007
+Version 1.0.1o - Sun 8 Jan 2012
 
 by Michel Fortin
-<http://www.michelf.com/>
+<http://michelf.com/>
 
 based on work by John Gruber  
 <http://daringfireball.net/>
@@ -38,10 +38,7 @@ PHP Markdown requires PHP version 4.0.5 or later.
 
 ### WordPress ###
 
-PHP Markdown works with [WordPress][wp], version 1.2 or later. 
-PHP Markdown is already bundled with WordPress. Still, you can find 
-here the latest version that may be newer than the latest WordPress 
-version.
+PHP Markdown works with [WordPress][wp], version 1.2 or later.
 
  [wp]: http://wordpress.org/
 
@@ -113,7 +110,7 @@ can solve this problem by installing the "smartypants.php" file from
 Compatibility Mode function will use SmartyPants automatically without 
 further modification.
 
- [psp]: http://www.michelf.com/projects/php-smartypants/
+ [psp]: http://michelf.com/projects/php-smartypants/
 
 
 ### Updating Markdown in Other Programs ###
@@ -202,6 +199,152 @@ expected; (3) the output PHP Markdown actually produced.
 
 Version History
 ---------------
+
+1.0.1o (8 Jan 2012):
+
+*	Silenced a new warning introduced around PHP 5.3 complaining about
+	POSIX characters classes not being implemented. PHP Markdown does not
+	use POSIX character classes, but it nevertheless trigged that warning.
+
+
+1.0.1n (10 Oct 2009):
+
+*	Enabled reference-style shortcut links. Now you can write reference-style 
+	links with less brakets:
+	
+		This is [my website].
+		
+		[my website]: http://example.com/
+	
+	This was added in the 1.0.2 betas, but commented out in the 1.0.1 branch, 
+	waiting for the feature to be officialized. [But half of the other Markdown
+	implementations are supporting this syntax][half], so it makes sense for 
+	compatibility's sake to allow it in PHP Markdown too.
+
+ [half]: http://babelmark.bobtfish.net/?markdown=This+is+%5Bmy+website%5D.%0D%0A%09%09%0D%0A%5Bmy+website%5D%3A+http%3A%2F%2Fexample.com%2F%0D%0A&src=1&dest=2
+
+*	Now accepting many valid email addresses in autolinks that were 
+	previously rejected, such as:
+	
+		<abc+mailbox/department=shipping@example.com>
+		<!#$%&'*+-/=?^_`.{|}~@example.com>
+		<"abc@def"@example.com>
+		<"Fred Bloggs"@example.com>
+		<jsmith@[192.0.2.1]>
+
+*	Now accepting spaces in URLs for inline and reference-style links. Such 
+	URLs need to be surrounded by angle brakets. For instance:
+	
+		[link text](<http://url/with space> "optional title")
+
+		[link text][ref]
+		[ref]: <http://url/with space> "optional title"
+	
+	There is still a quirk which may prevent this from working correctly with 
+	relative URLs in inline-style links however.
+
+*	Fix for adjacent list of different kind where the second list could
+	end as a sublist of the first when not separated by an empty line.
+
+*	Fixed a bug where inline-style links wouldn't be recognized when the link 
+	definition contains a line break between the url and the title.
+
+*	Fixed a bug where tags where the name contains an underscore aren't parsed 
+	correctly.
+
+*	Fixed some corner-cases mixing underscore-ephasis and asterisk-emphasis.
+
+
+1.0.1m (21 Jun 2008):
+
+*	Lists can now have empty items.
+
+*	Rewrote the emphasis and strong emphasis parser to fix some issues
+	with odly placed and overlong markers.
+
+
+1.0.1l (11 May 2008):
+
+*	Now removing the UTF-8 BOM at the start of a document, if present.
+
+*	Now accepting capitalized URI schemes (such as HTTP:) in automatic
+	links, such as `<HTTP://EXAMPLE.COM/>`.
+
+*	Fixed a problem where `<hr@example.com>` was seen as a horizontal
+	rule instead of an automatic link.
+
+*	Fixed an issue where some characters in Markdown-generated HTML
+	attributes weren't properly escaped with entities.
+
+*	Fix for code blocks as first element of a list item. Previously,
+	this didn't create any code block for item 2:
+	
+		*   Item 1 (regular paragraph)
+		
+		*       Item 2 (code block)
+
+*	A code block starting on the second line of a document wasn't seen
+	as a code block. This has been fixed.
+	
+*	Added programatically-settable parser properties `predef_urls` and 
+	`predef_titles` for predefined URLs and titles for reference-style 
+	links. To use this, your PHP code must call the parser this way:
+	
+		$parser = new Markdwon_Parser;
+		$parser->predef_urls = array('linkref' => 'http://example.com');
+		$html = $parser->transform($text);
+	
+	You can then use the URL as a normal link reference:
+	
+		[my link][linkref]	
+		[my link][linkRef]
+		
+	Reference names in the parser properties *must* be lowercase.
+	Reference names in the Markdown source may have any case.
+
+*	Added `setup` and `teardown` methods which can be used by subclassers
+	as hook points to arrange the state of some parser variables before and 
+	after parsing.
+
+
+1.0.1k (26 Sep 2007):
+
+*	Fixed a problem introduced in 1.0.1i where three or more identical
+	uppercase letters, as well as a few other symbols, would trigger
+	a horizontal line.
+
+
+1.0.1j (4 Sep 2007):
+
+*	Fixed a problem introduced in 1.0.1i where the closing `code` and 
+	`pre` tags at the end of a code block were appearing in the wrong 
+	order.
+
+*	Overriding configuration settings by defining constants from an 
+	external before markdown.php is included is now possible without 
+	producing a PHP warning.
+
+
+1.0.1i (31 Aug 2007):
+
+*	Fixed a problem where an escaped backslash before a code span 
+	would prevent the code span from being created. This should now
+	work as expected:
+	
+		Litteral backslash: \\`code span`
+
+*	Overall speed improvements, especially with long documents.
+
+
+1.0.1h (3 Aug 2007):
+
+*	Added two properties (`no_markup` and `no_entities`) to the parser 
+	allowing HTML tags and entities to be disabled.
+
+*	Fix for a problem introduced in 1.0.1g where posting comments in 
+	WordPress would trigger PHP warnings and cause some markup to be 
+	incorrectly filtered by the kses filter in WordPress.
+
 
 1.0.1g (3 Jul 2007):
 
@@ -433,7 +576,7 @@ Version History
 *	Major rewrite of the WordPress integration code that should 
 	correct many problems by preventing default WordPress filters from 
 	tampering with Markdown-formatted text. More details here:
-	<http://www.michelf.com/weblog/2005/wordpress-text-flow-vs-markdown/>
+	<http://michelf.com/weblog/2005/wordpress-text-flow-vs-markdown/>
 
 
 1.0.1a (15 Apr 2005)
@@ -597,8 +740,8 @@ Copyright and License
 ---------------------
 
 PHP Markdown
-Copyright (c) 2004-2007 Michel Fortin  
-<http://www.michelf.com/>  
+Copyright (c) 2004-2009 Michel Fortin  
+<http://michelf.com/>  
 All rights reserved.
 
 Based on Markdown  
