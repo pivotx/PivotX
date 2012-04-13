@@ -34,7 +34,7 @@ class pivotx_hashcash
 
     const MAX_KEY_RETENTION = 3600;     /* maximum age of the keys we keep */
     const MAX_KEY_PER_IP = 5;           /* maximum keys per ip we keep */
-    const MAX_KEYS = 400;               /* maximum number of keys we keep (approx. 280 bytes per key) */
+    const MAX_KEYS = 1000;              /* maximum number of keys we keep (approx. 280 bytes per key) */
     const MAX_KEYFILESIZE = 524288;     /* maxmum keyfile size, 512kb */
     const MAX_LOGFILESIZE = 1049600;    /* maximum logfile size, 1024kb */
 
