@@ -4272,8 +4272,12 @@ function loadSerialize($filename, $silent=false) {
             return FALSE; 
         }
 
-        $message = str_replace("%name%", $filename, "A needed file ('%name%') could not be read. <br /><br />Try logging in with your ftp-client and check to see if it is chmodded to be readable by the webuser (ie: 777 or 766, depending on the setup of your server). Else go <a href='javascript:history.go(-1)'>back</a> to the last page.");
-        renderErrorpage("File is not readable!", $message);
+        $message = sprintf(__("<p>The following file could not be read:</p>%s" . 
+                "<p>Try logging in with your ftp-client and make the file readable. " . 
+                "Else try to go <a href='javascript:history.go(-1)'>back</a> to the last page.</p>"),
+            '<pre>' . htmlspecialchars($filename) . '</pre>' 
+        );
+        renderErrorpage(__("File is not readable!"), $message);
     }
 
     $serialized_data = trim(implode("", file($filename)));
