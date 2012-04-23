@@ -1617,7 +1617,7 @@ EOM;
             'error' => __('Error'),
             'size' => 10,
             'isrequired' => 1,
-            'validation' => 'integer|min=0|max=200',
+            'validation' => 'integer|min=0',
             'text' => makeJtip(__('Number of Entries'), __('The Number of entries in this subweblog that will be shown on the frontpage.'))
         ));
 
