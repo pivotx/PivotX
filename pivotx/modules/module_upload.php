@@ -39,10 +39,19 @@ class UploadElement {
         if (!isset($params['max_file_size'])) {
             $ini_size = strtolower(ini_get('upload_max_filesize'));
             if (strpos('kmg',substr($ini_size,-1)) !== false) {
-                $ini_size .= 'b';
+                $ini_size .= 'b';  // add a "b" to get kb/mb/gb
             }
-            if (is_numeric($ini_size)) {
-                $ini_size = floor($ini_size/1024).'k';
+            if (is_numeric($ini_size)) {  
+                $ini_size = floor($ini_size/1024).'kb'; // changed to kb from k
+            }
+            // get config option and compare to server value
+            $upl_size = getDefault($PIVOTX['config']->get('upload_max_filesize'), -1);
+            if ($upl_size > 0) {
+                $ini_unit = substr($ini_size,-2);
+                if ($ini_unit == 'gb') { $upl_size = floor($upl_size/1024/1024/1024).'gb'; }
+                if ($ini_unit == 'mb') { $upl_size = floor($upl_size/1024/1024).'mb'; }
+                if ($ini_unit == 'kb') { $upl_size = floor($upl_size/1024).'kb'; }
+                if (substr($upl_size,0,-2) < substr($ini_size,0,-2)) { $ini_size = $upl_size; }
             }
             $params['max_file_size'] = $ini_size;
         }
