@@ -1723,7 +1723,13 @@ EOM;
             // Execute the 'feed_entry' hook, if present.
             $PIVOTX['extensions']->executeHook('feed_entry', $replace );                
                 
-            $feed .= str_replace(array_keys($replace), array_values($replace), $feed_template);
+            // Replace all items in $replace, unless it's an empty array. This way the feed_entry 
+            // hook can set $replace to an empty array, in order to skip it entirely.    
+            if (!empty($replace)) {
+
+                $feed .= str_replace(array_keys($replace), array_values($replace), $feed_template);
+
+            }
 
         }
         return $feed;
@@ -1787,24 +1793,30 @@ EOM;
             // Execute the 'feed_comment' hook, if present.
             $PIVOTX['extensions']->executeHook('feed_comment', $replace );                
                 
-            $item = str_replace(array_keys($replace), array_values($replace), $feed_template);
+            // Replace all items in $replace, unless it's an empty array. This way the feed_comment 
+            // hook can set $replace to an empty array, in order to skip it entirely.  
+            if (!empty($replace)) { 
+                               
+                $item = str_replace(array_keys($replace), array_values($replace), $feed_template);
 
-            // Handling email and url separately.
-            if (isEmail($comment['email'])) {
-                $item = str_replace('%author-email%', $comment['email'], $item);
-            } else {
-                $item = str_replace('<email>%author-email%</email>', '', $item);
-            }
-            if (isUrl($comment['url'])) {
-                if (strpos($comment["url"], "ttp://") < 1 ) {
-                    $comment["url"]="http://".$comment["url"];
+                // Handling email and url separately.
+                if (isEmail($comment['email'])) {
+                    $item = str_replace('%author-email%', $comment['email'], $item);
+                } else {
+                    $item = str_replace('<email>%author-email%</email>', '', $item);
                 }
-                $item = str_replace('%author-link%', $comment['url'], $item);
-            } else {
-                $item = str_replace('<uri>%author-link%</uri>', '', $item);
+                if (isUrl($comment['url'])) {
+                    if (strpos($comment["url"], "ttp://") < 1 ) {
+                        $comment["url"]="http://".$comment["url"];
+                    }
+                    $item = str_replace('%author-link%', $comment['url'], $item);
+                } else {
+                    $item = str_replace('<uri>%author-link%</uri>', '', $item);
+                }
+                
+                $feed_items .= $item;
+
             }
-            
-            $feed_items .= $item;
 
         }
 
