@@ -361,17 +361,18 @@ class db {
      * @return array
      */
     function set_entry($entry) {
-        global $loadcount;
 
-
+        $iswordhtml = false;
         if (isWordHtml($entry['introduction'])) {
-            echo "<p>You pasted text directly from Microsoft Word. Some of the markup might be lost</p>";
             $entry['introduction'] = stripWordHtml($entry['introduction']);
+            $iswordhtml = true;
         }
-
         if (isWordHtml($entry['body'])) {
-            echo "<p>You pasted text directly from Microsoft Word. Some of the markup might be lost</p>";
             $entry['body'] = stripWordHtml($entry['body']);
+            $iswordhtml = true;
+        }
+        if ($iswordhtml) {
+            debug(__('Text pasted directly from Microsoft Word. Some of the markup might be lost.'));
         }
 
         $this->entry = $this->db_lowlevel->set_entry($entry);
