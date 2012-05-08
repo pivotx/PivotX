@@ -428,6 +428,11 @@ function renderErrorpage($error, $additionalinfo) {
         $PIVOTX['template']->assign('warnings', $PIVOTX['messages']->getWarnings() );
     }
 
+    // Make sure $additionalinfo is wrapped with a <p> tag..
+    if (substr($additionalinfo, 0, 2)!="<p") {
+        $additionalinfo = "<p>" . $additionalinfo . "</p>";
+    }
+    
     // Assign some other global stuff to smarty
     $PIVOTX['template']->assign("build", $build);
     $PIVOTX['template']->assign('timetaken', timeTaken() );
