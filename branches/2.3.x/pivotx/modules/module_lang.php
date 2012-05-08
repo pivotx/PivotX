@@ -144,7 +144,7 @@ class Languages {
         if ($language == '') {
             if (!isInstalled()) {
                 $language = $this->default;
-            } elseif (defined('PIVOTX_INADMIN')) {
+            } elseif (defined('PIVOTX_INADMIN') || defined('PIVOTX_INEDITOR')) {
                 $currentuser = $PIVOTX['users']->getUser( $PIVOTX['session']->currentUsername() );
                 $language = $currentuser['language'];
             } elseif (defined('PIVOTX_INWEBLOG')) {

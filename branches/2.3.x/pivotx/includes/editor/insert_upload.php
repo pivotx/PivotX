@@ -13,20 +13,8 @@
 //
 // ---------------------------------------------------------------------------
 
-
-require_once(dirname(dirname(dirname(__FILE__))).'/lib.php');
-
-// Include some other files
-require_once($pivotx_path.'lib.php');
-//require_once($pivotx_path.'modules/module_db.php');
-require_once($pivotx_path.'modules/module_i18n.php');
-require_once($pivotx_path.'modules/module_lang.php');
-require_once($pivotx_path.'modules/module_parser.php');
-//require_once($pivotx_path.'modules/module_ipblock.php');
-//require_once($pivotx_path.'modules/module_spamkiller.php');
-require_once($pivotx_path.'modules/module_snippets.php');
-require_once($pivotx_path.'modules/module_tags.php');
-
+define('PIVOTX_INEDITOR', TRUE);
+require_once(dirname(dirname(dirname(__FILE__))) . '/lib.php');
 initializePivotX(false);
 
 // Make sure the person requesting this page is logged in:
