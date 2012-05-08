@@ -1804,7 +1804,7 @@ EOM;
         'label' => __('Mail to'),
         'error' => __('Error'),
         'size' => 50,
-        'validation' => 'email|minlen=1|maxlen=80',
+        'validation' => 'minlen=5', 
         'text' => makeJtip(__('Mail to'), __('Specify the email address(es) to whom mail will be sent. Separate multiple addresses with a comma.'))
     ));
 
