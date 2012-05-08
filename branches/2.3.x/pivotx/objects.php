@@ -3459,7 +3459,7 @@ class Minify {
                 
                 // We also skip files with an '?', because they have extra paremeters, indicating
                 // that they are generated, so we shouldn't minify them.                
-                if ( empty($href) || ($ext!="css") || (strpos($href, "ttp://")==1) || (strpos($href, "ttps://")==1) || (strpos($res, "?")>0) ) {
+                if ( empty($href) || ($ext!="css") || (strpos($href, "ttp://")==1) || (strpos($href, "ttps://")==1) || (strpos($href, "?")>0) ) {
                     continue;
                 }
                 
