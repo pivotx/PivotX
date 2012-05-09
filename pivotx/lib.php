@@ -2112,6 +2112,18 @@ function cleanUserInput() {
 }
 
 /**
+ * Cleans idiotic and unsafe parts of a path.
+ *
+ * We can't use realpath since the path can be relative.
+ */
+function cleanPath($path) {
+    $path = str_replace('../', '', $path);
+    $path = str_replace('..\\', '', $path);
+    $path = str_replace('..'.DIRECTORY_SEPARATOR, '', $path);
+    return $path;
+}
+
+/**
  * Clean strings to be used as (X)HTML attributes - strip tags and entify 
  * ampersands and quotes.
  *

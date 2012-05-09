@@ -51,12 +51,7 @@ if (isset($_GET['path']) && ($_GET['path'] != '')) {
     /* Using same user level as in fileOperations (in lib.php) */
     $PIVOTX['session']->minLevel(PIVOTX_UL_ADVANCED);
 
-    $path = $_GET['path'];
-
-    // Remove some idiotic and unsafe parts of the path
-    $path = str_replace('../','',$path);
-    $path = str_replace('..\\','',$path);
-    $path = str_replace('..'.DIRECTORY_SEPARATOR,'',$path);
+    $path = cleanPath($_GET['path']);
 
     // Don't ever allow uploading outside the images, templates and db folders.
     if (!uploadAllowed($path)) {
