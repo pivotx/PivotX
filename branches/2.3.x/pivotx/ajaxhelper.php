@@ -271,8 +271,18 @@ class ajaxhelper {
 
         // TODO: Check if the file is writable before showing the editor.
 
-        // TODO: make sure we don't try to pass stupid things here!!
-        $filename = base64_decode($_GET['basedir']) . "/" . $_GET['file'];
+        if (empty($_GET['basedir'])) {
+            die('Basedir is empty.');
+        } else {
+            $basedir = cleanPath(base64_decode($_GET['basedir']));
+        }
+        // Don't allow opening files outside $PIVOTX['paths']['home_path'].
+        // This is consistent with the file explorer functions in pages.php.
+        if (strpos($basedir, $PIVOTX['paths']['home_path']) === 0) {
+            $filename = $basedir . cleanPath($_GET['file']);
+        } else {
+            die('Basedir outside home_path. Hacking attempt?');
+        }
 
         if ($contents = loadSerialize($filename)) {
 
