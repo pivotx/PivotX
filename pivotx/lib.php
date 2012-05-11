@@ -1345,14 +1345,14 @@ function fileOperations($folder) {
     if ( (isset($_GET['del'])) && ($_GET['pivotxsession']==$_COOKIE['pivotxsession']) ) {
 
         // Do some clean-up of user-controlled variables, just in case. 
-        $_GET['del'] = strip_tags($_GET['del']);
-        
-        $filename = $folder . $_GET['del'];
+        $basename = cleanPath(strip_tags($_GET['del']));
+
+        $filename = $folder . $basename;
         $thumbname = makeThumbname($filename);
         @unlink($filename);
         @unlink($thumbname);
 
-        $_GET['additionalpath'] = dirname($_GET['del']);
+        $_GET['additionalpath'] = dirname($basename);
         $PIVOTX['messages']->addMessage(sprintf(__('The file %s was deleted.'), basename($filename)));
     }
 
@@ -1367,10 +1367,10 @@ function fileOperations($folder) {
             // if file is set, we copy a file
 
             // Do some clean-up of user-controlled variables, just in case. 
-            $_GET['file'] = strip_tags($_GET['file']);
+            $basename = cleanPath(strip_tags($_GET['file']));
 
-            $oldfile = $folder.$_GET['file'];
-            $newfile = $folder.dirname($_GET['file'])."/".strtolower($_GET['answer']);
+            $oldfile = $folder.$basename;
+            $newfile = $folder.dirname($basename)."/".strtolower(basename($_GET['answer']));
 
             if((!file_exists($newfile)) && (copy($oldfile, $newfile))) {
                 $PIVOTX['messages']->addMessage(sprintf(__('The file has been copied: %s to %s.'), 
@@ -1379,7 +1379,7 @@ function fileOperations($folder) {
                 $PIVOTX['messages']->addMessage(__('The file has <b>NOT</b> been copied. Check if the target folder is writable, and whether the target file does not exist.'));
             }
 
-            $_GET['additionalpath'] = dirname($_GET['file']);
+            $_GET['additionalpath'] = dirname($basename);
 
         } else {
 
@@ -1388,9 +1388,9 @@ function fileOperations($folder) {
                 // if addfolder is set, we add a folder
 
                 // Do some clean-up of user-controlled variables, just in case. 
-                $_GET['addfolder'] = strip_tags($_GET['addfolder']);
+                $basename = cleanPath(strip_tags($_GET['addfolder']));
 
-                $newfolder = $folder.$_GET['addfolder']."/".strtolower($_GET['answer']);
+                $newfolder = $folder.$basename."/".strtolower(basename($_GET['answer']));
 
                 if ((!file_exists($newfolder)) && (makeDir($newfolder))) {
 
@@ -1404,16 +1404,16 @@ function fileOperations($folder) {
 
                 }
 
-                $_GET['additionalpath'] = $_GET['addfolder'];
+                $_GET['additionalpath'] = $basename;
 
             } else {
 
                 // add a file..
 
                 // Do some clean-up of user-controlled variables, just in case. 
-                $_GET['path'] = strip_tags($_GET['path']);
+                $basename = cleanPath(strip_tags($_GET['path']));
 
-                $newfile = $folder.$_GET['path']."/".strtolower($_GET['answer']);
+                $newfile = $folder.$basename."/".strtolower(basename($_GET['answer']));
 
                 if ((!file_exists($newfile)) && ($fp = fopen($newfile, "w"))) {
 
@@ -1427,10 +1427,10 @@ function fileOperations($folder) {
 
                     $PIVOTX['messages']->addMessage(
                         sprintf(__('The file %s was <b>NOT</b> created.'), basename($newfile)));
+                
+		}
 
-                }
-
-                $_GET['additionalpath'] = $_GET['path'];
+                $_GET['additionalpath'] = $basename;
 
             }
 
