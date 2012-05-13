@@ -21,7 +21,7 @@
 DEFINE('INPIVOTX', TRUE);
 
 $version = "2.3.3";
-$codename = "prerelease";
+$codename = "";
 $svnrevision = '$Rev$';
 
 $minrequiredphp = "5.2.0";
