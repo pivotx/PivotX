@@ -2911,14 +2911,20 @@ function smarty_link_list($params, &$smarty) {
 
     $templatedir = $vars['templatedir'];
 
-    if ($smarty->template_exists($templatedir."/link_list.html")) {
+    if ($smarty->template_exists($templatedir."/_sub_link_list.tpl")) {
+        $output = $smarty->fetch($templatedir."/_sub_link_list.tpl");
+    } else if ($smarty->template_exists($templatedir."/_aux_link_list.tpl")) {
+        $output = $smarty->fetch($templatedir."/_aux_link_list.tpl");
+    } else if ($smarty->template_exists($templatedir."/link_list.tpl")) {
+        $output = $smarty->fetch($templatedir."/link_list.tpl");
+    } else if ($smarty->template_exists($templatedir."/link_list.html")) {
         $output = $smarty->fetch($templatedir."/link_list.html");
     } else if ($smarty->template_exists($templatedir."/_aux_link_list.html")) {
         $output = $smarty->fetch($templatedir."/_aux_link_list.html");
     } else if ($smarty->template_exists($templatedir."/_sub_link_list.html")) {
         $output = $smarty->fetch($templatedir."/_sub_link_list.html");
     } else {
-        $output = "<!-- _sub_link_list.html doesn't exist! -->";
+        $output = "<!-- _sub_link_list.tpl doesn't exist! -->";
     }
 
     return $output;
