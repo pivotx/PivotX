@@ -5445,7 +5445,7 @@ function tag_exists($tagname) {
 /**
  * @see $smarty->register_resource
  */
-function dbGetTemplate($tpl_name, $tpl_source, &$smarty_obj) {
+function dbGetTemplate($tpl_name, &$tpl_source, &$smarty_obj) {
 
     if (isset($smarty_obj->custom_template[ $tpl_name ])) {
         $tpl_source = $smarty_obj->custom_template[ $tpl_name ];
