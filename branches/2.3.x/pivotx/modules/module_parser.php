@@ -1101,11 +1101,15 @@ class Parser {
         // to display nothing (by using '0' as user configured favicon)
         $favicon_html = "\t<link rel=\"shortcut icon\" href=\"%s\" />\n";
         $favicon = $PIVOTX['config']->get('favicon');
-        if ($favicon == '0') {
+        if ($favicon === '0') {
             $favicon_html = '';
         } else {
             if ($favicon == '') {
-                $favicon = $PIVOTX['paths']['pivotx_url'] ."pics/favicon.ico";
+                if (file_exists($PIVOTX['paths']['upload_base_path'] . 'favicon.ico')) {
+                    $favicon = $PIVOTX['paths']['upload_base_url'] . 'favicon.ico';
+                } else {
+                    $favicon = $PIVOTX['paths']['pivotx_url'] ."pics/favicon.ico";
+                }
             }
             $favicon_html = sprintf($favicon_html,$favicon);
         }
