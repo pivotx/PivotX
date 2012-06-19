@@ -2668,6 +2668,14 @@ function _smarty_link_category($params, &$smarty) {
             $catlink = getHost() . $catlink;
         }
 
+        if ($params['query'] !='' ) {
+            if (strpos($link,"?")>0) {
+               $catlink .= '&amp;'.$params['query'];
+            } else {
+               $catlink .= '?'.$params['query'];
+            }
+        }
+
         if (!empty($params['hrefonly'])) {
             $output = $catlink;
         } else {
@@ -2768,6 +2776,14 @@ function _smarty_link_page($params, &$smarty) {
         if (!empty($params['fullurl'])) {
             $pagelink = getHost() . $pagelink;
         }
+
+        if ($params['query'] !='' ) {
+            if (strpos($link,"?")>0) {
+               $pagelink .= '&amp;'.$params['query'];
+            } else {
+               $pagelink .= '?'.$params['query'];
+            }
+        }
         
         if (!empty($params['hrefonly'])) {
             $output = $pagelink;
@@ -2804,6 +2820,14 @@ function _smarty_link_weblog($params, &$smarty) {
     // Perhaps add the protocol and hostname, to create a full URL. 
     if (!empty($params['fullurl'])) {
         $link = getHost() . $link;
+    }
+
+    if ($params['query'] !='' ) {
+        if (strpos($link,"?")>0) {
+            $link .= '&amp;'.$params['query'];
+        } else {
+            $link .= '?'.$params['query'];
+        }
     }
 
     if (!empty($params['hrefonly'])) {
