@@ -1208,7 +1208,12 @@ class Weblogs extends BaseConfig {
                         $results[] = trim($name[0]);
                     } else {
                         preg_match("/name=['\"]([^'\"]*)/mi", $match, $name);
-
+                        // subweblog 'archive' has a special role so skip it here (not when in the dashboard)
+                        // this is to disregard its number of entries e.g. for the pager display and initial building of the front page
+                        // as no pager is allowed for archive display the number is only irrelevant.
+                        if ($name[1]=='archive' && isset($PIVOTX['parser'])) { 
+                            $name[1] = '';
+                        }
                         if ($name[1]!="") {
                             $results[] = $name[1];
                         }
