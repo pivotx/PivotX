@@ -3147,6 +3147,11 @@ function smarty_nextpage($params, &$smarty) {
         }
         ksort($pages);
     }
+    // Is there something in pages? If not loop will occur. This is possible for orphan pages.
+    if ($pages == null) { 
+        debug('The page list is empty. Possible orphan page?'); 
+        return; 
+    }
     if ($params['sortorder'] == 'reverse') {
         $pages = array_reverse($pages, true);
     }
@@ -3764,6 +3769,11 @@ function smarty_previouspage($params, &$smarty) {
             unset($pages[$key]);
         }
         ksort($pages);
+    }
+    // Is there something in pages? If not loop will occur. This is possible for orphan pages.
+    if ($pages == null) { 
+        debug('The page list is empty. Possible orphan page?'); 
+        return; 
     }
 
     // We will find the previous page by searching the array in reverse order.
