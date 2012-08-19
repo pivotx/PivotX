@@ -627,10 +627,7 @@ automagically be published in this section of your weblog.</p>',
             }
 
             // Sort the entries array
-            $sort_arr = array();
-            foreach ($entries_arr as $row_key => $row) {
-                $sort_arr[] = $row[$params['orderby']];
-            }
+            $sort_arr = $this->_getSortArray($entries_arr, $params['orderby']);
             array_multisort($sort_arr, $entries_arr);
 
             // Order the entries according to 'order' by reversing if descending.
@@ -708,9 +705,7 @@ automagically be published in this section of your weblog.</p>',
                 shuffle($sort_arr);
                 array_multisort($sort_arr, $entries_arr);
             } elseif ($params['orderby'] != 'date') {
-                foreach ($entries_arr as $row_key => $row) {
-                    $sort_arr[] = $row[$params['orderby']];
-                }
+                $sort_arr = $this->_getSortArray($entries_arr, $params['orderby']);
                 array_multisort($sort_arr, $entries_arr);
             }
 
@@ -829,6 +824,7 @@ automagically be published in this section of your weblog.</p>',
             }
         } else {
             // Create a list of full entries
+            // TODO: Don't read the entries again if we already did it in _getSortArray.
             foreach($final_entries_arr as $key => $row) {
                 $final_entries_arr[$key] = $this->read_entry($row['code']);
                 $final_entries_arr[$key]['link'] = makeFileLink($row, '', '');
@@ -1838,6 +1834,28 @@ automagically be published in this section of your weblog.</p>',
         $d->close();
     }
 
+    /**
+     * Gets the sort array for a given orderby parameter.
+     *
+     * It also updates $entries_arr so it contains the full entries.
+     * if the orderby parameter is referencing an extrafield.
+     */
+    function _getSortArray(&$entries_arr, $orderby) {
+        $sort_arr = array();
+        if (substr($orderby,0,12) == "extrafields_") {
+            $orderby = substr($orderby,12);
+            foreach ($entries_arr as $row_key => $row) {
+                $entries_arr[$row_key] = $this->read_entry($row['code']);
+                $sort_arr[] = $entries_arr[$row_key]['extrafields'][$orderby];
+            }
+        } else {
+            foreach ($entries_arr as $row_key => $row) {
+                $sort_arr[] = $row[$orderby];
+            }
+        }
+        return $sort_arr;
+    }
+        
     // end of class EntriesFlat
 }
 
