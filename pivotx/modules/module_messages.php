@@ -161,7 +161,7 @@ class Messages {
         }
 
         // Check Safe Mode
-        if( ini_get('safe_mode') && (!$PIVOTX['config']->get('ignore_safe_mode')) ) {
+        if( ini_get_bool('safe_mode') && (!$PIVOTX['config']->get('ignore_safe_mode')) ) {
             $thiswarning = __("This webserver has safe_mode enabled. This doesn't actually make things any 'safer', just more annoying. Please ask your hosting provider to turn it off. See the documentation for more info: <a href='http://docs.pivotx.net/doku.php?id=dealing_with_safe_mode'>Dealing with safe_mode</a>.");
             $this->warnings[] = "<p>". $thiswarning ."</p>";
         }
@@ -247,13 +247,13 @@ class Messages {
          * dir than pivotx/, there is no problem with open_basedir..
          */
         // Check Open Basedir
-        //        if( ini_get('open_basedir') ) {
+        //        if( ini_get_bool('open_basedir') ) {
         //            $thiswarning = __("This webserver has open_basedir enabled. You'll have a hard time running PivotX in the current configuration. Please ask your hosting provider to turn it off. See the documentation for more info: <a href='http://docs.pivotx.net/doku.php?id=dealing_with_safe_mode'>Dealing with safe_mode</a>.");
         //            $this->warnings[] = "<p>". $thiswarning ."</p>";
         //        }
 
         // Check Register Globals
-        if( ini_get('register_globals') && (!$PIVOTX['config']->get('ignore_register_globals')) ) {
+        if( ini_get_bool('register_globals') && (!$PIVOTX['config']->get('ignore_register_globals')) ) {
             $thiswarning = __("This webserver has register_globals enabled. This is a serious potential security issue. Please ask your hosting provider to turn it off. See the PHP documentation for more info: <a href='http://php.net/register_globals'>Register Globals</a>.");
             $this->warnings[] = "<p>". $thiswarning ."</p>";
         }

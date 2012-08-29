@@ -110,7 +110,7 @@ function initializePivotX($loadextensions=true) {
     // Some servers do 'magic_quotes', without a way of detecting it apparently. In this case you can 
     // use the hidden setting for 'always_stripslashes'.  
     if((function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc())
-       || (ini_get('magic_quotes_sybase') && (strtolower(ini_get('magic_quotes_sybase'))!="off")) 
+       || ini_get_bool('magic_quotes_sybase') 
        || ($PIVOTX['config']->get('always_stripslashes')==1) ){
         stripSlashesDeep($_GET);
         stripSlashesDeep($_POST);
@@ -5182,6 +5182,30 @@ function isBase64Encoded($str) {
     return (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $str));
 }
 
+/**
+ * Returns true or false for boolean PHP settings.
+ *
+ * This is need because ini_get can return various (string) values
+ * which inidicates on/off. 
+ */
+function ini_get_bool($key) {
+    $value = ini_get($key);
+
+    switch (strtolower($value)) {
+        case 'on':
+        case 'yes':
+        case 'true':
+            return true;
+
+        case 'off':
+        case 'no':
+        case 'false':
+            return false;
+
+        default:
+            return (bool) (int) $value;
+    }
+}
 
 /**
  * Go through the cache folder, delete all files.
