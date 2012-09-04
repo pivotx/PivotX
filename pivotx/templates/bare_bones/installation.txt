@@ -1,0 +1,10 @@
+Bare Bones
+
+This is the 'Bare Bones' template for PivotX.
+ 
+It's not much to look at, but it's a good start to write your own templates. It contains most of the usual tags 
+you'd like to have in a template, with a minimum of CSS/HTML.
+
+The archive contains files of the types html and tpl. The files of type html are only included for 
+reasons of backward compatibility. If you have a new installation of PivotX (version 2.3 or later), 
+you may simply delete the html-files.
