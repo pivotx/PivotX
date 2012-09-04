@@ -1,9 +1,7 @@
-
 <hr size="1" noshade="noshade" />
+<h2 id="navigation">[[t]]Navigation[[/t]]</h2>
 
-    <h2 id="navigation">[[t]]Navigation[[/t]]</h2>
-
-    <!-- Javascript enabled Jumpmenu for the pages -->
+<!-- Javascript enabled Jumpmenu for the pages -->
     <select id='pagemenu' style="display:none;">
 
         [[ pagelist
@@ -70,8 +68,10 @@
     });
     </script>
 
-    <h3>[[t]]Search[[/t]]</h3>
-    [[search]]
+    [[ if $pagetype!="search" ]]
+      <h3>[[t]]Search[[/t]]</h3>
+      [[ search ]]
+    [[ /if ]]
 
     <h3>[[t]]Stuff[[/t]]</h3>
     [[pivotxbutton]]
