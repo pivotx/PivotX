@@ -1,0 +1,8 @@
+Skinny
+
+This is the default theme for PivotX. It has all the common PivotX functionality built in. 
+If you want to start developing themes yourself, this is a good one to tear apart and to learn from.
+
+This folder contains files of the types html and tpl. The files of type html are only included for 
+reasons of backward compatibility. If you have a new installation of PivotX (version 2.3 or later), 
+you may simply delete the html-files.
