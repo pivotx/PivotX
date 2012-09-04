@@ -1,0 +1,18 @@
+Andreas
+
+This is the default template for PivotX.
+
+The theme comes in two versions, with two or three columns. You may select which version to use in the admin panel 
+under Administration -> Weblogs -> Templates.
+
+The theme comes with three different css-files:
+	pivotx_dark.css
+	pivotx_light.css
+	pivotx_default.css
+the last of these is used by default. You may choose another one by uncommenting the appropriate line in _sub_header.tpl.
+
+The archive contains files of the types html and tpl. The files of type html are only included for 
+reasons of backward compatibility. If you have a new installation of PivotX (version 2.3 or later), 
+you may simply delete the html-files.
+
+The image in the header is copyright of Andreas Reinhold.
