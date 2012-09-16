@@ -1,5 +1,5 @@
 
--= PivotX 2.3.3 =-
+-= PivotX 2.3.4 =-
 
 If you're reading this, you've downloaded and extracted a build of PivotX. Look
 here for instructions on how to install:
