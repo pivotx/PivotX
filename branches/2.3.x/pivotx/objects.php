@@ -195,6 +195,11 @@ class Config extends BaseConfig {
     }
 
     protected function verifyConfig() {
+        // If there's a file called 'pivotxdebugmode.txt', we'll enable debugging 
+        if (file_exists(dirname(__FILE__)."/pivotxdebugmode.txt")) {
+            $this->data['debug'] = 1;
+        }
+
         if ($this->count() < 5) {
             return false;
         }
@@ -245,10 +250,6 @@ class Config extends BaseConfig {
             $this->setChanged();
         }
 
-        // If there's a file called 'pivotxdebugmode.txt', we'll enable debugging 
-        if (file_exists(dirname(__FILE__)."/pivotxdebugmode.txt")) {
-            $this->data['debug'] = 1;
-        }
     }
 
     /**
