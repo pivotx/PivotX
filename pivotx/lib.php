@@ -1221,7 +1221,7 @@ function getFiles($basepath, $additionalpath, $imageurl) {
         $additionalpath = implode("/", $atoms);
     }
 
-    $path = realpath($basepath)."/".$additionalpath;
+    $path = str_replace("\\", "/", realpath($basepath))."/".$additionalpath;
 
     if (!is_readable($path)) {
         $PIVOTX['messages']->addMessage( __("PivotX is not allowed to read this folder.") );
