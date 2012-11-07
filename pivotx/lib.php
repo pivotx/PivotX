@@ -20,7 +20,7 @@
 
 DEFINE('INPIVOTX', TRUE);
 
-$version = "2.3.4";
+$version = "2.3.5";
 $codename = "";
 $svnrevision = '$Rev$';
 
