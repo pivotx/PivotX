@@ -220,7 +220,7 @@ EOM;
                 $logged_in = true;
                 // This is an old Pivot user which isn't using the new hashed passwords
                 // so we create a new salt, and set the hashed/salted password.
-                $salt = md5(rand(1,999999) . mktime());
+                $salt = md5(rand(1,999999) . time());
                 $md5_pass = md5($user['pass'] . $salt);
                 $user['salt'] = $salt;
                 $user['pass'] = $md5_pass;
@@ -527,7 +527,7 @@ EOM;
             if ($user && ($this->input['id'] == $user['reset_id'])) {
                 $message = __('The new password is <q>%pass%</q>.');
                 $this->input['message'] = str_replace('%pass%',$user['pass_reset'],$message);
-                $user['salt'] = md5(rand(1,999999) . mktime());
+                $user['salt'] = md5(rand(1,999999) . time());
                 $user['pass'] = md5($user['pass_reset'] . $user['salt']);
                 unset($user['pass_reset']);
                 unset($user['reset_id']);
@@ -610,7 +610,7 @@ EOM;
         } else {
 
             // Create a new salt, and set the salted password.
-            $salt = md5(rand(1,999999) . mktime());
+            $salt = md5(rand(1,999999) . time());
             $md5_pass = md5($input['pass'] . $salt);
 
             $user = array(

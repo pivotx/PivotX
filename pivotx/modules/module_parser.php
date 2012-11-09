@@ -971,7 +971,7 @@ class Parser {
             "%admin-nick%"    => $adminnick,
             "%year%"          => date("Y"),
             "%date%"          => date("Y-m-d\TH:i:s") . $this->_rssOffset(),
-            "%date_rfc%"      => getRfcDate(mktime()),
+            "%date_rfc%"      => getRfcDate(time()),
             "%genagent%"      => "http://www.pivotx.net/?ver=".urlencode(strip_tags($build)),
             "%version%"       => strip_tags($build),
             "%lang%"          => $PIVOTX['languages']->getCode(),
