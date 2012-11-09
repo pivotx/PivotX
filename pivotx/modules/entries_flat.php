@@ -95,7 +95,10 @@ class EntriesFlat {
         if (!$initialisationchecks && !$PIVOTX['config']->get('dont_recreate_default_entries')) {
             $PIVOTX['config']->set('dont_recreate_default_entries', 1);
 
-            $now = date("Y-m-d-H-i", getCurrentDate());
+            // We are setting the timestamp 60 seconds back to avoid problems with
+            // the cache on the very first page display after installation.
+            $now = date("Y-m-d-H-i", getCurrentDate()-60);
+
             $version = __("Welcome to"). " " . strip_tags($GLOBALS['build']);
             $userdata = $PIVOTX['users']->getUsers();
             $username = $userdata[0]['username'];
