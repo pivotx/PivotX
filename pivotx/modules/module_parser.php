@@ -863,6 +863,15 @@ class Parser {
             $this->modifier['category'] = implode(",", $PIVOTX['categories']->getCategorynames() );
         }
 
+        // If we want comments from a special entry, read it.
+        if (($this->modifier['feedcontent'] == 'comments') && isset($this->modifier['entry'])) {
+            $entry = $PIVOTX['db']->read_entry($this->modifier['entry']);
+            if (empty($entry) || ($entry['uid'] == '')) {
+                renderErrorpage(sprintf($error,__('entry')),
+                    sprintf($error_info,__('entry'),htmlspecialchars($this->modifier['entry']),'e'));
+            }
+        }
+
         // Try to set current weblog intelligently.
         if (isset($this->modifier['weblog'])) {
             if (!$PIVOTX['weblogs']->setCurrent($this->modifier['weblog'])) {
@@ -875,12 +884,7 @@ class Parser {
             $categories = array_map('trim', explode(',', $this->modifier['category']));
             list($thisweblog, $dummy) = $PIVOTX['weblogs']->getWeblogsWithCat($categories);
             $PIVOTX['weblogs']->setCurrent($thisweblog);
-        } else if (isset($this->modifier['entry'])) {
-            $entry = $PIVOTX['db']->read_entry($this->modifier['entry']);
-            if (empty($entry) || ($entry['uid'] == '')) {
-                renderErrorpage(sprintf($error,__('entry')),
-                    sprintf($error_info,__('entry'),htmlspecialchars($this->modifier['entry']),'e'));
-            }
+        } else if (isset($entry)) {
             list($thisweblog, $dummy) = $PIVOTX['weblogs']->getWeblogsWithCat($entry['category']);
             $PIVOTX['weblogs']->setCurrent($thisweblog);
         } else {
@@ -1706,6 +1710,7 @@ EOM;
                 "%title%"         => htmlspecialchars(strip_tags($title)),
                 "%subtitle%"     => htmlspecialchars(strip_tags($subtitle)),
                 "%link%"         => $link,
+                "%host%"         => $PIVOTX['paths']['host'],
                 "%description%"  => relativeToAbsoluteURLS($description),
                 "%summary%"      => relativeToAbsoluteURLS($summary),
                 "%author%"       => $user['username'],
@@ -1752,13 +1757,15 @@ EOM;
 
         $i = 0;
         $feed_items = "";
-        
+        $sitename = safeString($PIVOTX['config']->get('sitename'), TRUE);
+       
         // Loop through the comments..
         foreach ($comments as $comment) {
-            
-            $tag =  safeString($PIVOTX['config']->get('sitename'), TRUE) .
-                ",". date("Y") . ":" .  safeString($PIVOTX['weblogs']->get('', 'name'), TRUE);
-            $tag .= '.entry%uid%.comment'.$i;
+
+            $id = makeURI(html_entity_decode($comment['name'], ENT_COMPAT, 'UTF-8')) . "-" . 
+                formatDate($comment['date'],"%ye%%month%%day%%hour24%%minute%");
+            $year = formatDate($comment['date'], "%year%");
+            $tag = sprintf("%s,%s:entry-%s#%s", $sitename, $year, $comment['entry_uid'], $id);
             $tag = str_replace("_", "",strtolower($tag));
 
             $date = formatDate( $comment['date'], "%year%-%month%-%day%T%hour24%:%minute%:00") .
@@ -1776,13 +1783,12 @@ EOM;
                 $title = $summary;
             }
             
-            // Make the link..
-            $id = makeURI(html_entity_decode($comment['name'], ENT_COMPAT, 'UTF-8')) ."-". formatDate($comment['date'],"%ye%%month%%day%%hour24%%minute%");
             $url = makeFileURL($comment['entry_uid'], '', $id);    
 
             $replace = array(
                 "%title%"       => htmlspecialchars(strip_tags($title)),
                 "%link%"        => $url,
+                "%host%"        => $PIVOTX['paths']['host'],
                 "%summary%"     => $summary,
                 "%content%"     => $summary,
                 "%description%" => $summary,

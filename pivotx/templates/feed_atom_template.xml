@@ -26,7 +26,7 @@
         <id>tag:%tag%</id>
         <link rel="related" type="text/html" href="%vialink%" %viatitle% />
         <summary type="text">%summary%</summary>
-        <content type="html" xml:lang="%lang%" xml:base="%link%"><![CDATA[
+        <content type="html" xml:lang="%lang%" xml:base="%host%"><![CDATA[
             %content%
         ]]></content>
         <author>
