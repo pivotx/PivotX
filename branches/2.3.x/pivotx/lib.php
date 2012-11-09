@@ -5001,8 +5001,8 @@ function relativeToAbsoluteURLS($link) {
 
     $host = "http://".$_SERVER['HTTP_HOST'];
 
-    $link = preg_replace("/a href=(['\"])(?!http)/mUi", "a href=\\1$host\\2", $link);
-    $link = preg_replace("/img src=(['\"])(?!http)/mUi", "img src=\\1$host\\2", $link);
+    $link = preg_replace("/<a ([^>]*? )?href=(['\"])(?!http)/mUi", "<a \\1href=\\2$host\\3", $link);
+    $link = preg_replace("/<img ([^>]*? )?src=(['\"])(?!http)/mUi", "<img \\1src=\\2$host\\3", $link);
 
     return ($link);
 }
