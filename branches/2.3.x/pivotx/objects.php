@@ -671,7 +671,7 @@ class Users extends BaseConfig {
             $user['salt'] = 'phpass';
             $user['password'] =  $phpass->HashPassword($password);
         } else {
-            $user['salt'] = md5(rand(1,999999) . mktime());  
+            $user['salt'] = md5(rand(1,999999) . time());  
             $user['password'] = md5( $password . $user['salt']);
         }
 
@@ -2243,7 +2243,7 @@ class Session {
 
         $this->logins['failed'][ $ip ] = array(
           'attempts' => $this->logins['failed'][ $ip ]['attempts'] + 1,
-          'time' => mktime()      
+          'time' => time()      
         );
             
         $this->saveLogins();
@@ -2474,7 +2474,7 @@ class Session {
         $this->logins = loadSerialize($PIVOTX['paths']['db_path'] . "ser_logins.php", true);
 
         // Set timeout to the timestamp at which the block needs to be dropped.
-        $timeout = mktime() - ($timeout*3600);
+        $timeout = time() - ($timeout*3600);
 
         // Iterate over the failed attempts, to see if they need to be dropped.
         foreach ($this->logins['failed'] as $ip => $item) {
