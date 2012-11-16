@@ -38,8 +38,10 @@ jQuery(function($) {
     }
     
     // Handler for Dialog links..
-    $('.dialog').bind('click', function() {
+    $('.dialog').bind('click', function(e) {
                 
+        e.preventDefault();
+        
         // If we passed an extra class to set the type of dialog, we use it here
         // to set the size of the window.
         if ($(this).hasClass('editor')) {
