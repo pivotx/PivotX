@@ -24,7 +24,7 @@
     });
     </script>
 
-    <link rel="stylesheet" type="text/css" href="templates_internal/ui-theme/jquery-ui-1.8.17.custom.css" />
+    <link rel="stylesheet" type="text/css" href="templates_internal/ui-theme/jquery-ui-1.9.1.custom.css" />
 
     <!-- Markitup -->
     <link rel="stylesheet" type="text/css" href="includes/markitup/markitup.css" />
