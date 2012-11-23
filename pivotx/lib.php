@@ -149,8 +149,8 @@ function initializePivotX($loadextensions=true) {
         return;
     }
 
-	// Check the database version, and perform updates if needed.
-	checkDBVersion();
+    // Check the database version, and perform updates if needed.
+    checkDBVersion();
 
     // If we are in the backend, we must load languages first so weblogs 
     // and categories get the correct settings based on the default language.
@@ -1428,7 +1428,7 @@ function fileOperations($folder) {
                     $PIVOTX['messages']->addMessage(
                         sprintf(__('The file %s was <b>NOT</b> created.'), basename($newfile)));
                 
-		}
+	        }
 
                 $_GET['additionalpath'] = $basename;
 
@@ -2736,7 +2736,7 @@ function getUploadFolderUrl($basefilename='') {
  * @return string 
  */
 function zeroise($number,$threshold) {
-	return sprintf('%0'.$threshold.'s', $number);
+    return sprintf('%0'.$threshold.'s', $number);
 }
 
 
@@ -2945,17 +2945,17 @@ function uploadAllowed($path) {
 function formatEntry($entry, $format) {
 
     // if format does not contain '%' just return to save some processing time
-	if (strpos($format, "%")=== FALSE) {
-		return $format;
-	}
+    if (strpos($format, "%")=== FALSE) {
+        return $format;
+    }
 
-	foreach ($entry as $key => $value) {
-                if (is_array($value)) {
-			$value = implode(', ',$value);
-		}
-		$format=str_replace("%$key%", $value, $format);
-	}
-	return $format;
+    foreach ($entry as $key => $value) {
+        if (is_array($value)) {
+            $value = implode(', ',$value);
+        }
+        $format=str_replace("%$key%", $value, $format);
+    }
+    return $format;
 }
 
 
@@ -4084,20 +4084,20 @@ function getEditTrackbackLink($uid=0, $number) {
 function commentFormat($text, $striplinebreaks=false ) {
     global $PIVOTX;
 
-	// If the hidden configuration option 'allow_html_in_comments' is set, we
-	// allow HTML tags. Use at your own risk!
-	if ($PIVOTX['config']->get('allow_html_in_comments')==1) {
-		$text = stripTagsAttributes($text, "*");
-	} else {
-	    $text = stripTagsAttributes($text, "<b><em><i><strong>");	
-	}
+    // If the hidden configuration option 'allow_html_in_comments' is set, we
+    // allow HTML tags. Use at your own risk!
+    if ($PIVOTX['config']->get('allow_html_in_comments')==1) {
+        $text = stripTagsAttributes($text, "*");
+    } else {
+        $text = stripTagsAttributes($text, "<b><em><i><strong>");   
+    }
 
-	// If the hidden configuration option 'allow_smarty_in_comments' is set, we
-	// allow Smarty tags. You are an idiot if you use this in a site that's
-	// publicly available on the internet!
-	if ($PIVOTX['config']->get('allow_smarty_in_comments')==1) {
-		$text = parse_intro_or_body($text);
-	}
+    // If the hidden configuration option 'allow_smarty_in_comments' is set, we
+    // allow Smarty tags. You are an idiot if you use this in a site that's
+    // publicly available on the internet!
+    if ($PIVOTX['config']->get('allow_smarty_in_comments')==1) {
+        $text = parse_intro_or_body($text);
+    }
 
     if( $PIVOTX['weblogs']->get('', 'comment_textile') == 1 ) {
 
@@ -4587,7 +4587,7 @@ function makeURI($str, $type='entry') {
 function uniqueURI($source_uri, $code=null, $type='page', $iterator=0) {
     global $PIVOTX;
 
-	// debug("called uniqueURI($source_uri, $code, $type, $iterator)");
+    // debug("called uniqueURI($source_uri, $code, $type, $iterator)");
 
     if($iterator>=1) {
         $test_uri = $source_uri .'-'. $iterator;
@@ -4595,8 +4595,8 @@ function uniqueURI($source_uri, $code=null, $type='page', $iterator=0) {
         $test_uri = $source_uri;
     }
 
-	// debug("testing the following uri: $test_uri");
-	
+    // debug("testing the following uri: $test_uri");
+    
     // find out if there is an entry with the same uri
     $existing_entry = $PIVOTX['db']->get_entry_by_uri($test_uri);
     $foundentrycode = !empty($existing_entry['uid'])?$existing_entry['uid']:null;
@@ -4605,8 +4605,8 @@ function uniqueURI($source_uri, $code=null, $type='page', $iterator=0) {
     $existing_page = $PIVOTX['pages']->getPageByUri($test_uri);
     $foundpagecode = !empty($existing_page['uid'])?$existing_page['uid']:null;
 
-	// debug("entry: [ $foundentrycode ] - page: [ $foundpagecode ]");
-	
+    // debug("entry: [ $foundentrycode ] - page: [ $foundpagecode ]");
+    
     $iteratormax = getDefault( $PIVOTX['config']->get('max_unique_uri_iterations') , 20);
         
     if($iterator >= $iteratormax) {
@@ -4619,21 +4619,21 @@ function uniqueURI($source_uri, $code=null, $type='page', $iterator=0) {
         // no existing code found, the uri is safe
         return $test_uri;
     } elseif(($code == '>') && (empty($foundentrycode) && empty($foundpagecode))) {
-		// new entry
+        // new entry
         // no existing code found, the uri is safe
         return $test_uri;
     } elseif ($type == 'entry' && $code == $foundentrycode) {
-		// debug('same entry');
-		// debug_printr($existing_entry);
+        // debug('same entry');
+        // debug_printr($existing_entry);
         // code is same as current entry
         return $test_uri;
-	} elseif($type == 'page' && $code == $foundpagecode) {
-		// debug('same page');
+    } elseif($type == 'page' && $code == $foundpagecode) {
+        // debug('same page');
         // debug_printr($existing_page);
         // code is same as current page
         return $test_uri;
     } else {
-		// debug("** collision detected for the following uri: $test_uri");
+        // debug("** collision detected for the following uri: $test_uri");
         // there was a uri collision, increase the iterator and try again
         // this can go on forever
         $iterator++;
@@ -4898,6 +4898,8 @@ function sendMailNotification($type, $data){
                 $notify_arr[ $commuserdata['email'] ] = $commuserdata['name'];
             }
         }
+        // Get the morelink position
+        $morelink_position = strtolower(getDefault( $PIVOTX['config']->get('email_morelink_position'), 'bottom'));
 
         // send mail to those on the 'notify me' list..
         if (count($notify_arr)>0) {
@@ -4907,14 +4909,22 @@ function sendMailNotification($type, $data){
             if (empty($user)) {
                 $user = $entry['user'];
             }
-
-            $defaultbody = sprintf(__('"%s" posted the following entry').":\n\n", $user );
-            $defaultbody .= sprintf("%s\n\n%s\n", $title, unentify(strip_tags($entry['introduction'])));
+            if ($morelink_position == 'top') {
+                $defaultbody = sprintf(__('"%s" posted the following entry').":\n", $user );
+                $defaultbody .= sprintf("\n%s:\n%s%s\n\n", __('View the complete entry'), 
+                    $PIVOTX['paths']['host'], makeFileLink($entry, "", ""));
+            } else {
+                $defaultbody = sprintf(__('"%s" posted the following entry').":\n\n", $user );
+            }
+            // parse the introduction so text includes through tags get activated (strip_tags removes any unwanted effects)
+            $defaultbody .= sprintf("%s\n\n%s\n", $title, unentify(strip_tags(parse_intro_or_body($entry['introduction']))));
             $defaultbody .= sprintf("\n\n-------------\n");
 
-            $defaultbody .= sprintf("\n%s:\n%s%s\n", __('View the complete entry'), 
-                $PIVOTX['paths']['host'], makeFileLink($entry, "", ""));
-
+            if ($morelink_position == 'bottom') {
+                $defaultbody .= sprintf("\n%s:\n%s%s\n", __('View the complete entry'), 
+                    $PIVOTX['paths']['host'], makeFileLink($entry, "", ""));
+            }
+            
             $defaultbody .= sprintf("\n%s:\n%s%s\n", __('View your settings'),
                 $PIVOTX['paths']['host'], makeVisitorPageLink());
 
