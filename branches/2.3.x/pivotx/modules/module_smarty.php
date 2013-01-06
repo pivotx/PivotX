@@ -4942,8 +4942,14 @@ function smarty_weblog_list($params, &$smarty) {
     $aExclude= array();
     if(!empty($params['exclude'])) {
         $aExclude = explode(",", $params['exclude']);
-	$aExclude = array_map("trim", $aExclude);
-	$aExclude = array_map("safe_string", $aExclude);	
+        $aExclude = array_map("trim", $aExclude);
+        $aExclude = array_map("safe_string", $aExclude);
+    }
+    $aInclude= array();
+    if(!empty($params['include'])) {
+        $aInclude = explode(",", $params['include']);
+        $aInclude = array_map("trim", $aInclude);
+        $aInclude = array_map("safe_string", $aInclude);
     }
     
     $Current_weblog = $PIVOTX['weblogs']->getCurrent();
@@ -4960,6 +4966,9 @@ function smarty_weblog_list($params, &$smarty) {
     foreach ($weblogs as $key=>$weblog) {
 
         if(in_array(safeString($weblog['name']), $aExclude)) {
+            continue;
+        }
+        if(!empty($params['include']) && !in_array(safeString($weblog['name']), $aInclude)) {
             continue;
         }
 
