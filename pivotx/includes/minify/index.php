@@ -30,8 +30,13 @@ if ($min_documentRoot) {
 }
 
 if (isset($min_symlinks)) {
-    $min_serveOptions['minifierOptions']['text/css']['symlinks'] = $min_symlinks;
+    $min_serveOptions['minifierOptions'][Minify::TYPE_CSS]['symlinks'] = $min_symlinks;
 }
+
+// Disable minifying of Javascript since it generates invalid code
+// with already minified jQuery 1.8.2 and jQuery UI 1.9.1.
+// (This is OK since Minify will combine the files.)
+$min_serveOptions['minifiers'][Minify::TYPE_JS] = '';
 
 if ($min_allowDebugFlag && isset($_GET['debug'])) {
     $min_serveOptions['debug'] = true;
