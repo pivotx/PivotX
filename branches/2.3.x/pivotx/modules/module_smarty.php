@@ -3937,7 +3937,7 @@ function smarty_remember($params, &$smarty) {
         // (The corresponding posted keys start with "piv_".)
         foreach ($_POST as $key => $value) {
             if (substr($key,0,4) == 'piv_') {
-                $default_values[substr($key,4)] = urldecode(trim($value));
+                $default_values[substr($key,4)] = trim($value);
             }
         }
 
@@ -3951,7 +3951,7 @@ function smarty_remember($params, &$smarty) {
 
     switch($name) {
         case 'all':
-            echo "<h1>koekies</h1><pre>cookies:";
+            echo "<h1>Cookies</h1><pre>cookies:";
             print_r($_COOKIE);
             echo "</pre>";
             break;
