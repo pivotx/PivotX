@@ -1125,22 +1125,57 @@ class Parser {
             "\t<meta name=\"generator\" content=\"PivotX\" /><!-- version: " . strip_tags($build) . " -->\n" .
             $favicon_html
             );
-        
-        // Output the canonical link. See:
+
+        // Determine if the page is being offset. (Zero offset is the same as no offset).
+        if (isset($this->modifier['offset']) && ($this->modifier['offset'] > 0)) {
+            $offset = true;
+        } else {
+            $offset = false;
+        }
+
+        // Determine if the page being viewed is the chosen root of the site.
+        $this->modifier['home'] = false;
+        if (($this->modifier['action']=="page") && ($PIVOTX['config']->get('root') == "p:".$this->modifier['uri'])) {
+            $this->modifier['home'] = true;
+        } else if (($this->modifier['action']=="weblog") && 
+                ($PIVOTX['config']->get('root') == "w:".$this->modifier['weblog']) &&
+                empty($this->modifier['category']) && empty($this->modifier['archive']) && !$offset) {
+            $this->modifier['home'] = true;
+        } else if (($this->modifier['uri']=="") && ($PIVOTX['config']->get('root') == "")) {
+            $this->modifier['home'] = true;
+        }
+
+        // Output a canonical link (if suitable). See:
         // http://googlewebmastercentral.blogspot.com/2009/02/specify-your-canonical.html
+        $output_canonical_link = false;
         if ($PIVOTX['config']->get('dont_add_canonical')==0) {
-        
+            $output_canonical_link = true;
+            // Don't output a canonical link when browsing a weblog,
+            // viewing a category, an archive or a search/tag/special page.
+            // (This is needed because the function smarty_link
+            // doesn't generate links for these pages.)
+            if (($this->modifier['pagetype'] == 'archive') && $offset) {
+                $output_canonical_link = false;
+            } else if (($this->modifier['action'] == 'weblog') && (!empty($this->modifier['category']))) {
+                $output_canonical_link = false;
+            } else if (($this->modifier['action'] == 'weblog') && (!empty($this->modifier['archive']))) {
+                $output_canonical_link = false;
+            } else if (($this->modifier['action'] == 'tag') || ($this->modifier['action'] == 'search') || 
+                    ($this->modifier['action'] == 'special')) {
+                $output_canonical_link = false;
+            }
+        }
+        if ($output_canonical_link) {
             // If we're at the site's root, regardless of _what_ page or blog it is, 
             // we always return the site url..
-            if( (($this->modifier['action']=="page") && ($PIVOTX['config']->get('root') == "p:".$this->modifier['uri'])) ||
-                (($this->modifier['action']=="weblog") && ($PIVOTX['config']->get('root') == "w:".$this->modifier['uri'])) || 
-                (($this->modifier['uri']=="") && ($PIVOTX['config']->get('root') == "")) &&
-                (!isset($this->modifier['offset'])) ) {
+            if ($this->modifier['home']) {
                 $link = "";
-                // Also set $modifier.home, so we can check if we're at the homepage from the templates.
-                $this->modifier['home'] = true;
             } else {
-                $link = smarty_link( array('hrefonly'=>true), $PIVOTX['template']);
+                $params = array('hrefonly' => true);
+                if ($this->modifier['action'] == 'weblog') {
+                    $params['weblog'] = $this->modifier['weblog'];
+                }
+                $link = smarty_link($params, $PIVOTX['template']);
             }
 
             if (isset($this->modifier['canonical_link'])) {
