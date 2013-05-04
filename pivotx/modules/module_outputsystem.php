@@ -382,6 +382,12 @@ class OutputSystem {
         if ((count($codes) == 0) && (count($filters) == 0)) {
             return $_html;
         }
+        // is it HTML5? Try to deduce by looking for the doctype
+        if (strpos($_html, '<!DOCTYPE html>') !== false) {
+            $itshtml5 = true;
+        } else {
+            $itshtml5 = false;
+        }
 
         $html = $_html;
 
@@ -434,7 +440,11 @@ class OutputSystem {
                     }
 
                     if (empty($innerhtml) && $tag!="script") {
-                        $part[$loc] .= ' />';
+                        if ($itshtml5 && $tag == 'meta') {
+                            $part[$loc] .= ' >';
+                        } else {
+                            $part[$loc] .= ' />';
+                        }
                     } else {
                         $part[$loc] .= '>'.$innerhtml.'</'.$tag.'>';
                     }
