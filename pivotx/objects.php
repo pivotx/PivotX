@@ -37,6 +37,7 @@
 class BaseConfig {
 
     var $configfile = '';
+    var $backup_configfile = '';
     var $data = array();
     var $changed = false;
     var $upgraded = false;
@@ -54,7 +55,8 @@ class BaseConfig {
             $db_path = $PIVOTX['paths']['db_path'];
         }
         
-        $this->configfile = $db_path . $filename;
+        $this->configfile        = $db_path . $filename;
+        $this->backup_configfile = $db_path . 'backup/' . $filename;
 
         $this->loadConfig();
 
@@ -83,6 +85,10 @@ class BaseConfig {
     protected function loadConfig() {
         $this->data = loadSerialize($this->configfile, true);
 
+        if ((!isset($this->data)) || ($this->data === false)) {
+            $this->data = loadSerialize($this->backup_configfile, true);
+        }
+
         if (!$this->verifyConfig()) {
             $this->fixConfig();
 
@@ -110,13 +116,17 @@ class BaseConfig {
     /**
      * Organize configuration
      *
-     * @param boolean    true, if configuration can be saved
+     * @return true, if configuration can be saved
      *
      * This is called when just loaded and before configuration is saved.
      */
     protected function organizeConfig() {
         if (is_array($this->data)) {
             ksort($this->data);
+        }
+
+        if (count($this->data) <= 0) {
+            return false;
         }
 
         return true;
@@ -952,10 +962,15 @@ class Weblogs extends BaseConfig {
 
         // Set default weblog either as specified by the root in the config
         // or just by selecting the first in the weblo
-        list($type, $root) = explode(":", $PIVOTX['config']->get('root'));
-        if ($type=="w" && !empty($root) && isset($this->data[$root]) ) {
-            $this->default = $root;
-        } else {
+        $reset = true;
+        if (strpos($PIVOTX['config']->get('root'), ':') !== false) {
+            list($type, $root) = explode(":", $PIVOTX['config']->get('root'));
+            if ($type=="w" && !empty($root) && isset($this->data[$root]) ) {
+                $this->default = $root;
+                $reset = false;
+            }
+        }
+        if ($reset) {
             // Nothing to do but fall back to the first available weblog..
             reset($this->data);
             $this->default = key($this->data);
@@ -964,6 +979,10 @@ class Weblogs extends BaseConfig {
 
     protected function organizeConfig() {
         uasort($this->data, array($this, 'sort'));
+
+        if ($this->count() < 1) {
+            return false;
+        }
 
         return true;
     }
@@ -1615,7 +1634,11 @@ class Categories extends BaseConfig {
     protected function organizeConfig() {
         usort($this->data, array($this, 'sort'));
 
-        return true;
+        if (count($this->data) > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
