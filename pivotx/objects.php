@@ -2041,11 +2041,12 @@ class Session {
         $this->cookie_path = $PIVOTX['paths']['site_url'];
 
         // Don't set the domain for a cookie on a "TLD" - like localhost ...
-        if (strpos($_SERVER["SERVER_NAME"], ".") > 0) {
-            if (preg_match("/^www./",$_SERVER["SERVER_NAME"])) {
-                $this->cookie_domain = "." . preg_replace("/^www./", "", $_SERVER["SERVER_NAME"]);
+        // PS! We don't use $_SERVER["SERVER_NAME"] since we might be on an alias domain.
+        if (strpos($_SERVER["HTTP_HOST"], ".") > 0) {
+            if (preg_match("/^www./",$_SERVER["HTTP_HOST"])) {
+                $this->cookie_domain = "." . preg_replace("/^www./", "", $_SERVER["HTTP_HOST"]);
             } else {
-                $this->cookie_domain = $_SERVER["SERVER_NAME"];
+                $this->cookie_domain = $_SERVER["HTTP_HOST"];
             }
         } else {
             $this->cookie_domain = "";
