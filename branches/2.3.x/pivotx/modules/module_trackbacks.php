@@ -378,7 +378,7 @@ function getTracbackKeyJS($uri, $date) {
         $tburl .= "/$trackback/?key=";
     }
 
-    if (!strstr($_SERVER["HTTP_REFERER"], $_SERVER["SERVER_NAME"]))  {
+    if (!strstr($_SERVER["HTTP_REFERER"], $_SERVER["HTTP_HOST"]))  {
         // Creating a bogus key
         $tbkey = md5(microtime());
         debug("hardened trackbacks: illegal request - creating bogus key");
