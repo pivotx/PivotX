@@ -3169,6 +3169,11 @@ function formatDateRange($start_date, $end_date, $format) {
 
     $format=str_replace("%st_aye%", "&#8217;".substr($st_yr,2), $format);
     $format=str_replace("%st_ordday%", 1*$st_da, $format);
+    if ($PIVOTX['languages']->getCode() == 'en') {
+        $format=str_replace("%st_orddaysuffix_en%", @date("S",$mktime), $format);
+    } else {
+        $format=str_replace("%st_orddaysuffix_en%", '', $format);
+    }
     $format=str_replace("%st_ordmonth%", 1*$st_mo, $format);
     $mktime = mktime(1,1,1,$en_mo,$en_da,$en_yr);
     $day = @date("w",$mktime);
@@ -3189,6 +3194,11 @@ function formatDateRange($start_date, $end_date, $format) {
 
     $format=str_replace("%en_aye%", "&#8217;".substr($en_yr,2), $format);
     $format=str_replace("%en_ordday%", 1*$en_da, $format);
+    if ($PIVOTX['languages']->getCode() == 'en') {
+        $format=str_replace("%en_orddaysuffix_en%", @date("S",$mktime), $format);
+    } else {
+        $format=str_replace("%en_orddaysuffix_en%", '', $format);
+    }
     $format=str_replace("%en_ordmonth%", 1*$en_mo, $format);
 
     return $format;
