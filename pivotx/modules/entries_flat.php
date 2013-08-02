@@ -19,6 +19,9 @@ if(!defined('INPIVOTX')){ exit('not in pivotx'); }
 $currentfile = basename(__FILE__);
 require dirname(dirname(__FILE__))."/lamer_protection.php";
 
+/**
+ * Class to work with Entries, using the flat file storage model.
+ */
 class EntriesFlat {
 
     // the name of the log
