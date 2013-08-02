@@ -21,7 +21,9 @@ require dirname(dirname(__FILE__))."/lamer_protection.php";
 
 require_once(dirname(__FILE__)."/module_sql.php");
 
-
+/**
+ * Class to work with Entries, using the MySQL storage model.
+ */
 class EntriesSql {
 
     // the name of the log

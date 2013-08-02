@@ -16,8 +16,7 @@ require_once(dirname(__FILE__)."/module_sql.php");
 
 
 /**
- * Class to work with Pages, using the flat file storage model.
- *
+ * Class to work with Pages, using the MySQL storage model.
  */
 class PagesSql {
 
