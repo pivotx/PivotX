@@ -757,7 +757,7 @@ function tagLink($tag, $template="") {
             $link .= "&amp;w=" . para_weblog($Current_weblog);
         }
         if ($template != "") {
-            $link .= "&amp;t=$template";
+            $link .= "&amp;te=$template";
         } 
     } else {
         $prefix = getDefault($PIVOTX['config']->get('localised_tag_prefix'), 'tag');
@@ -767,7 +767,7 @@ function tagLink($tag, $template="") {
             $link .= "/" . para_weblog($Current_weblog);
         }
         if ($template != "") {
-            $link .= "/?t=$template";
+            $link .= "/?te=$template";
         }
     }
 
