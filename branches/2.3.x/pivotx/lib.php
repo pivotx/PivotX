@@ -3018,7 +3018,7 @@ function formatDate($date="", $format="", $title="") {
     $format=str_replace("%sec%", $se, $format);
     $format=str_replace("%aye%", "&#8217;".substr($yr,2), $format);
     $format=str_replace("%ordday%", 1*$da, $format);
-    if ($PIVOTX['languages']->getCode() == 'en') {
+    if (is_object($PIVOTX['languages']) && ($PIVOTX['languages']->getCode() == 'en')) {
         $format=str_replace("%orddaysuffix_en%", @date("S",$mktime), $format);
     } else {
         $format=str_replace("%orddaysuffix_en%", '', $format);
