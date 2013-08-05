@@ -4360,7 +4360,8 @@ function smarty_tagcloud($params) {
 
 
 /**
- * Get a concise list of the entry's tags.
+ * Get a concise list of the entry's tags or (for the MySQL database 
+ * backend only) the page's tags.
  *
  * @return string The text to display.
  * @param string $text The output format. The default
@@ -4369,6 +4370,16 @@ function smarty_tagcloud($params) {
  *  The default value is ", ".
  */
 function smarty_tags($params, &$smarty) {
+    global $PIVOTX;
+
+    $vars = $smarty->get_template_vars();
+    $pagetype = $PIVOTX['parser']->modifier['pagetype'];
+    if (($pagetype == "page") && !isset($vars['entry'])) {
+        if ($PIVOTX['db']->db_type == 'flat') {
+            debug("Tags on pages only works with the MySQL database backend.");
+            return "";
+        }
+    }
 
     $params = cleanParams($params);
 

@@ -446,7 +446,7 @@ class PagesSql {
         $this->sql->build_delete($qry);
         $this->sql->query();
 
-        $tags = getTags(false, '', $page['keywords']);
+        $tags = getTags(false, $page['introduction'].$page['body'], $page['keywords']);
 
         // Add the keywords / tags..
         foreach ($tags as $tag) {
