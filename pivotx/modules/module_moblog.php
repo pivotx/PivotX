@@ -324,20 +324,18 @@ class Moblog {
             $this->entry['replyaddress'] = utf8_encode($this->entry['replyaddress']);
         }
 
-
-        // for 'plain text' messages, parse the body.
-        // parse_body($structure->body);
-        $this->parse_body($structure);
-
-        // for mime mail, parse each part
+        // For multipart mail, parse each part of the mail.
         if ((isset($structure->parts)) && (is_array($structure->parts))) {
-
             foreach ($structure->parts as $part) {
-                $this->parse_parts($part);
+                $found = $this->parse_parts($part);
+                // We stop parsing if we found a plain text part. 
+                if ($found == 'text/plain') {
+                    break;
+                }
             }
-
+        } else {
+            $this->parse_body($structure);
         }
-
     }
 
     /**
@@ -356,6 +354,8 @@ class Moblog {
 
             $this->parse_body($part);
 
+            return 'text/' . strtolower($part->ctype_secondary);
+
         } else if (strtolower($part->ctype_primary) == "multipart") {
 
             foreach ($part->parts as $temp_part) {
@@ -367,12 +367,15 @@ class Moblog {
 
             $this->parse_image($part);
 
+            return 'image';
+
         } else {
 
             $this->parse_download($part);
 
-        } // end if ($filename ... )
+            return 'file';
 
+        } // end if ($filename ... )
 
     }
 
