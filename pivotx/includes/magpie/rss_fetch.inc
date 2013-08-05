@@ -286,7 +286,15 @@ function _fetch_remote_file ($url, $headers = "" ) {
     // Added for PivotX: If file_get_contents is available, that's the easiest
     // and fastest way to handle this..
     if (function_exists('file_get_contents') && ini_get('allow_url_fopen') && empty($headers)) {
-        $context = stream_context_create(array('http' => array('timeout' => MAGPIE_FETCH_TIME_OUT)));
+        $context = stream_context_create(
+            array(
+                'http' => 
+                    array(
+                        'timeout' => MAGPIE_FETCH_TIME_OUT,
+                        'user_agent' => MAGPIE_USER_AGENT,
+                    )
+                )
+            );
         if ($file = file_get_contents($url, NULL, $context)) {
             $client->results = $file;
             $client->status = 200;
