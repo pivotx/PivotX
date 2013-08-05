@@ -198,6 +198,7 @@ function getTagCosmosMysql($max=0,$weblogname='', $match='', $exclude= array()) 
     
     $tagtable = safeString($PIVOTX['config']->get('db_prefix')."tags", true);
     $entriestable = safeString($PIVOTX['config']->get('db_prefix')."entries", true);
+    $pagestable = safeString($PIVOTX['config']->get('db_prefix')."pages", true);
     
     $max = intval($max);
     
@@ -235,10 +236,9 @@ function getTagCosmosMysql($max=0,$weblogname='', $match='', $exclude= array()) 
     $qry['group'] = "tag";
     $qry['order'] = "tagcount DESC";
     $qry['limit'] = "0, $max";
-    $qry['where'][] = "t.contenttype='entry'";
-
     $qry['leftjoin'][$entriestable . " AS e"] = "e.uid = t.target_uid";
-    $qry['where'][] = "e.status='publish'";
+    $qry['leftjoin'][$pagestable . " AS p"] = "p.uid = t.target_uid";
+    $qry['where'][] = "(e.status='publish' AND contenttype='entry') OR (p.status='publish' AND contenttype='page')";
     
     if (!empty($match) && strlen($match)>1) {
         $qry['where'][] = 't.tag like "' . $database->quote($match, true) . '%"';  
@@ -250,9 +250,8 @@ function getTagCosmosMysql($max=0,$weblogname='', $match='', $exclude= array()) 
     
     $database->build_select($qry);    
     $database->query($query);
-  
+
     //echo nl2br(htmlentities($database->get_last_query()));
-      
     
     $rows = $database->fetch_all_rows();
 
@@ -265,8 +264,10 @@ function getTagCosmosMysql($max=0,$weblogname='', $match='', $exclude= array()) 
 
 
 /**
- * Get the tags from the current entry as an array. if $link is true,
- * the array will consist of links to the individual tag pages.
+ * Get the tags from the current entry or (for the MySQL database backend only) 
+ * current page as an array.
+ * 
+ * If $link is true, the array will consist of links to the individual tag pages.
  *
  * @param boolean $link
  * @param string $text
@@ -277,26 +278,35 @@ function getTagCosmosMysql($max=0,$weblogname='', $match='', $exclude= array()) 
 function getTags($link=true, $text="", $additional=false, $underscore=false) {
     global $PIVOTX;
 
-    // If entry is set in the template (Smarty), we use that, else we try 
+    // In the code below $data is either the current entry or page.
+
+    // If entry or page is set in the template (Smarty), we use that, else we try 
     // to get it from the database.
     $vars = $PIVOTX['template']->get_template_vars();
-    if (isset($vars['entry'])) {
-        $entry = $vars['entry'];
+    $pagetype = $PIVOTX['parser']->modifier['pagetype'];
+    if (($pagetype == "page") && !isset($vars['entry'])) {
+        if ($PIVOTX['db']->db_type == 'flat') {
+            debug("Tags on pages only works with the MySQL database backend.");
+            return array();
+        }
+        $data = $vars['page'];
+    } elseif (isset($vars['entry'])) {
+        $data = $vars['entry'];
     } elseif (isset($PIVOTX['db']->entry['code'])) {
-        $entry = $PIVOTX['db']->entry;
+        $data = $PIVOTX['db']->entry;
     } elseif (empty($text) && empty($additional))  {
         return array();
     }
 
-    // If text is not empty, we gather tags from that, else we use the current $entry
+    // If text is not empty, we gather tags from that, else we use the current data.
     if ($text == "") {
-        $text = $entry["introduction"].$entry["body"];
+        $text = $data["introduction"].$data["body"];
     }
 
-    // If additional is not empty, we gather tags from that, else we use the
-    // current $PIVOTX['db']->keywords
+    // If additional is not empty, we gather tags from that, else we use the 
+    // current entry's or page's keywords.
     if ($additional === false) {
-        $additional = $entry["keywords"];
+        $additional = $data["keywords"];
     }
 
     // Parsing out the tags from the tt snippet in the text, taking into
@@ -352,9 +362,7 @@ function getTags($link=true, $text="", $additional=false, $underscore=false) {
         }
     }
 
-
     return $aTagsList;
-
 }
 
 /**
