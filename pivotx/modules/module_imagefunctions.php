@@ -204,6 +204,12 @@ function auto_thumbnail($imagename, $folder='', $action='upload', $maxsize='0') 
     $filename = $folder . $imagename;
     $thumbfilename = $folder . $thumbname;
 
+    // check whether the file exists (and stop continuing to avoid warnings)
+    if (!file_exists($filename)) {
+        debug("Can not auto create thumb for ".basename($filename)." - file does not exist.");
+        return FALSE;
+    }
+
 
     $width = $PIVOTX['image']['mw'];
     $height = $PIVOTX['image']['mh'];
@@ -219,7 +225,7 @@ function auto_thumbnail($imagename, $folder='', $action='upload', $maxsize='0') 
     }
 
     list($curwidth, $curheight) = getimagesize($filename);
-	
+
     // When Fancybox calls and maxsize is specified then maxthumb was specified in FB
     if ($action == 'Fancybox' && $maxsize != '0') {
         if ($curwidth > $curheight) {
