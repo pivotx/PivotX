@@ -1767,7 +1767,7 @@ function templateGuess($filter) {
     $templates = templateList();
 
     // Set the items to skip:
-    $skip = array('_sub_', '_aux_');
+    $skip = array('_sub_', '_aux_', '_mob_');
 
     // Make sure $filter won't break our regex..
     $filter = preg_quote($filter, "/");
