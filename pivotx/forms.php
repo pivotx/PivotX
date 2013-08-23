@@ -1512,7 +1512,7 @@ EOM;
         'label' => __('Archivepage Template'),
         'value' => '',
         'options' => $templateoptions,
-        'text' => makeJtip(__('Frontpage Template'), __('The Template which determines the layout of your archives. This can be the same as "Frontpage Template".'))
+        'text' => makeJtip(__('Archivepage Template'), __('The Template which determines the layout of your archives. This can be the same as "Frontpage Template".'))
     ));
 
 
