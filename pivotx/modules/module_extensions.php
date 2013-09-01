@@ -541,6 +541,24 @@ class Extensions {
         
     }
 
+
+    function delHook($type="", $action="", $parameters="") {
+
+        $type = safeString($type, true);
+        $action = safeString($action, true);
+
+        // addHook has calculated a hash to use as key so do that too to get the exact key
+        // so it is obligatory to specify the hook exactly the same as when it was added
+        $delhookkey = md5($type.$action.serialize($parameters));
+
+        if (!$this->hooks[$delhookkey]) {
+            return false;
+        } else {
+            unset($this->hooks[$delhookkey]);
+        }
+        return true;
+    }
+
     /**
      * Check if a particular hook has been set. $type can be a simple value like
      * 'before_parse', or a compound one like 'make_link#pages'.
