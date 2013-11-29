@@ -146,7 +146,11 @@ class UploadElement {
         $vars['name']        = 'test-file-upload';
         $vars['upload_path'] = getUploadFolderUrl();
         $vars                = $this->_completeTemplateVars($vars);
-        $os->addTemplate('plupload_render', OutputSystem::LOC_BODYEND,'inc_plupload_element.tpl',$vars);
+        $addtplname          = 'plupload_render';
+        if ($vars['rendername'] != '') {
+            $addtplname      = $vars['rendername'];
+        }
+        $os->addTemplate($addtplname, OutputSystem::LOC_BODYEND,'inc_plupload_element.tpl',$vars);
 
         return '';
     }

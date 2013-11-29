@@ -4,9 +4,9 @@ Parameters:
     browse_button           id of button to choose the files (and start uploading)
     container               id of the container where everything happens
     progress_selector       jquery selector for the progress information
-    input_selector          (optional) enter the uploaded filenames to this jquery selector
+    input_selector          (optional) enter the uploaded file names to this jquery selector
     upload_type             type of upload: image, images, file, files
-    filters                 filetype filter: image, document, any
+    filters                 file type filter: image, document, any
 *]]
 
 [[assign var='multiple' value=false]]
@@ -16,10 +16,19 @@ Parameters:
 
 <script type="text/javascript">
 
-// Custom example logic
+// Custom example logic for [[$upload_var]] - [[$input_selector]]
+//
+// Comment: For some reason the click function for upload is not bound when you add more than one uploader at a time.
+//          This happens only when the very first time the editor page is started in a PivotX session.
+//          (In IE none work and in other browsers the second doesn't)
+//          Refreshing the screen or opening the editor for another entry/page results in 
+//          all uploader buttons working OK.
+//          If there is only one uploader then everything works OK (so no problems with backward compatibility).
+//          ==todo== find out what causes this weird behaviour
+//
 var [[$upload_var]];
 var timer_[[$upload_var]] = false;
-var upload_history = [];
+var [[$upload_var]]_upload_history = [];
 
 function [[$upload_var]]_start()
 {
@@ -82,9 +91,9 @@ function [[$upload_var]]_setprogress(name,percent)
     html += '<div style="border: 1px solid #888; margin: 4px; padding: 4px; color: #444">';
 
 [[if $upload_type=='images']]
-    if (upload_history.length > 0) {
-        for(var i=0; i < upload_history.length; i++) {
-            html += '<strong>' + upload_history[i] + '</strong> [[t]]uploaded[[/t]].<br/>';
+    if ([[$upload_var]]_upload_history.length > 0) {
+        for(var i=0; i < [[$upload_var]]_upload_history.length; i++) {
+            html += '<strong>' + [[$upload_var]]_upload_history[i] + '</strong> [[t]]uploaded[[/t]].<br/>';
         }
         html += '<br/>';
     }
@@ -137,10 +146,10 @@ jQuery(function($) {
     });
 
     [[$upload_var]].bind('Init', function(up, params){
-		var log = 'plupload runtime used is "' + params.runtime + '"';
-		var url = '[[$paths.pivotx_url]]ajaxhelper.php?function=logDebug&log='+escape(log);
-		$.ajax({ 'url': url });
-	});
+        var log = 'plupload runtime used is "' + params.runtime + '"';
+        var url = '[[$paths.pivotx_url]]ajaxhelper.php?function=logDebug&log='+escape(log);
+        $.ajax({ 'url': url });
+    });
 
     [[$upload_var]].bind('QueueChanged', function(up){
         [[if !$multiple]]
@@ -186,8 +195,8 @@ jQuery(function($) {
 
     [[$upload_var]].bind('Error', function(up, err) {
         var log = 'File upload error. Code=' + err.code;
-		var url = '[[$paths.pivotx_url]]ajaxhelper.php?function=logDebug&log='+escape(log);
-		$.ajax({ 'url': url });
+        var url = '[[$paths.pivotx_url]]ajaxhelper.php?function=logDebug&log='+escape(log);
+        $.ajax({ 'url': url });
 
         var message = '';
         if (err.code === plupload.FILE_EXTENSION_ERROR) {
@@ -242,7 +251,7 @@ jQuery(function($) {
     [[/if]]
         [[$upload_var]]_setprogress(name,100);
 
-        var cmd = "upload_history=[]; $('[[$progress_selector]]').hide('slow')";
+        var cmd = "[[$upload_var]]_upload_history=[]; $('[[$progress_selector]]').hide('slow')";
         timer_[[$upload_var]] = setTimeout(cmd,3000);
 
     [[if $upload_type=='image']]
@@ -262,7 +271,11 @@ jQuery(function($) {
         setTimeout('[[$upload_var]]_reloadbutton();',100);
     [[/if]]
 
-    upload_history[upload_history.length] = file.name;
+    // getting the length of an array with a variable name is not easy to do....
+    var temp_upl_hist = [[$upload_var]]_upload_history;
+    temp_upl_hist[temp_upl_hist.length] = file.name;
+    [[$upload_var]]_upload_history = temp_upl_hist;
+
     [[if $upload_type=='images']]
         if (imagearray) {
             imagearray[imagearray.length] = name;
