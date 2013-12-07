@@ -18,14 +18,6 @@ Parameters:
 
 // Custom example logic for [[$upload_var]] - [[$input_selector]]
 //
-// Comment: For some reason the click function for upload is not bound when you add more than one uploader at a time.
-//          This happens only when the very first time the editor page is started in a PivotX session.
-//          (In IE none work and in other browsers the second doesn't)
-//          Refreshing the screen or opening the editor for another entry/page results in 
-//          all uploader buttons working OK.
-//          If there is only one uploader then everything works OK (so no problems with backward compatibility).
-//          ==todo== find out what causes this weird behaviour
-//
 var [[$upload_var]];
 var timer_[[$upload_var]] = false;
 var [[$upload_var]]_upload_history = [];
