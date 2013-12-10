@@ -55,7 +55,7 @@ small {
 }
 
 #mainmenu {
-    width: 320px;
+    width: 330px;  /* was 320px */
     height: 40px;
 }
 
