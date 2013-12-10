@@ -3,7 +3,7 @@
 [[ hook name="mobile-dashboard-before-comments" ]]
     
 [[ if count($comments)>0 ]]
-<h2><span><a href="/index.php?page=m_comments">[[t]]more[[/t]] &raquo;</a></span><img src="pics/star.png" alt="" height="16" width="16" style="border-width: 0px; margin-bottom: -2px;" />
+<h2><span><a href="index.php?page=m_comments">[[t]]more[[/t]] &raquo;</a></span><img src="pics/star.png" alt="" height="16" width="16" style="border-width: 0px; margin-bottom: -2px;" />
         <strong>[[t]]The latest comments[[/t]]</strong></h2>
 
     [[ foreach from=$comments key=key item=item ]]
@@ -44,7 +44,7 @@
 
 
 [[ if is_array($entries) && count($entries)>0 ]]
-<h2><span><a href="/index.php?page=m_entries">[[t]]more[[/t]] &raquo;</a></span><img src="pics/star.png" alt="" height="16" width="16" style="border-width: 0px; margin-bottom: -2px;" />
+<h2><span><a href="index.php?page=m_entries">[[t]]more[[/t]] &raquo;</a></span><img src="pics/star.png" alt="" height="16" width="16" style="border-width: 0px; margin-bottom: -2px;" />
         <strong>[[t]]The latest entries[[/t]]</strong></h2>
 
     [[ foreach from=$entries key=key item=item ]]
@@ -89,7 +89,7 @@
 
 
 [[ if is_array($pages) && count($pages)>0 ]]
-<h2><span><a href="/index.php?page=m_pages">[[t]]more[[/t]] &raquo;</a></span><img src="pics/star.png" alt="" height="16" width="16" style="border-width: 0px; margin-bottom: -2px;" />
+<h2><span><a href="index.php?page=m_pages">[[t]]more[[/t]] &raquo;</a></span><img src="pics/star.png" alt="" height="16" width="16" style="border-width: 0px; margin-bottom: -2px;" />
         <strong>[[t]]The latest pages[[/t]]</strong></h2>
 
     [[ foreach from=$pages key=key item=item ]]

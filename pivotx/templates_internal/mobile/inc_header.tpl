@@ -57,10 +57,8 @@
         
             <li [[if $active=="entries"]]class="active"[[/if]]><a href='' rel='entries'>[[t]]Entries[[/t]]</a></li>
             <li [[if $active=="pages"]]class="active"[[/if]]><a href='' rel='pages'>[[t]]Pages[[/t]]</a></li>
-            <li [[if $active=="comments"]]class="active"[[/if]]><a href='[[ $paths.pivotx_url ]]index.php?page=m_comments'>[[t]]Comments[[/t]]</a></li>
-            <li [[if $active=="other"]]class="active"[[/if]]><a href='' rel='other'>[[t]]Other[[/t]]</a></li>
- 
-               
+            <li [[if $active=="comments"]]class="active"[[/if]]><a href='' rel='comments'>[[t]]Comments[[/t]]</a></li>
+            <li [[if $active=="other"]]class="active"[[/if]]><a href='' rel='other'>[[t]]Other[[/t]]</a></li>               
     
     </ul>
     </div>
@@ -80,7 +78,12 @@
                 <li><a href="[[ $paths.pivotx_url ]]index.php?page=m_editpage">[[t]]New Page[[/t]]</a></li>
             </ul>
         </div>
-        
+    
+        <div id="menu-comments">
+            <ul>
+                <li><a href="[[ $paths.pivotx_url ]]index.php?page=m_comments">[[t]]Overview[[/t]]</a></li>
+            </ul>
+        </div>        
     
         <div id="menu-other">
             <ul>
