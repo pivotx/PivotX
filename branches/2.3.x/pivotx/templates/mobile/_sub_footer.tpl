@@ -32,7 +32,8 @@
     [[archive_list
         unit="month"
         order="desc"
-        format="<option value='%url%'>%st_monthname% %st_year%</option>"
+        format="<option %active% value='%url%'>%st_monthname% %st_year%</option>"
+        isactive="selected='selected'"
     ]]
 
     </select>
@@ -43,7 +44,8 @@
     [[archive_list
         unit="month"
         order="desc"
-        format="<li><a href='%url%'>%st_monname% %st_year%</a></li>"
+        format="<li %active%><a href='%url%'>%st_monname% %st_year%</a></li>"
+        isactive="class='activepage'"
     ]]
      </ul>
     </noscript>
@@ -79,7 +81,7 @@
     [[atombutton]]
 
 <!-- a small 'hack' to make sure jquery is included.. -->
-<!-- [[popup]] -->
+<!-- [[popup file='icon_pivotx.jpg']] -->
 
 <hr size="1" noshade="noshade" />
 <p><a href="#top">Top</a></p>

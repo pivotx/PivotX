@@ -1,5 +1,5 @@
 [[ include file="`$templatedir`/_sub_header.tpl" ]]
-<p id="navigation">
+<p id="navigation_top">
   [[previousentry text="&laquo; <a href='%link%'>%title%</a>" cutoff=20 ]] |
     <a href="[[home]]">[[t]]Home[[/t]]</a> |
   [[nextentry text="<a href='%link%'>%title%</a> &raquo;" cutoff=20 ]]
@@ -25,26 +25,26 @@
      &bull; [[ commentlink ]]
   [[ /if ]]
 </p>
-[[ if ($entry.allow_comments == 1) ]]
+[[ if ($entry.allow_comments == 1 || $entry.comment_count > 0) ]]
   <p class="divider">[[ commcount ]]</p>
   <div class="commentblock">
     [[ comments date="%dayname% %day%.%month%.%ye% // %hour24%&#58;%minute%" ]]
       %anchor%
       <div class="comment925">
         %comment%
-        <cite><strong>%name%</strong> %email% %url% // %datelink% %editlink%</cite>
+        <br/><cite><strong>%name%</strong> %email% %url% // %datelink% %editlink%</cite>
       </div>
     [[ /comments ]]
   </div>
 [[ /if ]]
-<br />
-<br />
+[[ if ($entry.allow_comments == 1) ]]
+<br /><br />
 [[message]]
 [[commentform template="`$templatedir`/_sub_commentform.tpl" ]]
-<br />
-<br />
+<br /><br />
+[[ /if ]]
 <hr size="1" noshade="noshade" />
-<p id="navigation">
+<p id="navigation_bot">
   [[previousentry text="&laquo; <a href='%link%'>%title%</a>" cutoff=20 ]] |
   <a href="[[home]]">[[t]]Home[[/t]]</a> |
   [[nextentry text="<a href='%link%'>%title%</a> &raquo;" cutoff=20 ]]
