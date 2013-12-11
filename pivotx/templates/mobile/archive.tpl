@@ -1,5 +1,5 @@
   [[ include file="`$templatedir`/_sub_header.tpl" ]]
-    <p id="navigation">
+    <p id="navigation_top">
       [[ paging action="prev" format="&laquo; previous page" ]] |
       <a href="[[ home ]]">Home</a> |
       [[ paging action="next" format="next page &raquo; " ]]
@@ -14,7 +14,7 @@
       [[ include file="`$templatedir`/_sub_weblog.tpl" ]]
     [[ /subweblog ]]
     <!-- end of weblog 'standard' -->
-    <p id="navigation">
+    <p id="navigation_bot">
       [[ paging action="prev" format="&laquo; previous page" ]] |
       <a href="[[ home ]]">Home</a> |
       [[ paging action="next" format="next page &raquo; " ]]

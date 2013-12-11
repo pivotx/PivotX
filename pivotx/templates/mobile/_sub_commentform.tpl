@@ -1,5 +1,5 @@
 
-<form method="post" action="[[ self ]]#message" id="form">
+<form method="post" action="[[ self ]]#message" id="commentform">
     <table border='0' cellspacing='0' cellpadding='0' width="98%" class="commentform">
 
         <tr>
@@ -29,6 +29,15 @@
             </td>
         </tr>
 
+        <tr>
+            <td>
+                <label for="piv_comment">[[t]]Comment[[/t]]:</label>
+            </td>
+            <td colspan="2">
+                [[ emotpopup ]]
+                [[ textilepopup ]]
+            </td>
+        </tr>
 
         <tr>
             <td colspan='4'>
@@ -38,8 +47,15 @@
 
         <tr>
             <td colspan='4'>
+                [[ spamquiz ]]
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan='4'>
                 [[ moderate_message ]]
                 <input type="hidden" name="piv_code" value="[[ $entry.uid ]]" />
+                <input type="hidden" name="piv_discreet" value="1" />
                 <input type="hidden" name="piv_weblog" value="[[ weblogid ]]" />
                 <input type="submit" name="post" value="[[t]]Post Comment[[/t]]" class="commentbutton" style="font-weight: bold;" />
                 <input type="submit" name="preview" value="[[t]]Preview Comment[[/t]]" class="commentbutton" />
@@ -53,7 +69,7 @@
 
                     <tr>
                         <td valign="top" colspan="4">
-                            [[t]]Remember personal info?[[/t]]:
+                            [[t]]Remember personal info?[[/t]]
                         </td>
                     </tr>
                     <tr>
@@ -61,7 +77,7 @@
                             <input name="piv_rememberinfo" type="checkbox" id="piv_rememberinfo" value="1" [[ remember name="rememberinfo"]] />
                         </td>
                         <td valign="top">
-                            <label for="piv_notify">[[t]]Yes, give me a cookie and remember me.[[/t]]</label>
+                            <label for="piv_rememberinfo">[[t]]Yes, give me a cookie and remember me.[[/t]]</label>
                         </td>
                     </tr>
 
