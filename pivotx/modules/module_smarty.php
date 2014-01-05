@@ -254,7 +254,7 @@ $PIVOTX['template'] = new PivotxSmarty;
 
 
 /**
- * Inserts a linked list to the archives.
+ * Inserts a linked list to the archives for a given weblog.
  *
  * @param array $params
  * @param object $smarty
@@ -266,15 +266,22 @@ function smarty_archive_list($params, &$smarty) {
     $params = cleanParams($params);
 
     $Current_weblog = getDefault($params['weblog'], $PIVOTX['weblogs']->getCurrent());
+    $unit = getDefault($params['unit'], "month");
 
+    // If not yet done, load / make the array of archive filenames 
+    if (!isset($Archive_array)) { 
+        makeArchiveArray(false, $unit); 
+    }
+
+    // If there are no archives for the current weblog, just abort immediately.
+    if (empty($Archive_array[$Current_weblog])) {
+        return;
+    }
+
+    // Setting the formatting.
     $format = getDefault($params['format'], 
         "<a href=\"%url%\">%st_day% %st_monname% - %en_day% %en_monname% %st_year% </a><br />");
-    $unit = getDefault($params['unit'], "month");
     $separator = getDefault($params['separator'], "");
-
-    // if not yet done, load / make the array of archive filenames (together
-    // with at least one date)
-    if (!isset($Archive_array)) { makeArchiveArray(false, $unit); }
 
     // If we use 'isactive', set up the $active_arc and $isactive vars.
     if (!empty($params['isactive'])) {
@@ -284,41 +291,39 @@ function smarty_archive_list($params, &$smarty) {
         $isactive = "";
     }
 
-
     $output = array();
 
-    if( is_array( $Archive_array[$Current_weblog] )) {
-        
-        // maybe flip and reverse it.
-        if($params['order'] == 'descending' || $params['order'] == 'desc') {
-            $mylist = $Archive_array[$Current_weblog];
+    // TODO: Filter the archive array based on any date parameters.
+
+    // Maybe flip and reverse the archive array.
+    if($params['order'] == 'descending' || $params['order'] == 'desc') {
+        $mylist = $Archive_array[$Current_weblog];
+    } else {
+        $mylist = array_reverse($Archive_array[$Current_weblog]);
+    }
+
+    // Iterate over the list, formatting output as we go.
+    $counter = 0;
+    foreach($mylist as $date) {
+        $counter++;
+        $filelink = makeArchiveLink($date, $unit, $params['weblog']);
+
+        // Check if the current archive is the 'active' one.
+        if (!empty($isactive) && (makeArchiveName($date,'',$unit)==$active_arc)) {
+            $thisactive = $isactive;
         } else {
-            $mylist = array_reverse($Archive_array[$Current_weblog]);
+            $thisactive = "";
         }
 
-        // Iterate over the list, formatting output as we go.
-        $counter = 0;
-        foreach($mylist as $date) {
-            $counter++;
-            $filelink = makeArchiveLink($date, $unit, $params['weblog']);
+        // fix the rest of the string..
+        list($start_date, $stop_date) = getDateRange($date, $unit);
+        $this_output = formatDateRange($start_date, $stop_date, $format);
 
-            // Check if the current archive is the 'active' one.
-            if (!empty($isactive) && (makeArchiveName($date,'',$unit)==$active_arc)) {
-                $thisactive = $isactive;
-            } else {
-                $thisactive = "";
-            }
- 
-            // fix the rest of the string..
-            list($start_date, $stop_date) = getDateRange($date, $unit);
-            $this_output = formatDateRange($start_date, $stop_date, $format);
+        $this_output = str_replace("%counter%" , $counter, $this_output);
+        $this_output = str_replace("%url%" , $filelink, $this_output);
+        $this_output = str_replace("%active%" , $thisactive, $this_output);
 
-            $this_output = str_replace("%counter%" , $counter, $this_output);
-            $this_output = str_replace("%url%" , $filelink, $this_output);
-            $this_output = str_replace("%active%" , $thisactive, $this_output);
-
-            $output[] = "\n".$this_output;
-        }
+        $output[] = "\n".$this_output;
     }
 
     return implode($separator, $output);
