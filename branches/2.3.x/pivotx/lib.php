@@ -2424,18 +2424,21 @@ function tidyHtmlCallbackNestedobjects($match) {
 // -- End tidy functions ---------------
 
 /**
- * Sets the global variable $Archive_array used by several archive snippets.
+ * Returns an archive array for a given unit from the database.
  *
  * @param string $unit time unit for the archive.
  * @param boolean $force
- * @return void
+ * @return array
  */
 function makeArchiveArray($force=FALSE,$unit) {
-    global $Archive_array;
+    static $Archive_array = array();
 
-    $arc_db = new db();
+    if (!isset($Archive_array[$unit])) {
+        $arc_db = new db();
+        $Archive_array[$unit] = $arc_db->getArchiveArray($force,$unit);
+    }
 
-    $Archive_array = $arc_db->getArchiveArray($force,$unit);
+    return $Archive_array[$unit];
 }
 
 /**
