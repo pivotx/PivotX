@@ -261,17 +261,14 @@ $PIVOTX['template'] = new PivotxSmarty;
  * @return string
  */
 function smarty_archive_list($params, &$smarty) {
-    global $Archive_array, $PIVOTX;
+    global $PIVOTX;
 
     $params = cleanParams($params);
 
     $Current_weblog = getDefault($params['weblog'], $PIVOTX['weblogs']->getCurrent());
     $unit = getDefault($params['unit'], "month");
 
-    // If not yet done, load / make the array of archive filenames 
-    if (!isset($Archive_array)) { 
-        makeArchiveArray(false, $unit); 
-    }
+    $Archive_array = makeArchiveArray(false, $unit); 
 
     // If there are no archives for the current weblog, just abort immediately.
     if (empty($Archive_array[$Current_weblog])) {
