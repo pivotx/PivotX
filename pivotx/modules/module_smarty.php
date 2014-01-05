@@ -293,13 +293,45 @@ function smarty_archive_list($params, &$smarty) {
 
     $output = array();
 
-    // TODO: Filter the archive array based on any date parameters.
-
-    // Maybe flip and reverse the archive array.
+    // Maybe flip/reverse the archive array.
     if($params['order'] == 'descending' || $params['order'] == 'desc') {
         $mylist = $Archive_array[$Current_weblog];
     } else {
         $mylist = array_reverse($Archive_array[$Current_weblog]);
+    }
+
+    // Filter the archive array based on any date parameters given.
+    // Accepted formats are "YYYY" for year and "YYYY-MM" (if unit is 
+    // month) or "YYYY-WW" (if unit is week) for start/end. If unit is 
+    // year, no filtering will happen.
+    if (($unit != 'year') && (!empty($params['year']) || !empty($params['start']) || !empty($params['end']))) {
+        $unit_identifier = substr($unit,0,1);
+        // Default start and end which doesn't filter anything. 
+        $start = sprintf('%s-%s%s', 1900, $unit_identifier, 0);
+        $end = sprintf('%s-%s%s', 2200, $unit_identifier, 0);
+        if (!empty($params['year'])) {
+            $year = $params['year'];
+            $start = sprintf('%s-%s%s', $year, $unit_identifier, '00');
+            // There are never more than 99 weeks or months in a year ;-)
+            $end = sprintf('%s-%s%s', $year, $unit_identifier, '99'); 
+        } else {
+            if (!empty($params['start'])) {
+                list($year, $month_or_week) = explode('-', $params['start']);
+                $start = sprintf('%s-%s%s', $year, $unit_identifier, $month_or_week);
+            }
+            if (!empty($params['end'])) {
+                list($year, $month_or_week) = explode('-', $params['end']);
+                $end = sprintf('%s-%s%s', $year, $unit_identifier, $month_or_week);
+            }
+        }
+        // Removing entries before start and after end.
+        foreach ($mylist as $datekey => $date) {
+            if ($datekey < $start) {
+                unset($mylist[$datekey]);
+            } elseif ($datekey > $end) {
+                unset($mylist[$datekey]);
+            }
+        }
     }
 
     // Iterate over the list, formatting output as we go.
