@@ -299,9 +299,8 @@ function smarty_archive_list($params, &$smarty) {
 
     // Filter the archive array based on any date parameters given.
     // Accepted formats are "YYYY" for year and "YYYY-MM" (if unit is 
-    // month) or "YYYY-WW" (if unit is week) for start/end. If unit is 
-    // year, no filtering will happen.
-    if (($unit != 'year') && (!empty($params['year']) || !empty($params['start']) || !empty($params['end']))) {
+    // month), "YYYY-WW" (if unit is week) or "YYYY-00" (if unit is year) for start/end.
+    if ((!empty($params['year']) || !empty($params['start']) || !empty($params['end']))) {
         $unit_identifier = substr($unit,0,1);
         // Default start and end which doesn't filter anything. 
         $start = sprintf('%s-%s%s', 1900, $unit_identifier, 0);
@@ -329,6 +328,11 @@ function smarty_archive_list($params, &$smarty) {
                 unset($mylist[$datekey]);
             }
         }
+    }
+
+    // Max amount requested?
+    if ((!empty($params['amount'])) && ($params['amount'] > 0)) {
+        $mylist = array_slice($mylist, 0, $params['amount']); 
     }
 
     // Iterate over the list, formatting output as we go.
