@@ -303,8 +303,8 @@ function smarty_archive_list($params, &$smarty) {
     if ((!empty($params['year']) || !empty($params['start']) || !empty($params['end']))) {
         $unit_identifier = substr($unit,0,1);
         // Default start and end which doesn't filter anything. 
-        $start = sprintf('%s-%s%s', 1900, $unit_identifier, 0);
-        $end = sprintf('%s-%s%s', 2200, $unit_identifier, 0);
+        $start = sprintf('%s-%s%s', 1900, $unit_identifier, '00');
+        $end = sprintf('%s-%s%s', 2200, $unit_identifier, '00');
         if (!empty($params['year'])) {
             $year = $params['year'];
             $start = sprintf('%s-%s%s', $year, $unit_identifier, '00');
