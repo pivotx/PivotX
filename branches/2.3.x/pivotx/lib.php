@@ -4916,8 +4916,6 @@ function sendMailNotification($type, $data){
                 $notify_arr[ $commuserdata['email'] ] = $commuserdata['name'];
             }
         }
-        // Get the morelink position
-        $morelink_position = strtolower(getDefault( $PIVOTX['config']->get('email_morelink_position'), 'bottom'));
 
         // send mail to those on the 'notify me' list..
         if (count($notify_arr)>0) {
@@ -4927,18 +4925,25 @@ function sendMailNotification($type, $data){
             if (empty($user)) {
                 $user = $entry['user'];
             }
+            // Get the morelink position
+            $morelink_position = strtolower(getDefault( $PIVOTX['config']->get('email_morelink_position'), 'bottom'));
+
+            // Get email start text
+            $mail_start_text = getDefault($PIVOTX['config']->get('email_start_text'), sprintf(__('"%s" posted the following entry').":", $user));
+
             if ($morelink_position == 'top') {
-                $defaultbody = sprintf(__('"%s" posted the following entry').":\n", $user );
+                $defaultbody = $mail_start_text . "\n";
                 $defaultbody .= sprintf("\n%s:\n%s%s\n\n", __('View the complete entry'), 
                     $PIVOTX['paths']['host'], makeFileLink($entry, "", ""));
             } else {
-                $defaultbody = sprintf(__('"%s" posted the following entry').":\n\n", $user );
+                $defaultbody = $mail_start_text . "\n\n";
             }
             // parse the introduction so text includes through tags get activated (strip_tags removes any unwanted effects)
             $defaultbody .= sprintf("%s\n\n%s\n", $title, unentify(strip_tags(parse_intro_or_body($entry['introduction']))));
             $defaultbody .= sprintf("\n\n-------------\n");
 
             if ($morelink_position == 'bottom') {
+                $defaultbody .= $mail_start_text . "\n";
                 $defaultbody .= sprintf("\n%s:\n%s%s\n", __('View the complete entry'), 
                     $PIVOTX['paths']['host'], makeFileLink($entry, "", ""));
             }
