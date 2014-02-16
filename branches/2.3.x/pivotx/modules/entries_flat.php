@@ -524,6 +524,9 @@ automagically be published in this section of your weblog.</p>',
     function read_entries($params) {
         global $PIVOTX;
 
+        // Get the current entry, so we can reset it afterwards.
+        $current_entry = $this->entry;
+
         // Indicator - is the entries requested by UID.
         $find_by_uid = false;
 
@@ -836,6 +839,9 @@ automagically be published in this section of your weblog.</p>',
                 $final_entries_arr[$key]['link'] = makeFileLink($row, '', '');
             }
         }
+
+        // Restore the current entry.
+        $this->entry = $current_entry;
 
         return $final_entries_arr;
     }
