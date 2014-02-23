@@ -66,7 +66,8 @@ function view_log() {
 
     <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
-        <title></title>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" /> 
+        <title>PivotX debug window</title>
         <style>
 
         body {
