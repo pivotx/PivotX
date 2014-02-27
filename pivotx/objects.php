@@ -2043,8 +2043,8 @@ class Session {
         // Don't set the domain for a cookie on a "TLD" - like localhost ...
         // PS! We don't use $_SERVER["SERVER_NAME"] since we might be on an alias domain.
         if (strpos($_SERVER["HTTP_HOST"], ".") > 0) {
-            if (preg_match("/^www./",$_SERVER["HTTP_HOST"])) {
-                $this->cookie_domain = "." . preg_replace("/^www./", "", $_SERVER["HTTP_HOST"]);
+            if (preg_match("/^www\./",$_SERVER["HTTP_HOST"])) {
+                $this->cookie_domain = preg_replace("/^www/", "", $_SERVER["HTTP_HOST"]);
             } else {
                 $this->cookie_domain = $_SERVER["HTTP_HOST"];
             }
