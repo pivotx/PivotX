@@ -883,6 +883,16 @@ function pageMyinfo() {
 
         $val = $form->getvalues();
 
+        // Don't allow HTML in email and nickname. (We don't trust 
+        // the form validation even if it is server side.) 
+        foreach (array('nickname', 'email') as $key) {
+            $stripped = strip_tags($val[$key]);
+            if ($val[$key] != $stripped) {
+                debug("HTML stripped from $key when {$val['username']} edited his/her info.");
+                $val[$key] = $stripped;
+            }
+        }
+
         // Make sure we don't try to set the username or userlevel.
         unset($val['username']);
         unset($val['userlevel']);
@@ -897,14 +907,12 @@ function pageMyinfo() {
         }
         $PIVOTX['session']->setUser($currentuser);
 
-        $PIVOTX['events']->add('edit_info');
+        $PIVOTX['events']->add('edit_info', '');
         // Set the language (in case it changed)
         $PIVOTX['languages']->switchLanguage($currentuser['language']);
 
         // Show a message
         $PIVOTX['messages']->addMessage(__("Your settings have been updated."));
-
-
 
     }
 

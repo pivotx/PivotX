@@ -23,10 +23,10 @@
     [[ foreach from=$users item=user ]]
     <tr class='[[ cycle values="even, odd"]]'>
         <td><strong><a href="index.php?page=useredit&amp;user=[[ $user.username ]]" class="dialog user" title="[[t]]Edit User[[/t]]">[[ $user.username ]]</strong></a></td>
-        <td><strong>[[ $user.nickname ]]</strong></td>
+        <td><strong>[[ $user.nickname|escape:'html' ]]</strong></td>
         <td>[[ $user.userlevel ]]</td>
         <td>[[ $user.lastseen ]]</td>
-        <td>[[ $user.email ]]</td>
+        <td>[[ $user.email|escape:'html' ]]</td>
         <td align='right' class="buttons_small" style="padding: 2px 0px">
         [[ if $user.allow_edit ]] 
             <a href="index.php?page=useredit&amp;user=[[ $user.username ]]" class="dialog user" title="[[t]]Edit User[[/t]]">
