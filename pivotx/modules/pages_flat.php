@@ -405,6 +405,12 @@ what it is today without the valuable contributions made by several other people
         krsort($pages);
         $pages = array_slice($pages, 0, $amount);
 
+        // Make the 'excerpts'..
+        foreach($pages as $key=>$page) {
+            $fullpage = $this->getPage($page['uid']);
+            $pages[$key]['excerpt'] = makeExcerpt($fullpage['subtitle'].$fullpage['introduction']);
+        }
+
         return $pages;
 
     }
