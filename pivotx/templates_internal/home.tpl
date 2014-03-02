@@ -48,7 +48,7 @@
 
     [[ if $item.editable ]]
         <td class='dashboardclip1'><div class="clip" style='width: 260px;'>
-            &#8470; [[ $item.code ]]. <strong><a href="index.php?page=entry&amp;uid=[[$item.code]]" title="[[t]]Edit this entry[[/t]]">[[ $item.title|trimlen:26]]</a></strong> - [[ $item.excerpt|hyphenize ]]
+            &#8470; [[ $item.code ]]. <strong><a href="index.php?page=entry&amp;uid=[[$item.code]]" title="[[t]]Edit this entry[[/t]]">[[ $item.title|strip_tags|trimlen:26]]</a></strong> - [[ $item.excerpt|hyphenize ]]
         </div></td>
         
         <td class="tabular">[[assign var=username value=$item.user]][[ if $users.$username != "" ]][[ $users.$username|trimlen:22 ]][[ else ]][[ $item.user|trimlen:22 ]][[/if]]</td>
@@ -68,7 +68,7 @@
         </td>
     [[ else]]
         <td class='dashboardclip1'><div class="clip" style='width: 260px;'>
-            &#8470; [[ $item.code ]]. <strong>[[ $item.title|trimlen:26]]</strong> - [[ $item.excerpt|hyphenize ]]
+            &#8470; [[ $item.code ]]. <strong>[[ $item.title|strip_tags|trimlen:26]]</strong> - [[ $item.excerpt|hyphenize ]]
         </div></td>
         <td class="tabular">[[assign var=username value=$item.user]][[ if $users.$username != "" ]][[ $users.$username|trimlen:22 ]][[ else ]][[ $item.user|trimlen:22 ]][[/if]]</td>
         <td class="tabular">
@@ -165,7 +165,7 @@
 
     [[ if $item.editable==1 ]]
         <td class='dashboardclip2'><div class="clip" style="width: 200px;">
-            &#8470; [[ $item.uid ]]. <strong><a href="index.php?page=page&amp;uid=[[$item.uid]]" title="[[t]]Edit this page[[/t]]"> [[ $item.title|trimlen:25]]</a></strong> - [[ $item.excerpt|hyphenize ]]
+            &#8470; [[ $item.uid ]]. <strong><a href="index.php?page=page&amp;uid=[[$item.uid]]" title="[[t]]Edit this page[[/t]]"> [[ $item.title|strip_tags|trimlen:25]]</a></strong> - [[ $item.excerpt|hyphenize ]]
         </div></td>
         <td class="tabular">[[assign var=username value=$item.user]][[ if $users.$username != "" ]][[ $users.$username|trimlen:22 ]][[ else ]][[ $item.user|trimlen:22 ]][[/if]]</td>
         <td class="tabular">[[ $item.chaptername|trimlen:24 ]]</td>
@@ -177,7 +177,7 @@
             <a href="#" onclick="return confirmme('index.php?page=pagesoverview&amp;delpage=[[ $item.uid ]]', '[[t escape=js ]]Are you sure you wish to delete this page?[[/t]]');"><img src="pics/page_delete.png"  alt="[[t]]delete[[/t]]"  height="16" width="16" /></a>
         </td>
     [[ else ]]
-        <td class='dashboardclip2'><div class="clip" style="width: 200px;">&#8470; [[ $item.uid ]]. <strong>[[ $item.title|trimlen:25]]</strong> [[ $item.excerpt|hyphenize ]]</div></td>
+        <td class='dashboardclip2'><div class="clip" style="width: 200px;">&#8470; [[ $item.uid ]]. <strong>[[ $item.title|strip_tags|trimlen:25]]</strong> [[ $item.excerpt|hyphenize ]]</div></td>
         <td class="tabular">[[assign var=username value=$item.user]][[ if $users.$username != "" ]][[ $users.$username|trimlen:22 ]][[ else ]][[ $item.user|trimlen:22 ]][[/if]]</td>
         <td class="tabular">[[ $item.chaptername|trimlen:24 ]]</td>
         <td class="tabular">[[ date date=$item.date format="%day%-%month%-'%ye% %hour24%:%minute%" ]] </td>

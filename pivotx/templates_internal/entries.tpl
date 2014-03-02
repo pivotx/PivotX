@@ -65,9 +65,9 @@
         <td class="entriesclip">
             <div class="clip extraclip" style='width: 300px;'>
             [[ if $entry.editable ]]
-                <a title="[[t]]Edit this entry[[/t]]" href="index.php?page=[[$adminentrytype.editpage]]&amp;uid=[[$entry.uid]]"><strong>[[ $entry.title|truncate:35 ]]</strong></a>
+                <a title="[[t]]Edit this entry[[/t]]" href="index.php?page=[[$adminentrytype.editpage]]&amp;uid=[[$entry.uid]]"><strong>[[ $entry.title|strip_tags|truncate:35 ]]</strong></a>
             [[else]]
-                <strong>[[$entry.title|truncate:35]]</strong>
+                <strong>[[$entry.title|strip_tags|truncate:35]]</strong>
             [[/if]]
             [[$entry.excerpt|truncate:100]]
             </div>
