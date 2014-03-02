@@ -27,7 +27,7 @@
             <strong>
                 [[ assign var=uid value=$page.uid ]]
                 [[ if $page.editable ]]<a title="[[t]]Edit this page[[/t]]" href="index.php?page=page&amp;uid=[[$uid]]">[[ /if ]]
-                [[ $page.title|truncate:35 ]][[ if $page.editable ]]</a>[[ /if ]]
+                [[ $page.title|strip_tags|truncate:35 ]][[ if $page.editable ]]</a>[[ /if ]]
 
             </strong>
             <span style="color:#555; font-size: 85%;">

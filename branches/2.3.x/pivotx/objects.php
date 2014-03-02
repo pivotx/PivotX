@@ -3653,6 +3653,11 @@ class Events {
             if (is_array($event[3])) {
                 $event[3] = implode(", ", $event[3]);
             }
+
+            // If $event[4] is set, escape it just to be sure.
+            if (!empty($event[4])) {
+                $event[4] = htmlspecialchars($event[4]);
+            }
             
             $name = "<strong>" . $event[1] ."</strong>";
         
