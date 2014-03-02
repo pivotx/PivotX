@@ -80,6 +80,19 @@ if (($fileName == '') && isset($_FILES['file']['name'])) {
 //$fileName = preg_replace('/[^a-zA-Z0-9_. -]+/', ' ', $fileName);
 $fileName = safeString($fileName,true,'.');
 
+// Alter disallowed file extension no matter what the actual file type is.
+// (We take care to handle double extensions like "whatever.php.jpg".)
+$disallowedextensions = array_map('trim', explode(',', getDefault($PIVOTX['config']->get('upload_disallowed_extensions'), '.php,.php\d')));
+foreach ($disallowedextensions as $ext) {
+    $pattern = "/($ext)(\.|$)/i";
+    if (preg_match($pattern, $fileName)) {
+        $msg = sprintf(__("File (%s) with illegal file extension (%s) uploaded - filename altered."), $fileName, $ext); 
+        debug($msg);
+        $fileName = preg_replace($pattern, '$1_$2', $fileName); 
+        break;
+    }
+}
+
 // Make sure the fileName is unique
 $previous_fileName = $fileName;
 if (file_exists($targetDir . DIRECTORY_SEPARATOR . $fileName)) {
