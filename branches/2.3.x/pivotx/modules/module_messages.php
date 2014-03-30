@@ -55,11 +55,11 @@ class Messages {
         $this->badextensions = explode(",", "php,php3,php4,php5,pl,cgi,asp,exe,xpi,cab,dmg,vbs,com,bat,sh,pif,scr,dll");
 
         if (!empty($_GET['px_message'])) {
-            $this->addMessage($_GET['px_message']);
+            $this->addMessage(strip_tags($_GET['px_message']));
         }
 
         if (!empty($_POST['px_message'])) {
-            $this->addMessage($_POST['px_message']);
+            $this->addMessage(strip_tags($_POST['px_message']));
         }
 
     }
