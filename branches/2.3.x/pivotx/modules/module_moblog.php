@@ -48,6 +48,7 @@ class Moblog {
     var $active;
     var $entry;
     var $mimedecode_params;
+    var $plain_text_found;
 
     /**
      * Initializes the class.
@@ -96,6 +97,7 @@ class Moblog {
         $cfg['pop_port'] = getDefault($PIVOTX['config']->get('moblog_pop_port'), 110);
         $cfg['imap_mailbox'] = getDefault($PIVOTX['config']->get('moblog_imap_mailbox'),'' );
         $cfg['spam_category'] = getDefault($PIVOTX['config']->get('moblog_spam_category'), 'spam');
+        $cfg['verbose'] = getDefault($PIVOTX['config']->get('moblog_debug'), 0);
         $cfg['replyaddress'] = getDefault($PIVOTX['config']->get('moblog_replyaddress'), '');
         $cfg['title'] = getDefault($PIVOTX['config']->get('moblog_title'), "Moblog on " . date("m-d H:i"));
         $cfg['status'] = getDefault($PIVOTX['config']->get('moblog_status'), 'publish');
@@ -259,7 +261,7 @@ class Moblog {
         $decode = new Mail_mimeDecode($email, "\r\n");
         $structure = $decode->decode($mimedecode_params);
 
-        $this->moblog_print("<h1>Headers</h1>");
+        $this->moblog_print("<h1>Headers</h1>", false);
 
         $this->moblog_print("Subject: ". $structure->headers['subject']);
         $this->entry['title'] = $structure->headers['subject'];
@@ -328,10 +330,6 @@ class Moblog {
         if ((isset($structure->parts)) && (is_array($structure->parts))) {
             foreach ($structure->parts as $part) {
                 $found = $this->parse_parts($part);
-                // We stop parsing if we found a plain text part. 
-                if ($found == 'text/plain') {
-                    break;
-                }
             }
         } else {
             $this->parse_body($structure);
@@ -348,21 +346,32 @@ class Moblog {
 
         $extension = strtolower(getExtension($temp_headers['filename']));
 
-        $this->moblog_print("<hr /><b>part: ".$part->ctype_primary ."</b>" );
+        $primary = strtolower($part->ctype_primary);
+        $secondary = strtolower($part->ctype_secondary);
 
-        if (strtolower($part->ctype_primary) == "text") {
+        $this->moblog_print("<hr /><h2>part: " . htmlspecialchars($primary) . "</h2>", false);
 
-            $this->parse_body($part);
+        if ($primary == "text") {
 
-            return 'text/' . strtolower($part->ctype_secondary);
+            if (!$this->plain_text_found) {
+                $this->parse_body($part);
 
-        } else if (strtolower($part->ctype_primary) == "multipart") {
+                if ($secondary == "plain") {
+                    $this->plain_text_found = true;
+                }
+            } else {
+                $this->moblog_print("Skipping 'text/$secondary' part");
+            }
+
+            return 'text/' . $secondary;
+
+        } else if ($primary == "multipart") {
 
             foreach ($part->parts as $temp_part) {
                 $this->parse_parts($temp_part);
             }
 
-        } else if ((strtolower($part->ctype_primary) == "image")  || ($extension == "gif") || 
+        } else if (($primary == "image")  || ($extension == "gif") || 
                 ($extension == "jpg") || ($extension == "jpeg") || ($extension == "png")  ) {
 
             $this->parse_image($part);
@@ -490,7 +499,7 @@ class Moblog {
             }
         }
 
-        $this->moblog_print("Temp_headers:");
+        $this->moblog_print("<h3>Temp_headers</h3>", false);
         $this->moblog_printr($temp_headers);
 
         if (is_string($part)) {
@@ -627,7 +636,7 @@ class Moblog {
             }
         }
 
-        $this->moblog_print("Temp_headers:");
+        $this->moblog_print("<h3>Temp_headers</h3>", false);
         $this->moblog_printr($temp_headers);
 
         // It's an image. We'll add all the images as an array to the entry..
@@ -822,9 +831,14 @@ class Moblog {
 
 
 
-    function moblog_print($str) {
+    function moblog_print($str, $escape=true) {
         if ($this->cfg['verbose']) {
-            echo htmlspecialchars($str)."<br />\n";
+            if ($escape) {
+                $output = htmlspecialchars($str) . "<br />\n";
+            } else {
+                $output = $str . "\n";
+            }
+            echo $output;
         }
     }
 
