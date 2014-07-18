@@ -1819,7 +1819,10 @@ function pageMedia() {
 
     getFiles($PIVOTX['paths']['upload_base_path'], $_GET['additionalpath'], $PIVOTX['paths']['upload_base_url']);
 
-    $title = __('Manage Media') . " <small>&raquo; ". basename($PIVOTX['paths']['upload_base_path']) . "/" . $_GET['additionalpath'] . "</small>";
+    $title = sprintf(__('Manage Media') . ' <small>&raquo; %s/%s</small>',
+        basename($PIVOTX['paths']['upload_base_path']),
+        htmlspecialchars($_GET['additionalpath'])
+    );
     $PIVOTX['template']->assign('title', $title );
 
     renderTemplate('fileexplorer.tpl');
@@ -2031,7 +2034,9 @@ function pageTemplates() {
 
     getFiles($PIVOTX['paths']['templates_path'], $_GET['additionalpath'], $PIVOTX['paths']['templates_url']);
 
-    $title = __('Templates') . " <small>&raquo; templates/" . $_GET['additionalpath'] . "</small>";
+    $title = sprintf(__('Templates') . ' <small>&raquo; templates/%s</small>',
+        htmlspecialchars($_GET['additionalpath'])
+    );
     $PIVOTX['template']->assign('title', $title );
 
     renderTemplate('fileexplorer.tpl');
