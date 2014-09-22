@@ -435,14 +435,14 @@ $link = "void(debugwin = window.open('includes/modules/module_debug.php#bottom',
 // If debug is set, we set up the custom error handler..
 if ( isset($PIVOTX['config']) && $PIVOTX['config']->get('debug')==1) {
     ini_set("display_errors", "1");
-    error_reporting (E_ALL ^ E_NOTICE );
+    error_reporting (E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
     $old_error_handler = set_error_handler("userErrorHandler");
 } else {
     
     if ( isset($PIVOTX['config']) && $PIVOTX['config']->get('suppress_errors')==1) {
         error_reporting( E_ERROR );        
     } else {
-        error_reporting( E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED );
+        error_reporting( E_ALL & ~E_WARNING & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
     }
 }
 
