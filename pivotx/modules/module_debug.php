@@ -442,7 +442,7 @@ if ( isset($PIVOTX['config']) && $PIVOTX['config']->get('debug')==1) {
     if ( isset($PIVOTX['config']) && $PIVOTX['config']->get('suppress_errors')==1) {
         error_reporting( E_ERROR );        
     } else {
-        error_reporting( E_ALL ^ E_NOTICE ^ E_WARNING ); 
+        error_reporting( E_ALL ^ E_NOTICE ^ E_WARNING ^ E_DEPRECATED );
     }
 }
 
