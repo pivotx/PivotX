@@ -57,7 +57,22 @@ function handlePostComment() {
     if ($PIVOTX['config']->get('allow_html_in_comments')==1) {
         $_POST['piv_comment'] = stripTagsAttributes($_POST['piv_comment'], "*");
     } else {
-        $_POST['piv_comment'] = stripTagsAttributes($_POST['piv_comment'], "<b><em><i><strong>");
+        if ($PIVOTX['config']->get('allow_html_readable_in_comments')==1) {
+            // Make html readable? Done by adding a space after the "<"; it will not be stripped in stripTagsAttributes
+            $_POST['piv_comment'] = str_replace("<", "< ", $_POST['piv_comment']);
+            // Now repair the "damage"
+            $_POST['piv_comment'] = str_replace("<  ", "< ", $_POST['piv_comment']);
+            $_POST['piv_comment'] = str_replace("< b>", "<b>", $_POST['piv_comment']);
+            $_POST['piv_comment'] = str_replace("< /b>", "</b>", $_POST['piv_comment']);
+            $_POST['piv_comment'] = str_replace("< em>", "<em>", $_POST['piv_comment']);
+            $_POST['piv_comment'] = str_replace("< /em>", "</em>", $_POST['piv_comment']);
+            $_POST['piv_comment'] = str_replace("< i>", "<i>", $_POST['piv_comment']);
+            $_POST['piv_comment'] = str_replace("< /i>", "</i>", $_POST['piv_comment']);
+            $_POST['piv_comment'] = str_replace("< strong>", "<strong>", $_POST['piv_comment']);
+            $_POST['piv_comment'] = str_replace("< /strong>", "</strong>", $_POST['piv_comment']);
+        } else {
+            $_POST['piv_comment'] = stripTagsAttributes($_POST['piv_comment'], "<b><em><i><strong>");
+        }
     }
 
     // Do some more processing on the comment itself: trimming, standardizing line-breaks.
