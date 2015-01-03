@@ -3551,7 +3551,7 @@ function initEmoticons() {
             $path = fixpath(sprintf("%sincludes/emoticons/%s", $PIVOTX['paths']['pivotx_url'], $emoticon_images));
 
             foreach ($emot as $emot_code => $emot_file) {
-                $emot[$emot_code]=sprintf("<img src='%s%s' alt='%s' />", $path, $emot_file, addslashes($emot_code) );
+                $emot[$emot_code]=sprintf('<img src="%s%s" alt="%s" />', $path, $emot_file, addslashes($emot_code) );
             }
         }
     }
