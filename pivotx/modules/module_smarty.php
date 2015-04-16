@@ -516,7 +516,7 @@ function smarty_button($params, $text, &$smarty) {
     }
 
 
-    if ($params['tabindex']!="") {
+    if (!empty($params['tabindex'])) {
         $tabindex = " tabindex=\"".$params['tabindex']."\"";
     } else {
         $tabindex = "";
@@ -534,7 +534,7 @@ function smarty_button($params, $text, &$smarty) {
         $link = "#";
     }
 
-    if ($params['class']!="") {
+    if (!empty($params['class'])) {
         $class = " class=\"".$params['class']."\"";
     } else {
         $class = "";
@@ -1863,11 +1863,11 @@ function smarty_hook($params, &$smarty) {
 
     $params = cleanParams($params);
 
-    $name = $params['name'];
-    $value = $params['value'];
+    $name = isset($params['name']) ? $params['name'] : '';
+    $value = isset($params['value']) ? $params['value'] : '';
 
     // To show where the hooks go into the HTML..
-    if ($_GET['showhooks']==1) {
+    if (isset($_GET['showhooks']) && ($_GET['showhooks'] == 1)) {
         return "<span class='visiblehook'>" . $name ."</span>";
     }
 
