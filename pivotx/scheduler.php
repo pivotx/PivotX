@@ -34,7 +34,13 @@ $scheduler['max_age_zip'] = 24*60*60; // 24 hours for zipped Minify / TinyMCE fi
 $scheduler['max_age_image'] = 7*24*60*60; // 7 days for thumbnails.
 $scheduler['max_age_other'] = 24*60*60; // 24 hours for other stuff.
 
-if (!isset($_GET['force']) || ($_GET['force'] != 'yes')) {
+if (isset($_GET['force']) && ($_GET['force'] == 'yes')) {
+    $force = TRUE;
+} else {
+    $force = FALSE;
+}
+
+if (!$force) {
     header("HTTP/1.0 204 No Content");
     // Make sure the session is started, then flush the headers to output.
     session_start();
@@ -66,10 +72,10 @@ if (file_exists($db_path."scheduler.txt")) {
 // Set the new timestamp. 
 $now = date("U");
 
-if ( ($_GET['force'] == 'yes') || ($now - $lastrun) >= $scheduler['frequency'] ) {
+if ($force || (($now - $lastrun) >= $scheduler['frequency'])) {
     
     // Write the new timestamp, if we start doing stuff..
-    $fp = fopen($db_path."scheduler.txt", w);
+    $fp = fopen($db_path."scheduler.txt", 'w');
     fwrite($fp, $now);
     fclose($fp);
     
