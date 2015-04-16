@@ -604,7 +604,7 @@ function organizeMenuLevel($in,$currentuserlevel,$path=false,$level=0) {
 
     $highest_sortorder = 1;
     foreach($out as $item) {
-        if ((!isset($item['sortorder'])) && ($item['sortorder'] > $highest_sortorder)) {
+        if (isset($item['sortorder']) && ($item['sortorder'] > $highest_sortorder)) {
             $highest_sortorder = $item['sortorder'];
         }
     }
