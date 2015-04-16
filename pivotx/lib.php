@@ -2988,7 +2988,7 @@ function formatDate($date="", $format="", $title="") {
     if ($date=="" || $date=="now") {
         $date= date("Y-m-d-H-i-s", getCurrentDate());
     }
-    list($yr,$mo,$da,$ho,$mi,$se) = preg_split('/[ |\\-|:]/' , $date);
+    list($yr,$mo,$da,$ho,$mi,$se) = array_pad(preg_split('/[ |\\-|:]/' , $date), 6, 0);
 
     $mktime = mktime(1,1,1,$mo,$da,$yr);
     $day = @date("w",$mktime);
@@ -3062,7 +3062,7 @@ function formatDateFuzzy($date) {
     $secsPerYear = $secsPerDay * 365; // fuzzy - no leap year
     $now = getCurrentDate();
 
-    list($yr,$mo,$da,$ho,$mi,$se) = preg_split('/[ |\\-|:]/' , $date);
+    list($yr,$mo,$da,$ho,$mi,$se) = array_pad(preg_split('/[ |\\-|:]/' , $date), 6, 0);
     $then = strtotime($yr . '-' . $mo . '-' . $da . ' ' . intval($ho) . ':' . intval($mi) .':' . intval($se));
     $diff = $now - $then;
 
@@ -5081,13 +5081,12 @@ function isMobile() {
 
     $isMobile = false;
 
-    $op = strtolower($_SERVER['HTTP_X_OPERAMINI_PHONE']);
     $ua = strtolower($_SERVER['HTTP_USER_AGENT']);
     $ac = strtolower($_SERVER['HTTP_ACCEPT']);
     $ip = $_SERVER['REMOTE_ADDR'];
     
     $isMobile = strpos($ac, 'application/vnd.wap.xhtml+xml') !== false
-        || $op != ''
+        || isset($_SERVER['HTTP_X_OPERAMINI_PHONE'])
         || strpos($ua, 'sony') !== false 
         || strpos($ua, 'symbian') !== false 
         || strpos($ua, 'nokia') !== false 
