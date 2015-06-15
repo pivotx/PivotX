@@ -61,7 +61,8 @@ class Form {
 
         // Set the 'action' attribute for the form. (whereto it will submit)
         if ($action=="") {
-            $action = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?".$_SERVER['QUERY_STRING'];
+            $action = $protocol . $_SERVER['HTTP_HOST'] .
+                htmlspecialchars($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'];
         }
 
         // Always remove the 'retry=1' from the action.
