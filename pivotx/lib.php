@@ -763,17 +763,17 @@ function getPivotxURL() {
     } else {
 
         // We need to calculate the URL to PivotX.
-        if (!empty($_SERVER['PATH_INFO'])) {
-            $current_path = $_SERVER['PATH_INFO'];
-        } else if (!empty($_SERVER['PHP_SELF'])) {
+        if (!empty($_SERVER['PHP_SELF'])) {
             $current_path = $_SERVER['PHP_SELF'];
         } else {
             $current_path = $_SERVER['SCRIPT_NAME'];
         }
+        // Stripping off things after index.php and being completely paranoid: 
+        list($current_path, $dummy) = explode('index.php', $current_path);
+        $current_path = htmlspecialchars($current_path);
 
-        // Make sure we have a trailing slash, and remove windows weirdness from current path.
-        $url = dirname($current_path)."/";
-        $url = str_replace("//", "/", str_replace("\\", "/", $url)); 
+        // Remove windows weirdness from current path.
+        $url = str_replace("//", "/", str_replace("\\", "/", $current_path)); 
 
         // If we are not on the admin side, compensate the path/url.
         if (!defined('PIVOTX_INADMIN')) {
