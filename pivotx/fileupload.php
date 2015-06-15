@@ -23,10 +23,6 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-if (($_COOKIE['PHPSESSID'] == '') && ($_GET['sess'] != '')) {
-    session_id($_GET['sess']);
-}
-
 // Make sure we're logged in..
 require_once(dirname(__FILE__).'/lib.php');
 initializePivotX(false);
