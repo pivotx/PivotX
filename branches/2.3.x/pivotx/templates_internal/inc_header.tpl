@@ -24,23 +24,23 @@
     });
     </script>
 
-    <link rel="stylesheet" type="text/css" href="templates_internal/ui-theme/jquery-ui-1.9.1.custom.css" />
+    <link rel="stylesheet" type="text/css" href="[[ $paths.pivotx_url ]]templates_internal/ui-theme/jquery-ui-1.9.1.custom.css" />
 
     <!-- Markitup -->
-    <link rel="stylesheet" type="text/css" href="includes/markitup/markitup.css" />
-    <script type="text/javascript" src="includes/markitup/jquery.markitup.js"></script>
-    <script type="text/javascript" src="includes/markitup/set.js"></script>
+    <link rel="stylesheet" type="text/css" href="[[ $paths.pivotx_url ]]includes/markitup/markitup.css" />
+    <script type="text/javascript" src="[[ $paths.pivotx_url ]]includes/markitup/jquery.markitup.js"></script>
+    <script type="text/javascript" src="[[ $paths.pivotx_url ]]includes/markitup/set.js"></script>
 
     <!-- Thickbox -->
-    <script type="text/javascript" src="includes/js/thickbox.js"></script>
-    <link rel="stylesheet" type="text/css" href="templates_internal/assets/thickbox.css" />
+    <script type="text/javascript" src="[[ $paths.pivotx_url ]]includes/js/thickbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="[[ $paths.pivotx_url ]]templates_internal/assets/thickbox.css" />
 
     <!-- Formclass library -->
-    <link rel="stylesheet" type="text/css" href="templates_internal/assets/formclass.css" />
+    <link rel="stylesheet" type="text/css" href="[[ $paths.pivotx_url ]]templates_internal/assets/formclass.css" />
 
     <!-- PivotX -->
-    <script type="text/javascript" src="includes/js/pivotx.js"></script>
-    <link rel="stylesheet" type="text/css" href="templates_internal/assets/pivotx.css"/>
+    <script type="text/javascript" src="[[ $paths.pivotx_url ]]includes/js/pivotx.js"></script>
+    <link rel="stylesheet" type="text/css" href="[[ $paths.pivotx_url ]]templates_internal/assets/pivotx.css"/>
 
     [[ hook name="head-end" ]]
 
