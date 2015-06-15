@@ -112,9 +112,9 @@ jQuery(function($) {
         container : '[[$container]]',
         max_file_size : '[[$max_file_size]]',
         [[if $path=='']]
-        url : '[[$url]]?type=[[$upload_type]]&sess=[[$sessionid]]',
+        url : '[[$url]]?type=[[$upload_type]]',
         [[else]]
-        url : '[[$url]]?type=[[$upload_type]]&sess=[[$sessionid]]&path=[[$path]]',
+        url : '[[$url]]?type=[[$upload_type]]&path=[[$path]]',
         [[/if]]
         flash_swf_url : '[[$jsdir]]/plupload.flash.swf',
         silverlight_xap_url : '[[$jsdir]]/plupload.silverlight.xap',
