@@ -307,8 +307,8 @@ class ajaxhelper {
 
 
             echo "<form id='editor' class='formclass' method='post' action='' style='border: 0px;'>";
-            echo "<input type='hidden' value='".$_GET['basedir']."' id='editBasedir'>";
-            echo "<input type='hidden' value='".$_GET['file']."' id='editFile'>";
+            echo "<input type='hidden' value='".htmlspecialchars($_GET['basedir'])."' id='editBasedir'>";
+            echo "<input type='hidden' value='".htmlspecialchars($_GET['file'])."' id='editFile'>";
             echo "<textarea style='width: 759px; border: 1px inset #999; height: 380px;' id='editContents' name='editContents' class='Editor' >";
             echo htmlentities($contents, ENT_QUOTES, 'UTF-8');
             echo "</textarea>";
