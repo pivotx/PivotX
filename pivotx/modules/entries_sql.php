@@ -1321,7 +1321,6 @@ class EntriesSql {
 
     function delete_entry() {
 
-
         $uid = intval($this->entry['uid']);
 
         $this->sql->query("DELETE FROM " . $this->entriestable . " WHERE uid=$uid LIMIT 1;");
@@ -1446,6 +1445,8 @@ class EntriesSql {
      */
     function delete_comment( $uid ) {
         global $PIVOTX;
+        
+        $uid = intval($uid);
 
         // Find the associated entries so we can update comment count and clear the cache.
         $this->sql->query("SELECT entry_uid FROM " . $this->commentstable . " WHERE contenttype = 'entry' AND uid=$uid;");
@@ -1489,16 +1490,20 @@ class EntriesSql {
     function delete_trackback( $uid ) {
         global $PIVOTX;
 
+        $uid = intval($uid);
+
         // Find the associated entries so we can update trackback count and clear the cache.
         $this->sql->query("SELECT entry_uid FROM " . $this->trackbackstable . " WHERE uid=$uid;");
         $trackback = $this->sql->fetch_row();
-        $entry_uid = $trackback['entry_uid'];
-        $PIVOTX['cache']->set("trackbacks", $entry_uid, array());
-        $PIVOTX['cache']->set("entries", $entry_uid, array());
-        $this->sql->query("UPDATE " . $this->entriestable . " SET trackback_count = trackback_count -1 WHERE uid=$entry_uid;");
-
-        $this->sql->query("DELETE FROM " . $this->trackbackstable . " WHERE uid=$uid;");
-
+        if (!empty($trackback['entry_uid'])) {
+            $entry_uid = $trackback['entry_uid'];
+            
+            $PIVOTX['cache']->set("trackbacks", $entry_uid, array());
+            $PIVOTX['cache']->set("entries", $entry_uid, array());
+            
+            $this->sql->query("UPDATE " . $this->entriestable . " SET trackback_count = trackback_count -1 WHERE uid=$entry_uid;");
+            $this->sql->query("DELETE FROM " . $this->trackbackstable . " WHERE uid=$uid;");
+        }
     }
 
     /**
