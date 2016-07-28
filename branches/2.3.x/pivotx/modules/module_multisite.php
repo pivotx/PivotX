@@ -33,7 +33,7 @@ class MultiSite {
     /**
      * Initializes the class.
      */
-    function MultiSite() {
+    function __construct() {
         global $PIVOTX, $pivotx_path;
 
         $sites_path = $pivotx_path . 'sites/';

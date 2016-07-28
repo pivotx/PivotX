@@ -25,7 +25,7 @@ class PagesSql {
      *
      * @return PagesFlat
      */
-    function PagesSql() {
+    function __construct() {
         global $PIVOTX;
 
         // Set the names for the tables we use.

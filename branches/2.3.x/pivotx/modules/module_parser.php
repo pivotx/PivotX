@@ -47,7 +47,7 @@ class Parser {
      * @param array $modifier
      * @return Parser
      */
-    function Parser($action="weblog", $modifier=array()) {
+    function __construct($action="weblog", $modifier=array()) {
 
         // In case $action is an empty string, set to default value.
         if ($action == "") {

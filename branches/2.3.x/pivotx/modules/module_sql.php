@@ -43,7 +43,7 @@ class sql {
     var $return_silent;
     var $error_handler;
 
-    function sql($type="", $dbase="", $host="", $user="", $pass="") {
+    function __construct($type="", $dbase="", $host="", $user="", $pass="") {
         global $cfg;
 
         $this->type = $type;

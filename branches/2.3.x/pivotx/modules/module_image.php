@@ -195,8 +195,7 @@ function create_thumbnail() {
 class Image {
     var $name, $w, $h, $x, $y, $type;
 
-    function Image($n,$w,$h,$x,$y,$type,$link)
-    {
+    function __construct($n,$w,$h,$x,$y,$type,$link) {
         $this->name = $n;
         $this->w    = $w;
         $this->h    = $h;
@@ -213,8 +212,7 @@ class Attributes extends Image {
 
     var $ext, $new_name, $org_name;
 
-    function Attributes($n,$w,$h,$x,$y, $link)
-    {
+    function __construct($n,$w,$h,$x,$y, $link) {
         $this->Image($n,$w,$h,$x,$y, $type, $link);
 
         $this->ext = getExtension($this->name);

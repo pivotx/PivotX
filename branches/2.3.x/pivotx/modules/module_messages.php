@@ -46,7 +46,7 @@ class Messages {
      * Initialise the Messages object.
      *
      */
-    function Messages() {
+    function __construct() {
 
         $this->messages = array();
         $this->warnings = array();

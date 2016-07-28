@@ -24,7 +24,7 @@ class IPBlock {
     /**
      * Initialise the IP block.
      */
-    function IPBlock() {
+    function __construct() {
         global $PIVOTX;
        
         if (file_exists($PIVOTX['paths']['db_path'] . "blocked_ips.txt.php")) {
