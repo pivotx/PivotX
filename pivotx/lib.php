@@ -4741,8 +4741,9 @@ function stripTagsAttributes($source, $allowedtags = "", $disabledattributes = "
         $disabledattributes = implode('|', $disabledattributes);    
     }
 
-    $result = strip_tags($source, $allowedtags);    
-    $result = @preg_replace('/<(.*?)>/ie', "'<' . preg_replace(array('/javascript:[^\"\']*/i', '/(" . $disabledattributes . ")[ \\t\\n]*=[ \\t\\n]*[\"\'][^\"\']*[\"\']/i', '/\s+/'), array('', '', ' '), stripslashes('\\1')) . '>'", $result);
+    $result = strip_tags($source, $allowedtags); 
+    // @TODO: Rewrite with preg_replace_callback    
+    // $result = preg_replace('/<(.*?)>/ie', "'<' . preg_replace(array('/javascript:[^\"\']*/i', '/(" . $disabledattributes . ")[ \\t\\n]*=[ \\t\\n]*[\"\'][^\"\']*[\"\']/i', '/\s+/'), array('', '', ' '), stripslashes('\\1')) . '>'", $result);
     
     return $result;
 
