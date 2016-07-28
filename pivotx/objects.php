@@ -2003,7 +2003,7 @@ class Session {
      *
      * @return Session
      */
-    function Session() {
+    function __construct() {
         global $PIVOTX;
 
         $this->cookie_lifespan = 60*60*24*30;  // 30 days
@@ -2558,7 +2558,7 @@ class Pages {
      *
      * @return Pages
      */
-    function Pages() {
+    function __construct() {
         global $PIVOTX;
 
         if ($PIVOTX['config']->get('db_model')=="flat") {
@@ -2807,7 +2807,7 @@ class Paging {
     var $offset;
     var $name;
 
-    function Paging($name) {
+    function __construct($name) {
         $this->name = $name;
     }
 
@@ -3152,7 +3152,7 @@ class Simplecache {
     var $itemlimit;
     var $memlimit;
 
-    function SimpleCache() {
+    function __construct() {
         global $PIVOTX;
         
         $this->cache = array();
@@ -3330,7 +3330,7 @@ class Minify {
     var $cssfiles;
     var $base;
     
-    function Minify($html) {
+    function __construct($html) {
         global $PIVOTX;
         
         $this->html = $html;
@@ -3587,7 +3587,7 @@ class Events {
     var $edit_timeout;
     var $maxevents;
 
-    function Events() {
+    function __construct() {
         global $PIVOTX;
         
         $this->filename = "ser_events.php";
