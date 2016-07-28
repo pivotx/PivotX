@@ -18,13 +18,15 @@
  *
  */
 class PagesFlat {
+    
+    var $index;
 
     /**
      * Initialisation.
      *
      * @return PagesFlat
      */
-    function PagesFlat() {
+    function __construct() {
         global $PIVOTX;
 
         //init vars..

@@ -47,7 +47,7 @@ class Extensions {
      *
      * @return Extensions
      */
-    function Extensions() {
+    function __construct() {
         global $PIVOTX;
 
         // If there's a file called 'pivotxsafemode.txt', we'll disable all extensions.

@@ -47,7 +47,7 @@ class Form {
 
 
 
-    function form($name, $action="", $submit="Submit") {
+    function __construct($name, $action="", $submit="Submit") {
 
         // Set up the default HTML for the various form elements
         $this->init_html();

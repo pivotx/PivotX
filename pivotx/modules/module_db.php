@@ -37,7 +37,7 @@ class db {
      *
      * @param boolean $loadindex Whether the index should be loaded.
      */
-    function db($loadindex=TRUE) {
+    function __construct($loadindex=TRUE) {
         global $PIVOTX, $pivotx_path;
 
         if ($PIVOTX['config']->get('db_model')=="flat") {

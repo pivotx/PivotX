@@ -56,7 +56,7 @@ class EntriesSql {
 
     // public functions
 
-    function EntriesSql($loadindex=TRUE, $allow_write=TRUE) {
+    function __construct($loadindex=TRUE, $allow_write=TRUE) {
         global $PIVOTX, $dbversion;
 
         static $initialisationchecks;

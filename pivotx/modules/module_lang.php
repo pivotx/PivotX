@@ -138,7 +138,7 @@ class Languages {
     
     var $default = 'en';
 
-    function Languages($language='') {
+    function __construct($language='') {
         global $l10n, $PIVOTX;
 
         if ($language == '') {
@@ -422,7 +422,7 @@ class px_Locale {
         }
     }
 
-    function px_Locale() {
+    function __construct() {
         // Currently only running init - more can be added.
         $this->init();
     }

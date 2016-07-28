@@ -53,7 +53,7 @@ class Moblog {
     /**
      * Initializes the class.
      */
-    function Moblog() {
+    function __construct() {
         global $PIVOTX, $moblogdir;
         
         if ($PIVOTX['config']->get('moblog_active') == '') {
