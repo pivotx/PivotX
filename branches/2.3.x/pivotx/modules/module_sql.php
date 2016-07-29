@@ -43,14 +43,15 @@ class sql {
     var $return_silent;
     var $error_handler;
 
-    function __construct($type="", $dbase="", $host="", $user="", $pass="") {
+    function __construct($type="", $dbase="", $host="", $user="", $pass="", $port="") {
         global $cfg;
 
         $this->type = $type;
+        $this->dbport = $port;
         $this->dbhost = $host;
         $this->dbuser = $user;
         $this->dbpass = $pass;
-        $this->dbase =$dbase;
+        $this->dbase = $dbase;
 
         $this->sql_link = 0;
         $this->sql_result = '';
@@ -95,8 +96,12 @@ class sql {
                 // Set up the link, if not already done so.
                 if (!$this->sql_link) {
 
-                    // See if we can connect to the Mysql Database.
-                    if ($this->sql_link = mysqli_connect($this->dbhost, $this->dbuser, $this->dbpass, $this->dbase)) {                       
+                    if (!empty($this->dbport)) {
+                        $this->sql_link = mysqli_connect($this->dbhost, $this->dbuser, $this->dbpass, $this->dbase, $this->dbport);
+                    } else {
+                        $this->sql_link = mysqli_connect($this->dbhost, $this->dbuser, $this->dbpass, $this->dbase);                        
+                    }
+                    if ($this->sql_link) {
                         // Set the DB to always use UTF-8, if we're on MySQL 4.1 or higher..
                         $result = mysqli_query($this->sql_link, "SELECT VERSION() as version;");
                         $row = mysqli_fetch_assoc($result);
@@ -109,7 +114,7 @@ class sql {
 
                     } else {
                         // No, couldn't. So we print an error
-                        $this->error( "Can't connect to MySQL Database", '', '' );
+                        $this->error("Failed to connect to MySQL Database - " . mysqli_connect_error(), '', mysqli_connect_errno() );
 
                         // If silent_after_failed_connect is set, from now on return without errors/warnings
                         if($this->silent_after_failed_connect) {

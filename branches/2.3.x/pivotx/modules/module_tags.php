@@ -210,7 +210,8 @@ function getTagCosmosMysql($max=0,$weblogname='', $match='', $exclude= array()) 
             $PIVOTX['config']->get('db_databasename'),
             $PIVOTX['config']->get('db_hostname'),
             $PIVOTX['config']->get('db_username'),
-            $PIVOTX['config']->get('db_password')
+            $PIVOTX['config']->get('db_password'),
+            $PIVOTX['config']->get('db_port')
         );
 
     // Get the total amount of tags.

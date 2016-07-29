@@ -85,7 +85,8 @@ class EntriesSql {
             $PIVOTX['config']->get('db_databasename'),
             $PIVOTX['config']->get('db_hostname'),
             $PIVOTX['config']->get('db_username'),
-            $PIVOTX['config']->get('db_password')
+            $PIVOTX['config']->get('db_password'),
+            $PIVOTX['config']->get('db_port')
         );
 
         // Verify that the entries database tables exist. If not, we create them.
