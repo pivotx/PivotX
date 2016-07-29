@@ -902,7 +902,8 @@ function getWordSql($word) {
         $PIVOTX['config']->get('db_databasename'),
         $PIVOTX['config']->get('db_hostname'),
         $PIVOTX['config']->get('db_username'),
-        $PIVOTX['config']->get('db_password')
+        $PIVOTX['config']->get('db_password'),
+        $PIVOTX['config']->get('db_port')
     );
 
     // Make sure we don't inject unwanted stuff..

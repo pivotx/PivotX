@@ -1193,9 +1193,9 @@ function checkDBVersion() {
     }
     
     $db1 = new sql('mysql', $PIVOTX['config']->get('db_databasename'), $PIVOTX['config']->get('db_hostname'),
-            $PIVOTX['config']->get('db_username'), $PIVOTX['config']->get('db_password') );
+            $PIVOTX['config']->get('db_username'), $PIVOTX['config']->get('db_password'), $PIVOTX['config']->get('db_port'));
     $db2 = new sql('mysql', $PIVOTX['config']->get('db_databasename'), $PIVOTX['config']->get('db_hostname'),
-            $PIVOTX['config']->get('db_username'), $PIVOTX['config']->get('db_password') );
+            $PIVOTX['config']->get('db_username'), $PIVOTX['config']->get('db_password'), $PIVOTX['config']->get('db_port'));
 
     $db_version = $PIVOTX['config']->get('db_version');
 

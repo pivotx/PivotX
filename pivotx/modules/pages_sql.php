@@ -35,12 +35,12 @@ class PagesSql {
         $this->extrafieldstable = safeString($PIVOTX['config']->get('db_prefix')."extrafields", true);
 
         // Set up DB connection
-        $this->sql = new sql(
-                'mysql',
+        $this->sql = new sql('mysql',
                 $PIVOTX['config']->get('db_databasename'),
                 $PIVOTX['config']->get('db_hostname'),
                 $PIVOTX['config']->get('db_username'),
-                $PIVOTX['config']->get('db_password')
+                $PIVOTX['config']->get('db_password'),
+                $PIVOTX['config']->get('db_port')
             );
 
     }
