@@ -472,7 +472,7 @@ function renderErrorpage($error, $additionalinfo) {
  * @param string $sql_query
  * @param integer $error_no
  */
-function setError($type='general', $error_msg, $sql_query="") {
+function setError($type='general', $error_msg, $sql_query='', $error_no) {
     global $PIVOTX;
 
     $error_text = '';
@@ -481,20 +481,11 @@ function setError($type='general', $error_msg, $sql_query="") {
 
         case "sql":
 
-            $error_no = mysql_errno();
-            $error_text = mysql_error();
-
-            // If the given error is the same as the error we get from mySQL,
-            // we don't need to print 'em both:
-            if ($error_msg == $error_text) {
-                $error_msg = "";
-            } else {
-                $error_msg = "<p><strong>$error_msg</strong></p>";
-            }
+            $error_msg = "<p><strong>$error_msg</strong></p>";
 
             $error = sprintf(__("<p>There was a problem with the Database: </p>
             %s
-            <p><tt>error code %s: %s</tt></p>
+            <p><tt>error code %s</tt></p>
             </p>
             <ul><li>If you're in the process of setting up PivotX, you should review your
             <a href='%s'>Database connection settings</a>.</li>
@@ -503,7 +494,6 @@ function setError($type='general', $error_msg, $sql_query="") {
             </ol>"),
                 $error_msg,
                 $error_no,
-                $error_text,
                 "index.php?page=configuration#section-2"
             );
 

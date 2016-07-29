@@ -93,41 +93,23 @@ class sql {
                  */
 
                 // Set up the link, if not already done so.
-                if ($this->sql_link == 0) {
+                if (!$this->sql_link) {
 
-                    // See if we can connect to the Mysql Database Engine.
-                    if ($this->sql_link = @mysql_connect($this->dbhost, $this->dbuser, $this->dbpass,true)) {
-                       // Yes, so now see if we can select the database.
-
-                       if (!mysql_select_db($this->dbase, $this->sql_link)) {
-
-                          // We couldn't connect to the database. Print an error.
-                          $this->error( "Can't select Database '<tt>". $this->dbase ."</tt>'" , '', mysql_errno($this->sql_link) );
-
-                          // If silent_after_failed_connect is set, from now on return without errors/warnings
-                          if($this->silent_after_failed_connect) {
-                              $return_silent = true;
-                          }
-
-
-                          return false;
-
-                       }
-                       
+                    // See if we can connect to the Mysql Database.
+                    if ($this->sql_link = mysqli_connect($this->dbhost, $this->dbuser, $this->dbpass, $this->dbase)) {                       
                         // Set the DB to always use UTF-8, if we're on MySQL 4.1 or higher..
-                        $result = mysql_query("SELECT VERSION() as version;");
-                        $row = mysql_fetch_assoc($result);
+                        $result = mysqli_query($this->sql_link, "SELECT VERSION() as version;");
+                        $row = mysqli_fetch_assoc($result);
 
                         if (checkVersion($row['version'], "4.1.0")) {
-                            mysql_query("SET CHARACTER SET 'utf8'", $this->sql_link);
-			    mysql_query('SET NAMES utf8', $this->sql_link);
-			    mysql_query('SET collation_connection = "utf8_unicode_ci"', $this->sql_link);
+                            mysqli_query($this->sql_link, "SET CHARACTER SET 'utf8'");
+                            mysqli_query($this->sql_link, 'SET NAMES utf8');
+                            mysqli_query($this->sql_link, 'SET collation_connection = "utf8_unicode_ci"');
                         }
 
                     } else {
-
                         // No, couldn't. So we print an error
-                        $this->error( "Can't connect to MySQL Database Engine", '', '' );
+                        $this->error( "Can't connect to MySQL Database", '', '' );
 
                         // If silent_after_failed_connect is set, from now on return without errors/warnings
                         if($this->silent_after_failed_connect) {
@@ -181,7 +163,7 @@ class sql {
      */
     function close() {
 
-        mysql_close( $this->sql_link );
+        mysqli_close($this->sql_link );
 
     }
 
@@ -193,7 +175,7 @@ class sql {
      */
     function get_server_info() {
 
-        $version = mysql_get_server_info();
+        $version = mysqli_get_server_info($this->sql_link);
         list($version) = explode("_", $version);
 
         return $version;
@@ -214,7 +196,7 @@ class sql {
 
         // if no error message was given, use the mysql error:
         if ( ($error_msg == "") && ($error_no != 0) ) {
-            $error_msg = mysql_error();
+            $error_msg = mysqli_error($this->sql_link);
         }
 
 
@@ -281,7 +263,7 @@ class sql {
 		$now = timeTaken('int');
 
         // execute it.
-        $this->sql_result = @mysql_query( $query, $this->sql_link );
+        $this->sql_result = @mysqli_query($this->sql_link, $query);
 
         // If we're profiling, we use the following to get an array of all queries.
         // We also debug queries that took relatively long to perform.
@@ -316,7 +298,7 @@ class sql {
         if (!$this->sql_result) {
 
             // If an error occured, we output the error.
-            $this->error('', $this->last_query, mysql_errno( $this->sql_link ) );
+            $this->error('', $this->last_query, mysqli_errno($this->sql_link) );
 
             $this->num_affected_rows = 0;
 
@@ -328,7 +310,7 @@ class sql {
             $timetaken['query_count']++;
             $timetaken['sql'] += timetaken('int') - $now;
 
-            $this->num_affected_rows = mysql_affected_rows($this->sql_link);
+            $this->num_affected_rows = mysqli_affected_rows($this->sql_link);
 
             return true;
 
@@ -384,9 +366,9 @@ class sql {
             return false;
         }
 
-        $mysql_rows = mysql_num_rows( $this->sql_result );
+        $mysqli_rows = mysqli_num_rows( $this->sql_result );
 
-        return $mysql_rows;
+        return $mysqli_rows;
 
     }
 
@@ -401,9 +383,9 @@ class sql {
             return false;
         }
 
-        $mysql_affected_rows = mysql_affected_rows( $this->sql_link );
+        $mysqli_affected_rows = mysqli_affected_rows( $this->sql_link );
 
-        return $mysql_affected_rows;
+        return $mysqli_affected_rows;
 
     }
 
@@ -431,8 +413,8 @@ class sql {
         //}
 
         //check if this function exists
-        if( function_exists( "mysql_real_escape_string" ) ) {
-            $value = mysql_real_escape_string( $value );
+        if( function_exists( "mysqli_real_escape_string" ) ) {
+            $value = mysqli_real_escape_string($this->sql_link, $value);
         }  else   {
             //for PHP version < 4.3.0 use addslashes
             $value = addslashes( $value );
@@ -458,15 +440,15 @@ class sql {
         if ( $this->num_rows() > 0 ) {
 
             if ($getnames != "no_names") {
-                $mysql_array = mysql_fetch_assoc( $this->sql_result );
+                $mysqli_array = mysqli_fetch_assoc( $this->sql_result );
             } else {
-                $mysql_array = mysql_fetch_row( $this->sql_result );
+                $mysqli_array = mysqli_fetch_row( $this->sql_result );
             }
 
-            if (!is_array( $mysql_array )) {
+            if (!is_array( $mysqli_array )) {
                 return false;
             } else {
-                return $mysql_array;
+                return $mysqli_array;
             }
         } else {
 
@@ -490,11 +472,11 @@ class sql {
         if ( $this->num_rows() > 0 ) {
 
             if ($getnames!="no_names") {
-                while($row = mysql_fetch_assoc( $this->sql_result )) {
+                while($row = mysqli_fetch_assoc( $this->sql_result )) {
                     $results[] = $row;
                 }
             } else {
-                while($row = mysql_fetch_row( $this->sql_result )) {
+                while($row = mysqli_fetch_row( $this->sql_result )) {
                     $results[] = $row;
                 }
 
@@ -729,7 +711,7 @@ class sql {
 
             foreach( $q['values'] as $key => $value) {
 
-                if($this->is_mysql_function($value)) {
+                if($this->is_mysqli_function($value)) {
                     $q['values'][$key] = $value;
                 } else {
                     $q['values'][$key] = $this->quote($value);
@@ -801,7 +783,7 @@ class sql {
                 $key = $q['fields'][$i];
                 $value =$q['values'][$i];
 
-                if($this->is_mysql_function($value)) {
+                if($this->is_mysqli_function($value)) {
                     $values[] = sprintf(" `%s`=%s ",$key, $value );
                 } else {
                     $values[] = sprintf(" `%s`=%s ",$key, $this->quote($value) );
@@ -910,16 +892,16 @@ class sql {
      * Checks if the parameter is an mysql function or not. used to determine
      * whether or not a parameter needs to be escaped.
      *
-     * $this->is_mysql_function("some value");
+     * $this->is_mysqli_function("some value");
      * // returns true
      *
-     * $this->is_mysql_function("some value");
+     * $this->is_mysqli_function("some value");
      * // returns true
      *
      * @param string string
      * @return boolean
      */
-    function is_mysql_function($str) {
+    function is_mysqli_function($str) {
 
         // Check if we're even allowed to use MySQL functions. If not, return right away..
         if (!$this->allow_functions) {
