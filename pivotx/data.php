@@ -921,8 +921,8 @@ function makeChaptersTable($sql) {
     $query2 = "INSERT INTO `$tablename` (`uid`, `chaptername`, `description`, `sortorder`) VALUES
         (1, '%name%', '%desc%', 10);
     ";
-    $query2 = str_replace("%name%", mysql_real_escape_string(__('Pages')), $query2);
-    $query2 = str_replace("%desc%", mysql_real_escape_string(__('Add some pages here, or start a new chapter.')), $query2);
+    $query2 = str_replace("%name%", mysqli_real_escape_string($sql->sql_link, __('Pages')), $query2);
+    $query2 = str_replace("%desc%", mysqli_real_escape_string($sql->sql_link, __('Add some pages here, or start a new chapter.')), $query2);
 
     $sql->query($query1);
     $sql->query($query2);
