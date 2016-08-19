@@ -1334,6 +1334,11 @@ function fileOperations($folder) {
     // Delete a file, but only if we have the right session, to prevent spoofing.
     if ( (isset($_GET['del'])) && ($_GET['pivotxsession']==$_COOKIE['pivotxsession']) ) {
 
+        // Don't allow opening files outside the folder we do file operations in.
+        if (strpos($_GET['del'], '..') !== FALSE) {
+            die('Filename contains "..". Directory traversal attempt?');
+        }
+        
         // Do some clean-up of user-controlled variables, just in case. 
         $basename = cleanPath(strip_tags($_GET['del']));
 
