@@ -279,7 +279,11 @@ class ajaxhelper {
         // Don't allow opening files outside $PIVOTX['paths']['home_path'].
         // This is consistent with the file explorer functions in pages.php.
         if (strpos($basedir, $PIVOTX['paths']['home_path']) === 0) {
-            $filename = cleanPath($basedir . $_GET['file']);
+            if (strpos($_GET['file'], '..') === FALSE) {
+                $filename = cleanPath($basedir . $_GET['file']);
+            } else {
+                die('Filename contains "..". Directory traversal attempt?');
+            }
         } else {
             die('Basedir outside home_path. Hacking attempt?');
         }
