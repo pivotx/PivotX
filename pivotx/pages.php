@@ -2344,7 +2344,7 @@ function pageFileexplore() {
 
     getFiles($PIVOTX['paths']['db_path'], $_GET['additionalpath'], $PIVOTX['paths']['db_url']);
 
-    $title = __('Explore Database Files') . " <small>&raquo; db/" . $_GET['additionalpath'] . "</small>";
+    $title = __('Explore Database Files') . " <small>&raquo; db/" . htmlspecialchars($_GET['additionalpath']) . "</small>";
     $PIVOTX['template']->assign('title', $title );
 
     renderTemplate('fileexplorer.tpl');
@@ -2370,7 +2370,7 @@ function pageHomeexplore() {
 
     getFiles($PIVOTX['paths']['home_path'], $_GET['additionalpath'], $PIVOTX['paths']['home_url']);
 
-    $title = __('Explore files') . " <small>&raquo; ../" . $_GET['additionalpath'] . "</small>";
+    $title = __('Explore files') . " <small>&raquo; ../" . htmlspecialchars($_GET['additionalpath']) . "</small>";
     $PIVOTX['template']->assign('title', $title );
 
     renderTemplate('fileexplorer.tpl');
