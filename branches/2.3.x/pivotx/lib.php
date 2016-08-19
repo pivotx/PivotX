@@ -1361,6 +1361,22 @@ function fileOperations($folder) {
 
             $oldfile = $folder.$basename;
             $newfile = $folder.dirname($basename)."/".strtolower(basename($_GET['answer']));
+            
+            // Code below is copied from fileupload.php. (This breaks the DRY principle - FIXME.)
+            // Alter disallowed file extension no matter what the actual file type is.
+            // (We take care to handle double extensions like "whatever.php.jpg".)
+            $disallowedextensions = array_map('trim', explode(',', getDefault($PIVOTX['config']->get('upload_disallowed_extensions'), '.php,.php\d')));
+            foreach ($disallowedextensions as $ext) {
+                $pattern = '/(\\' . $ext . ')(?=(\.|$))/i';
+                if (preg_match($pattern, $newfile)) {
+                    $msg = sprintf(__("File copied to new name (%s) with illegal file extension (%s) - filename altered."), $newfile, $ext); 
+                    debug($msg);
+                    $newfile = preg_replace($pattern, '$1_', $newfile);
+                    $newfile .= '.txt';
+                    break;
+                }
+            }
+
 
             if((!file_exists($newfile)) && (copy($oldfile, $newfile))) {
                 $PIVOTX['messages']->addMessage(sprintf(__('The file has been copied: %s to %s.'), 
