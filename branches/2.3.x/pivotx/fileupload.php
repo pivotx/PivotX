@@ -78,7 +78,7 @@ $fileName = safeString($fileName,true,'.');
 
 // Alter disallowed file extension no matter what the actual file type is.
 // (We take care to handle double extensions like "whatever.php.jpg".)
-$disallowedextensions = array_map('trim', explode(',', getDefault($PIVOTX['config']->get('upload_disallowed_extensions'), '.php,.php\d')));
+$disallowedextensions = array_map('trim', explode(',', getDefault($PIVOTX['config']->get('upload_disallowed_extensions'), '.php,.php\d,.htaccess')));
 foreach ($disallowedextensions as $ext) {
     $pattern = '/(\\' . $ext . ')(?=(\.|$))/i';
     if (preg_match($pattern, $fileName)) {
