@@ -3645,31 +3645,21 @@ function escape($i) {
 /**
  * Converts all applicable characters, encoded in UTF-8, to HTML entities.
  *
- * Currently the function does nothing for PHP version prior to 4.3.0.
- *
  * @param string $i
  * @return string
  */
 function entify($i) {
-    if(checkVersion(PHP_VERSION, "4.3.0") ) {
-        $i = @htmlentities( $i, ENT_NOQUOTES, "UTF-8");
-    }
-    return $i;
+    return @htmlentities( $i, ENT_NOQUOTES, "UTF-8");
 }
 
 /**
  * Converts all HTML entities to their applicable characters encoded in UTF-8.
  *
- * Currently the function does nothing for PHP version prior to 4.3.0.
- *
  * @param string $i
  * @return string
  */
 function unentify($i) {
-    if(checkVersion(PHP_VERSION, "4.3.0") ) {
-        $i = @html_entity_decode( $i, ENT_NOQUOTES, "UTF-8");
-    }
-     return $i;
+    return @html_entity_decode( $i, ENT_NOQUOTES, "UTF-8");
 }
 
 /**
