@@ -4169,7 +4169,7 @@ function smarty_self($params) {
     }
 
 
-    $output .= entifyAmpersand($_SERVER['REQUEST_URI']);
+    $output .= encodeText($_SERVER['REQUEST_URI']);
 
     return $output;
 
