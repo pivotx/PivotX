@@ -1368,22 +1368,23 @@ function fileOperations($folder) {
             $newfile = $folder.dirname($basename)."/".strtolower(basename($_GET['answer']));
             
             // Code below is copied from fileupload.php. (This breaks the DRY principle - FIXME.)
-            // Alter disallowed file extension no matter what the actual file type is.
-            // (We take care to handle double extensions like "whatever.php.jpg".)
+            // Block copying of files if new name has disallowed extension.
+            $file_disallowedextension = FALSE;
             $disallowedextensions = array_map('trim', explode(',', getDefault($PIVOTX['config']->get('upload_disallowed_extensions'), '.php,.php\d,.htaccess')));
             foreach ($disallowedextensions as $ext) {
                 $pattern = '/(\\' . $ext . ')(?=(\.|$))/i';
-                if (preg_match($pattern, $newfile)) {
-                    $msg = sprintf(__("File copied to new name (%s) with illegal file extension (%s) - filename altered."), $newfile, $ext); 
-                    debug($msg);
-                    $newfile = preg_replace($pattern, '$1_', $newfile);
-                    $newfile .= '.txt';
+                if (preg_match($pattern, $newfile, $matches)) {
+                    $msg = sprintf(__("File was <b>NOT</b> copied because the new filename (%s) had an illegal extension (%s)."), basename($newfile), $matches[0]); 
+                    $file_disallowedextension = TRUE;
                     break;
                 }
             }
 
 
-            if((!file_exists($newfile)) && (copy($oldfile, $newfile))) {
+            if ($file_disallowedextension) {
+                // Just display a message, do nothing
+                $PIVOTX['messages']->addMessage($msg);
+            } else if ((!file_exists($newfile)) && (copy($oldfile, $newfile))) {
                 $PIVOTX['messages']->addMessage(sprintf(__('The file has been copied: %s to %s.'), 
                     basename($oldfile), basename($newfile)));
             } else {
@@ -1425,8 +1426,27 @@ function fileOperations($folder) {
                 $basename = cleanPath(strip_tags($_GET['path']));
 
                 $newfile = $folder.$basename."/".strtolower(basename($_GET['answer']));
+                
+                // Code below is copied from fileupload.php. (This breaks the DRY principle - FIXME.)
+                // Block creating of files with disallowed extensions.
+                $file_disallowedextension = FALSE;
+                $disallowedextensions = array_map('trim', explode(',', getDefault($PIVOTX['config']->get('upload_disallowed_extensions'), '.php,.php\d,.htaccess')));
+                foreach ($disallowedextensions as $ext) {
+                    $pattern = '/(\\' . $ext . ')(?=(\.|$))/i';
+                    if (preg_match($pattern, $newfile, $matches)) {
+                        $msg = sprintf(__("File (%s) was <b>NOT</b> created because it's extension (%s) was illegal."), basename($newfile), $matches[0]); 
+                        $file_disallowedextension = TRUE;
+                        break;
+                    }
+                }
 
-                if ((!file_exists($newfile)) && ($fp = fopen($newfile, "w"))) {
+
+                if ($file_disallowedextension) {
+
+                    // Just display a message, do nothing
+                    $PIVOTX['messages']->addMessage($msg);
+
+                } else if ((!file_exists($newfile)) && ($fp = fopen($newfile, "w"))) {
 
                     fwrite($fp, "");
                     fclose($fp);
