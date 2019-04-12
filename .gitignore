@@ -1,0 +1,8 @@
+pivotx/db/cache
+pivotx/db/pages
+pivotx/db/search/*.php
+pivotx/db/tagdata
+
+pivotx/db/ser-*.php
+pivotx/db/ser_*.php
+pivotx/db/standard-?????
