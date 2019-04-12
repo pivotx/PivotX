@@ -3609,7 +3609,7 @@ class Events {
         
     }
 
-    function add($what, $uid, $extrainfo="") {
+    function add($what, $uid='', $extrainfo='') {
         global $PIVOTX;
         
         $timestamp = formatDate("", "%year%-%month%-%day%-%hour24%-%minute%");

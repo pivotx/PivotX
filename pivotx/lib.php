@@ -472,7 +472,7 @@ function renderErrorpage($error, $additionalinfo) {
  * @param string $sql_query
  * @param integer $error_no
  */
-function setError($type='general', $error_msg, $sql_query='', $error_no) {
+function setError($type='general', $error_msg, $sql_query='', $error_no='') {
     global $PIVOTX;
 
     $error_text = '';
@@ -516,8 +516,6 @@ function setError($type='general', $error_msg, $sql_query='', $error_no) {
             $PIVOTX['template']->assign('error', $error_text);
 
     }
-
-
 }
 
 
