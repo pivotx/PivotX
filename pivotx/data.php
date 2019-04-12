@@ -21,15 +21,6 @@
 function getMenus() {
     global $PIVOTX;
 
-    // !! (note to Bob/Hans, this doesn't work because $modqueue is local)
-    if (count($modqueue)>0) {
-        // __('Moderate Comments'));
-        $queuemsg = __('There are %1 comment(s) waiting to be approved.');
-        $queuemsg = str_replace("%1", count($modqueue), $queuemsg);
-    } else {
-        $queuemsg = __('No comments are waiting to be approved.');
-    }
-
     // determine user-level
     if (isset($PIVOTX['session'])) {
         $currentuser = $PIVOTX['session']->currentUser();
@@ -106,7 +97,7 @@ function getMenus() {
                         'sortorder' => 7000,
                         'uri' => 'moderatecomments',
                         'name' => __('Moderate Comments'),
-                        'description' => $queuemsg
+                        'description' => __('Overview of Comments to Moderate')
                     ),
                     array(
                         'sortorder' => 7100,
