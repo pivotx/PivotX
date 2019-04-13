@@ -832,7 +832,6 @@ function makePagesTable($sql) {
       `user` tinytext collate utf8_unicode_ci NOT NULL,
       `allow_comments` int(11) NOT NULL default '0',
       `keywords` tinytext collate utf8_unicode_ci NOT NULL,
-      `extrafields` text collate utf8_unicode_ci NOT NULL,
       PRIMARY KEY  (`uid`),
       FULLTEXT KEY `title` (`title`,`subtitle`,`introduction`,`body`, `keywords`)
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -955,7 +954,6 @@ function makeEntriesTable($sql) {
       `comment_names` mediumtext collate utf8_unicode_ci NOT NULL,
       `trackback_count` int(11) collate utf8_unicode_ci NOT NULL,
       `trackback_names` mediumtext collate utf8_unicode_ci NOT NULL,
-      `extrafields` text collate utf8_unicode_ci NOT NULL,
       PRIMARY KEY  (`uid`),
       FULLTEXT KEY `title` (`title`,`subtitle`,`introduction`,`body`, `keywords`)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;";
