@@ -1048,7 +1048,7 @@ class EntriesSql {
 
             foreach ($this->entry['comments'] as $comment) {
                 if (!$blocklist->isBlocked($comment['ip'])) {
-                    if ($comment[moderate]!=1) {
+                    if ($comment['moderate']!=1) {
                         $commnames[]=stripslashes($comment['name']);
                     } else {
                         // if moderation is on, we add the name as '-'..

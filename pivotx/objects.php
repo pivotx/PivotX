@@ -2499,6 +2499,10 @@ class Session {
     
         $this->logins = loadSerialize($PIVOTX['paths']['db_path'] . "ser_logins.php", true);
 
+        if (!is_array($this->logins['failed'])) {
+            $this->logins['failed'] = array();
+        }
+
         // Set timeout to the timestamp at which the block needs to be dropped.
         $timeout = time() - ($timeout*3600);
 

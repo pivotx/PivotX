@@ -5170,8 +5170,8 @@ function smarty_adminentrylist($params, &$smarty) {
     
     $template_vars = $smarty->_tpl_vars;
     
-    $dbmodel = '';
-    $adminentrytype = '';
+    $dbmodel = array();
+    $adminentrytype = array();
 
     // TODO: make this less dependent on the custom entrytypes
     // or alternatively make the custom entrytypes part of the core
