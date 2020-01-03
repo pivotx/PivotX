@@ -3969,16 +3969,15 @@ function pivotxTextile($str) {
 
     if (isset($textile)) {
 
-        $output = $textile->TextileThis($str);
+        $output = $textile->parse($str);
         return $output;
 
-    } else  if (file_exists($PIVOTX['paths']['pivotx_path']."includes/textile/classtextile.php")) {
+    } else if (file_exists($PIVOTX['paths']['pivotx_path'] . 'vendor/netcarver/textile/src/Netcarver/Textile/Parser.php')) {
 
-        include_once($PIVOTX['paths']['pivotx_path']."includes/textile/classtextile.php");
+        require_once($PIVOTX['paths']['pivotx_path'] . 'vendor/autoload.php');
 
-        $textile = new Textile;
-
-        $output = $textile->TextileThis($str);
+        $textile = new \Netcarver\Textile\Parser();
+        $output = $textile->parse($str);
         return $output;
 
     } else {

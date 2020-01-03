@@ -738,7 +738,7 @@ function getMyInfoForm() {
         'name' => 'text_processing',
         'label' => __('Text editor'),
         'value' => '',
-        'text' => makeJtip(__('Text editor'), __("Determines the default text processing, when a user is using Writing a new entry. For most users 'Wysiwyg editor' will be the easiest option. 'Plain XHTML' is for those who like to edit raw XHTML, while 'Convert Linebreaks' does nothing more than change linebreaks to a &amp;lt;br /&amp;gt;-tag. <a href='http://www.textism.com/tools/textile/' target='_blank'>Textile</a> and <a href='http://daringfireball.net/projects/markdown/' target='_blank'>Markdown</a> are both powerful, yet easy to learn markup styles.")),
+        'text' => makeJtip(__('Text editor'), __("Determines the default text processing, when a user is using Writing a new entry. For most users 'Wysiwyg editor' will be the easiest option. 'Plain XHTML' is for those who like to edit raw XHTML, while 'Convert Linebreaks' does nothing more than change linebreaks to a &amp;lt;br /&amp;gt;-tag. <a href='https://textile-lang.com/' target='_blank'>Textile</a> and <a href='http://daringfireball.net/projects/markdown/' target='_blank'>Markdown</a> are both powerful, yet easy to learn markup styles.")),
         'error' => __('Error'),
         'options' => array(
                5 => __('Wysiwyg'),
@@ -964,7 +964,7 @@ EOM;
         'name' => 'text_processing',
         'label' => __('Text editor'),
         'value' => '',
-        'text' => makeJtip(__('Text editor'), __("Determines the default text processing, when a user is using Writing a new entry. For most users 'Wysiwyg editor' will be the easiest option. 'Plain XHTML' is for those who like to edit raw XHTML, while 'Convert Linebreaks' does nothing more than change linebreaks to a &amp;lt;br /&amp;gt;-tag. <a href='http://www.textism.com/tools/textile/' target='_blank'>Textile</a> and <a href='http://daringfireball.net/projects/markdown/' target='_blank'>Markdown</a> are both powerful, yet easy to learn markup styles.")),
+        'text' => makeJtip(__('Text editor'), __("Determines the default text processing, when a user is using Writing a new entry. For most users 'Wysiwyg editor' will be the easiest option. 'Plain XHTML' is for those who like to edit raw XHTML, while 'Convert Linebreaks' does nothing more than change linebreaks to a &amp;lt;br /&amp;gt;-tag. <a href='https://textile-lang.com/' target='_blank'>Textile</a> and <a href='http://daringfireball.net/projects/markdown/' target='_blank'>Markdown</a> are both powerful, yet easy to learn markup styles.")),
         'error' => __('Error'),
         'options' => array(
                5 => __('Wysiwyg'),
@@ -1893,7 +1893,7 @@ EOM;
         'type' => 'checkbox',
         'name' => 'comment_textile',
         'label' => __('Allow Textile?'),
-        'text' => makeJtip(__('Allow Textile'), __('If this is set to "Yes", visitors are allowed to use <a href="http://www.textism.com/tools/textile/" target="_blank">Textile</a> in their comments.'))
+        'text' => makeJtip(__('Allow Textile'), __('If this is set to "Yes", visitors are allowed to use <a href="https://textile-lang.com/" target="_blank">Textile</a> in their comments.'))
     ));
 
     $form->add( array(
