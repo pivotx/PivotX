@@ -1,4 +1,5 @@
 pivotx/db/cache
+pivotx/db/logfile.php
 pivotx/db/pages
 pivotx/db/search/*.php
 pivotx/db/tagdata
