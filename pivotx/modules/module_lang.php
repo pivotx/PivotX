@@ -103,9 +103,10 @@ function getFilteredWords( ) {
     global $l10n, $PIVOTX;
 
     if( file_exists( $PIVOTX['paths']['db_path'].'search/filtered_words.txt' )) {
-        $filtered_file = file( $PIVOTX['paths']['db_path'].'search/filtered_words.txt' );
+        // $filtered_file = file( $PIVOTX['paths']['db_path'].'search/filtered_words.txt' );
+        $filtered_file = array();
         foreach( $filtered_file as $val ) {
-                        if (substr($val,0,2)!== "//") {
+            if (substr($val,0,2)!== "//") {
                 $filtered_words[] = trim( $val );
             }
         }
@@ -113,7 +114,7 @@ function getFilteredWords( ) {
         $filtered_words = array();  
     }
 
-    $theLang = $l10n['currlang'];
+    $theLang = $l10n['currlang'] ?? '';
     
     if((''!=$theLang) && file_exists($PIVOTX['paths']['db_path'].'search/filtered_words_'.$theLang.'.txt')) {
 

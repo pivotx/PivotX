@@ -200,10 +200,6 @@ class Config extends BaseConfig {
         parent::__construct('ser_config.php',$db_path);
     }
 
-    public function Config($sites_path = '') {
-        $this->__construct($sites_path);
-    }
-
     protected function verifyConfig() {
         // If there's a file called 'pivotxdebugmode.txt', we'll enable debugging 
         if (file_exists(dirname(__FILE__)."/pivotxdebugmode.txt")) {
@@ -444,10 +440,6 @@ class Users extends BaseConfig {
 
     public function __construct() {
         parent::__construct('ser_users.php');
-    }
-
-    public function Users() {
-        $this->__construct();
     }
 
     protected function verifyConfig() {
@@ -902,10 +894,6 @@ class Weblogs extends BaseConfig {
 
     public function __construct() {
         parent::__construct('ser_weblogs.php');
-    }
-
-    public function Weblogs() {
-        $this->__construct();
     }
 
     public function verifyConfig() {
@@ -1599,10 +1587,6 @@ class Categories extends BaseConfig {
         parent::__construct('ser_categories.php');
     }
 
-    public function Categories() {
-        $this->__construct();
-    }
-
     protected function verifyConfig() {
         if ($this->count() < 1) {
             return false;
@@ -2025,12 +2009,8 @@ class Session {
         }
         
         // Force cookie to be "HTTP only" to make cookie stealing harder - stops
-        // standard XSS attacks. (Introduced in PHP 5.2.0.)
-        if (checkVersion(phpversion(), '5.2.0')) {
-            $this->cookie_httponly = true;
-        } else {
-            $this->cookie_httponly = false;
-        }
+        // standard XSS attacks. 
+        $this->cookie_httponly = true;
 
         // On second thought, our CSRF check (that uses the double cookie submit 
         // test) needs to access the cookie ... We just can't use "HTTP only".
@@ -2088,7 +2068,7 @@ class Session {
         }
         
         // Add some debug output, if we couldn't set the cookie.
-        if ($res==false) {
+        if (!$res) {
             debug("Couldn't set cookies! (probably because output has already started)");
             if (headers_sent($filename, $linenum)) {
                 debug("Headers already sent in $filename on line $linenum");
@@ -2339,7 +2319,7 @@ class Session {
      */
     function currentUser() {
 
-        return $_SESSION['user'];
+        return $_SESSION['user'] ?? [];
 
     }
 
@@ -2359,11 +2339,11 @@ class Session {
     /**
      * Returns the username of the current user.
      *
-     * @return array
+     * @return string
      */
     function currentUsername() {
 
-        return $_SESSION['user']['username'];
+        return $_SESSION['user']['username'] ?? '';
 
     }
 

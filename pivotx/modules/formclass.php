@@ -37,15 +37,13 @@ class Form {
     var $fields = array();
     var $hidden_fields = array();
     var $formname = "";
+    var $noterror = "";
     var $upload_success = false;
     var $lastuploadfile = '';
     var $use_javascript = false;
     var $uploads = array();
     var $submitloc = " bottom";
     var $tabindex = 500;
-
-
-
 
     function __construct($name, $action="", $submit="Submit") {
 
@@ -100,7 +98,7 @@ class Form {
     function add( $params ) {
 
         // get the default value for this fieldtype
-        $default = $this->defaultfield( $params['type'], $params['name'], $params['sessionvariable'] );
+        $default = $this->defaultfield( $params['type'], $params['name'], $params['sessionvariable'] ?? '');
 
         $temp_field = array_merge($default, $params);
 
@@ -179,7 +177,7 @@ class Form {
             'extra' => "",
             'validation' => "",
             'isrequired' => 0,
-            'show_error' => 0,
+            'show_error' => false,
             'class' => "",
             'style' => ""
         );
@@ -437,7 +435,7 @@ class Form {
 
 
         // prepare error messages..
-        if (($field['show_error'] == 1) && ($field['error'] != "")) {
+        if (($field['show_error']) && ($field['error'] != "")) {
             $error = $this->error;
             $error = str_replace("%error%",$field['error'],  $error);
             $error = str_replace("%name%",$field['name'],  $error);
@@ -446,7 +444,7 @@ class Form {
             $field['haserror'] = $this->haserror;
         } else {
             $noterror = $this->noterror;
-            $noterror = str_replace("%noterror%", $field['noterror'],  $noterror);
+            $noterror = str_replace("%noterror%", $field['noterror'] ?? '',  $noterror);
             $noterror = str_replace("%name%", $field['name'],  $noterror);
 
             $field['error'] = $noterror;
@@ -814,7 +812,7 @@ class Form {
         $errors = array();
 
         foreach ($this->fields as $field) {
-            if ($field['show_error']==1) {
+            if ($field['show_error']) {
                 $errors[] = $field['name'];
             }
         }
@@ -857,7 +855,7 @@ class Form {
         }
 
         // If the error was set outside of the validation..
-        if ($this->fields[$key]['show_error'] != "") {
+        if ($this->fields[$key]['show_error']) {
             $error++;
         }
 

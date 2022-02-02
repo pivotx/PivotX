@@ -242,29 +242,29 @@ function i18n_eucjp_to_utf8($string) {
 function i18n_ord($str,$i) {
     $ud = 0;
     $n = 1;
-    if (ord($str{$i})>=0 && ord($str{$i})<=127) {
-    $ud = ord($str{$i});
-    } elseif (ord($str{$i})>=192 && ord($str{$i})<=223) {
-    $ud = (ord($str{$i})-192)*64 + (ord($str{$i+1})-128);
-    $n = 2;
-    } elseif (ord($str{$i})>=224 && ord($str{$i})<=239) {
-    $ud = (ord($str{$i})-224)*4096 + (ord($str{$i+1})-128)*64 + (ord($str{$i+2})-128);
-    $n = 3;
-    } elseif (ord($str{$i})>=240 && ord($str{$i})<=247) {
-    $ud = (ord($str{$i})-240)*262144 + (ord($str{$i+1})-128)*4096 + (ord($str{$i+2})-128)*64
-        + (ord($str{$i+3})-128);
-    $n = 3;
-    } elseif (ord($str{$i})>=248 && ord($str{$i})<=251) {
-    $ud = (ord($str{$i})-248)*16777216 + (ord($str{$i+1})-128)*262144 +
-        (ord($str{$i+2})-128)*4096 + (ord($str{$i+3})-128)*64 + (ord($str{$i+4})-128);
-    $n = 4;
-    } elseif (ord($str{$i})>=252 && ord($str{$i})<=253) {
-    $ud = (ord($str{$i})-252)*1073741824 + (ord($str{$i+1})-128)*16777216 +
-        (ord($str{$i+2})-128)*262144 + (ord($str{$i+3})-128)*4096 + (ord($str{$i+4})-128)*64 +
-        (ord($str{$i+5})-128);
-    $n = 5;
-    } elseif (ord($str{$i})>=254 && ord($str{$i})<=255) { //error
-    $ud = false;
+    if (ord($str[$i])>=0 && ord($str[$i])<=127) {
+        $ud = ord($str[$i]);
+    } elseif (ord($str[$i])>=192 && ord($str[$i])<=223) {
+        $ud = (ord($str[$i])-192)*64 + (ord($str[$i+1])-128);
+        $n = 2;
+    } elseif (ord($str[$i])>=224 && ord($str[$i])<=239) {
+        $ud = (ord($str[$i])-224)*4096 + (ord($str[$i+1])-128)*64 + (ord($str[$i+2])-128);
+        $n = 3;
+    } elseif (ord($str[$i])>=240 && ord($str[$i])<=247) {
+        $ud = (ord($str[$i])-240)*262144 + (ord($str[$i+1])-128)*4096 +
+              (ord($str[$i+2])-128)*64 + (ord($str[$i+3])-128);
+        $n = 3;
+    } elseif (ord($str[$i])>=248 && ord($str[$i])<=251) {
+        $ud = (ord($str[$i])-248)*16777216 + (ord($str[$i+1])-128)*262144 +
+              (ord($str[$i+2])-128)*4096 + (ord($str[$i+3])-128)*64 + (ord($str[$i+4])-128);
+        $n = 4;
+    } elseif (ord($str[$i])>=252 && ord($str[$i])<=253) {
+        $ud = (ord($str[$i])-252)*1073741824 + (ord($str[$i+1])-128)*16777216 +
+              (ord($str[$i+2])-128)*262144 + (ord($str[$i+3])-128)*4096 + (ord($str[$i+4])-128)*64 +
+              (ord($str[$i+5])-128);
+        $n = 5;
+    } elseif (ord($str[$i])>=254 && ord($str[$i])<=255) { //error
+        $ud = false;
     }
     return array($ud,$n);
 }

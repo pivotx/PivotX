@@ -381,7 +381,7 @@ function debug_var_dump_helper($var, $maxlevel, $level){
  * @param integer $linenum
  * @param array $vars
  */
-function userErrorHandler ($errno, $errmsg, $filename, $linenum, $vars) {
+function userErrorHandler ($errno, $errmsg, $filename, $linenum, $vars = []) {
 
      $replevel = error_reporting();
      if( ( $errno & $replevel ) != $errno )

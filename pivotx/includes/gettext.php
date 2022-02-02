@@ -343,10 +343,10 @@ class gettext_reader {
 				$nplurals = 2;
 				$expression = ' $n == 1 ? 0 : 1 ';
 			}
-			$func_body = "
-				\$plural = ($expression);
-				return (\$plural <= $nplurals)? \$plural : \$plural - 1;";
-			$this->select_string_function = create_function('$n', $func_body);
+			$this->select_string_function = function($n) use ($expression) {
+				$plural = ($expression);
+				return ($plural <= $nplurals)? $plural : $plural - 1;
+			};
 		}
 		return call_user_func($this->select_string_function, $n);
 	}

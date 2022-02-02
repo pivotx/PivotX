@@ -25,13 +25,6 @@ if(!defined('INPIVOTX')){ exit('not in pivotx'); }
 
 @set_time_limit(0);
 
-$tmp_filtered_words = getFilteredWords();
-$filtered_words = array();
-foreach($tmp_filtered_words as $word) {
-    // TODO - do something or not?
-    $filtered_words[] = px_strtolower($word);
-}
-
 
 /**
  * Calculates a search index key (used for file names). Only used be 
@@ -42,7 +35,7 @@ foreach($tmp_filtered_words as $word) {
  */
 function searchIndexKey($str) {
 
-    $char = $str{0};
+    $char = $str[0];
 
     $char = trim(strtr($char, "\xC0\xC1\xC2\xC3\xC4\xC5\xC6\xC7\xC8\xC9\xCA\xCB\xCC\xCD".
         "\xCE\xCF\xD0\xD1\xD2\xD3\xD4\xD5\xD6\xD8\xD9\xDA\xDB\xDC\xDD\xDE\xDF". 
@@ -249,7 +242,15 @@ function removeFromSearchIndex ($item, $type='e') {
  * @return array
  */
 function filterWords ($arr) {
-    global $filtered_words;
+    static $filtered_words;
+    if (!is_array($filtered_word)) {
+        $tmp_filtered_words = getFilteredWords();
+        $filtered_words = array();
+        foreach($tmp_filtered_words as $word) {
+            // TODO - do something or not?
+            $filtered_words[] = px_strtolower($word);
+        }
+    }
 
     $clean = array();
 

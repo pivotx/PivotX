@@ -454,8 +454,6 @@
 			{
 				$allOK = 0;
 				eval($code.'$allOK=1;');
-				// alternative
-				//$xmlrpcfuncname = create_function('$m', $innercode);
 
 				if(!$allOK)
 				{
@@ -669,8 +667,6 @@
 				{
 					$allOK = 0;
 					eval($results['source'].'$allOK=1;');
-					// alternative
-					//$xmlrpcfuncname = create_function('$m', $innercode);
 					if($allOK)
 					{
 						return $xmlrpcfuncname;
@@ -788,8 +784,6 @@
 				{
 					$allOK = 0;
 					eval($source.'$allOK=1;');
-					// alternative
-					//$xmlrpcfuncname = create_function('$m', $innercode);
 					if($allOK)
 					{
 						return $xmlrpcclassname;

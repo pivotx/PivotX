@@ -24,7 +24,7 @@ $version = "2.3.11";
 $codename = "";
 $svnrevision = '$Rev$';
 
-$minrequiredphp = "5.2.0";
+$minrequiredphp = "7.3.0";
 $minrequiredmysql = "4.1";
 $dbversion = "11"; // Used to track if it's necessary to upgrade the DB.
 
@@ -1533,7 +1533,7 @@ function formatFilename($filename, $include_dirs=false, $dir_delimiter=' ') {
     $formatted_filename = '';
     if ($include_dirs) {
         $formatted_filename = dirname($filename);
-        if ($formatted_filename{0} == '/') {
+        if ($formatted_filename[0] == '/') {
             $formatted_filename = substr($formatted_filename,1);
         }
         $formatted_filename = str_replace('/', $dir_delimiter, $formatted_filename); 
