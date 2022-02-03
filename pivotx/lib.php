@@ -20,8 +20,8 @@
 
 DEFINE('INPIVOTX', TRUE);
 
-$version = "2.3.11";
-$codename = "";
+$version = "3.0.0";
+$codename = "RC";
 $svnrevision = '$Rev$';
 
 $minrequiredphp = "7.3.0";

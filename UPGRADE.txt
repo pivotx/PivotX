@@ -1,0 +1,31 @@
+To upgrade, you basically replace the existing "pivotx" directory with
+the one from the new release. However, you want to preserve some directories
+to not loose your own modifications / additions.
+
+The recommended procedure is:
+
+1. Unpack the release and delete the following folders:
+   - pivotx/db
+   - pivotx/extensions
+   - pivotx/langs
+   - pivotx/templates
+2. On the server rename the "pivotx" folder to "pivotx.old".
+   After this, your website is off-line / doesn't work until you
+   have completed the procedure.
+3. Upload the new "pivotx" folder to the server.
+4. Move the following folders from "pivotx.old" to "pivotx":
+   - db
+   - extensions
+   - langs
+   - templates
+
+Done! You can keep the "pivotx.old" folder a while until you are sure the
+upgrade works as expected.
+
+PS! If the upgrade fails for some reason, just 
+
+- revert step 4 above
+- delete the "pivotx" folder
+- rename "pivotx.old" to "pivotx"
+
+And you are back where you started.
