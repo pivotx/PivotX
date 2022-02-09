@@ -393,7 +393,8 @@ function modifyMenu(&$menu, $path, $item) {
         foreach($parts as $part) {
             $idx = false;
             for($i=0; $i < count($ptrmenu); $i++) {
-                if ($ptrmenu[$i]['uri'] == $part) {
+                $_uri = $ptrmenu[$i]['uri'] ?? '';
+                if ($_uri == $part) {
                     $idx = $i;
                     break;
                 }
@@ -437,6 +438,10 @@ function modifyMenu(&$menu, $path, $item) {
         }
         foreach($item['menu'] as $subitem) {
             $idx = false;
+            if (!isset($subitem['uri'])) {
+                $ptrmenu[] = $subitem;
+                break;
+            }
             for($i=0; $i < count($ptrmenu); $i++) {
                 if ($ptrmenu[$i]['uri'] == $subitem['uri']) {
                     $idx = $i;
@@ -447,7 +452,7 @@ function modifyMenu(&$menu, $path, $item) {
                 $ptrmenu[] = $subitem;
             }
             else {
-                $ptrmenu[$i] = $subitem;
+                $ptrmenu[$idx] = $subitem;
             }
         }
     }
@@ -517,11 +522,11 @@ function addtoTopMenu(&$menu, $top, $items)
 /**
  * Compare two menu items
  *
- * @param array &$a
- * @param array &$b
+ * @param array $a
+ * @param array $b
  * @return
  */
-function compareMenuItem(&$a,&$b) {
+function compareMenuItem($a, $b) {
     if ($a['sortorder'] < $b['sortorder']) {
         return -1;
     }
@@ -551,13 +556,19 @@ function organizeMenuLevel($in,$currentuserlevel,$path=false,$level=0) {
     }
 
     foreach($in as $item) {
+        // Handle divider first.
+        if ($item['is_divider'] ?? false) {
+            $out[] = $item;
+            continue;
+        }
+        // Then check level and disabled
         if (isset($item['level']) && ($currentuserlevel < $item['level'])) {
             continue;
         }
         if (isset($item['disabled']) && $item['disabled']) {
             continue;
         }
-
+        // Then all the other stuff ...
         if (!isset($item['href'])) {
             if ($item['uri'] == 'dashboard') {
                 $item['href'] = makeAdminPageLink();
@@ -575,7 +586,7 @@ function organizeMenuLevel($in,$currentuserlevel,$path=false,$level=0) {
         }
         if ((isset($item['menu'])) && (count($item['menu']) > 0)) {
             $item['have_menu'] = true;
-            $item['menu'] = organizeMenuLevel($item['menu'],$currentuserlevel,$item['path'],$level+1);
+            $item['menu'] = organizeMenuLevel($item['menu'], $currentuserlevel, $item['path'] ?? [], $level + 1);
             foreach($item['menu'] as $i2) {
                 if (isset($i2['uri'])) {
                     $all_pages[] = $i2['uri'];

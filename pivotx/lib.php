@@ -294,7 +294,7 @@ function displayPage() {
  * @param array $page
  */
 function renderTemplate($template, $page="") {
-    global $build, $PIVOTX, $timetaken;
+    global $version, $codename, $build, $PIVOTX, $timetaken;
 
     // If the debug framework isn't loaded we handle some issues here so the 
     // template is rendered correctly.
@@ -302,7 +302,7 @@ function renderTemplate($template, $page="") {
         ini_set("display_errors", "0");
     }
 
-    if (($_GET['update']) || (count($_POST)>1) ) {
+    if (isset($_GET['update']) || (count($_POST) > 1) ) {
         // Force uncachen..
         $PIVOTX['template']->caching = false;
         $PIVOTX['template']->force_compile = true;
@@ -355,7 +355,7 @@ function renderTemplate($template, $page="") {
     getMenus();
 
     // Fetch the template
-    $html = $PIVOTX['template']->fetch($template, $cache_id);
+    $html = $PIVOTX['template']->fetch($template);
 
     // Send HTML and XML templates with the correct mime-type.
     if (strpos(strtolower($template), ".xml") > 0 ) {

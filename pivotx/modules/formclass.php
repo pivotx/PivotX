@@ -98,7 +98,7 @@ class Form {
     function add( $params ) {
 
         // get the default value for this fieldtype
-        $default = $this->defaultfield( $params['type'], $params['name'], $params['sessionvariable'] ?? '');
+        $default = $this->defaultfield($params['type'], $params['name'] ?? '', $params['sessionvariable'] ?? '');
 
         $temp_field = array_merge($default, $params);
 
