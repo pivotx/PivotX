@@ -1,5 +1,5 @@
 
--= PivotX 3.0.0 RC =-
+-= PivotX 3.0.0 Release Candidate 2 =-
 
 This version of PivotX is compatible with PHP 7 and 8.
 The minimum version is raised to PHP 7.3.
