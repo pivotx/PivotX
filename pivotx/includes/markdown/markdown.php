@@ -10,6 +10,7 @@
 # Copyright (c) 2004-2006 John Gruber  
 # <http://daringfireball.net/projects/markdown/>
 #
+# Ported to PHP 8 by Hans Fredrik Nordhaug <hansfn@gmail.com>, 2022.
 
 
 define( 'MARKDOWN_VERSION',  "1.0.1o" ); # Sun 8 Jan 2012
@@ -215,7 +216,7 @@ class Markdown_Parser {
 	var $predef_titles = array();
 
 
-	function Markdown_Parser() {
+	function __construct() {
 	#
 	# Constructor function. Initialize appropriate member variables.
 	#
