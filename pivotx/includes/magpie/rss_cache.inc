@@ -14,6 +14,7 @@
  * Magpie mailing list:
  * http://lists.sourceforge.net/lists/listinfo/magpierss-general
  *
+ * Ported to PHP 8 by Hans Fredrik Nordhaug <hansfn@gmail.com>, 2022.
  */
 
 class RSSCache {
@@ -21,7 +22,7 @@ class RSSCache {
     var $MAX_AGE    = 3600;         // when are files stale, default one hour
     var $ERROR      = "";           // accumulate error messages
     
-    function RSSCache ($base='', $age='') {
+    function __construct($base='', $age='') {
         
         // Added for PivotX: Use our db/cache..
         $this->BASE_CACHE = dirname(dirname(dirname(__FILE__))) . "/db/cache";
