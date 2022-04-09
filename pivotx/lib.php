@@ -2455,11 +2455,11 @@ function tidyHtmlCallbackNestedobjects($match) {
 /**
  * Returns an archive array for a given unit from the database.
  *
- * @param string $unit time unit for the archive.
+ * @param string $unit time unit for the archive, default month.
  * @param boolean $force
  * @return array
  */
-function makeArchiveArray($force=FALSE,$unit) {
+function makeArchiveArray($force=FALSE, $unit='month') {
     static $Archive_array = array();
 
     if (!isset($Archive_array[$unit])) {
