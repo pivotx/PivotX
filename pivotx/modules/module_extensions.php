@@ -348,7 +348,7 @@ class Extensions {
         // If we get to here, it's most likely an extension. See if
         // we can parse the info from it.
 
-        $contents = implode("", file($file));
+        $contents = readAFile($file);
 
         // Do a regular expression match for "// - something: something"..
         if(preg_match_all('/\\/\/ - ([a-z]+):(.*)/i', $contents, $match)) {
@@ -1078,9 +1078,12 @@ class Extensions {
              */
             case 'immediate_file':
 
-                if (file_exists($PIVOTX['paths']['extensions_path'].$target)) {
-                    $output .= implode("", file($PIVOTX['paths']['extensions_path'].$target));
-                } else {
+                if (file_exists($PIVOTX['paths']['extensions_path'].$target)) 
+                {                    
+                    $output .= readAFile($PIVOTX['paths']['extensions_path'].$target);
+                } 
+                else 
+                {
                     $output .= "'$target' does not exist.";
                 }
 

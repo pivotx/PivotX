@@ -103,6 +103,7 @@ function getFilteredWords( ) {
     global $l10n, $PIVOTX;
 
     if( file_exists( $PIVOTX['paths']['db_path'].'search/filtered_words.txt' )) {
+        // NOTE: it seems someone commented this for debuging and forgot to reactivate it?
         // $filtered_file = file( $PIVOTX['paths']['db_path'].'search/filtered_words.txt' );
         $filtered_file = array();
         foreach( $filtered_file as $val ) {
@@ -118,7 +119,8 @@ function getFilteredWords( ) {
     
     if((''!=$theLang) && file_exists($PIVOTX['paths']['db_path'].'search/filtered_words_'.$theLang.'.txt')) {
 
-        $filtered_file = file($PIVOTX['paths']['db_path'].'search/filtered_words_'.$theLang.'.txt');
+        $txt = readAFile($PIVOTX['paths']['db_path'].'search/filtered_words_'.$theLang.'.txt'); 
+        $filtered_file = explode("\n", $txt);
         foreach( $filtered_file as $val ) {
             $filtered_words[] = trim( $val );
         }

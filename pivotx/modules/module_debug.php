@@ -91,7 +91,7 @@ function view_log() {
 EOM;
 
     if (file_exists($logfile)) {
-        $file = implode("",file($logfile));
+        $file = readAfile($logfile);
         $file = nl2br(str_replace("  ", "&nbsp; ", $file));
         $file = str_replace("<?php /* pivotx */ die(); ?>", "", $file);
     } else {

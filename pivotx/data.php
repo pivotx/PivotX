@@ -720,6 +720,7 @@ function getDefaultConfig() {
         'tag_cloud_amount' => '30',
         'tag_max_font' => '17',
         'tag_min_font' => '9',
+        'tag_cache_timeout' => '60', 
         'text_processing' => '1',
         'timeoffset' => '0',
         'timeoffset_unit' => 'h',

@@ -304,7 +304,7 @@ class ajaxhelper {
 
             $extension = getExtension($filename);
 
-            $contents = implode("", file( $filename ));
+            $contents = readAFile($filename);
 
             $contents = preg_replace('/<textarea/i','<*textarea', $contents);
             $contents = preg_replace('/<\/textarea/i','<*/textarea', $contents);

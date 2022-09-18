@@ -2180,7 +2180,7 @@ function pageBuildindex() {
     $dir->close();
 
     // Make a new archive array.
-    makeArchiveArray();
+    makeArchiveArray(false, "month"); 
 
     $output = "<p>". __('Now building Index. This may take a short while, so please do not interrupt.') ."<br />\n";
 

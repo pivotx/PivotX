@@ -16,7 +16,6 @@
 if(!defined('INPIVOTX')){ exit('not in pivotx'); }
 
 
-
 /**
  * Get the TagCosmos. Wrapper for either getTagCosmosFlat or getTagCosmosMysql,
  * Depending on the DB model that's being used.
@@ -94,9 +93,25 @@ function getTagCosmos($max=0, $weblogname='', $match='', $exclude='') {
 function getTagCosmosFlat($max=0,$weblogname,$match,$exclude=array()) {
     global $PIVOTX;
 
+    
+    // Note that on Windows systems, filectime will show the file creation time
+    // So instead we encode the modification date in a separate file...
+    //$file_time = filectime( $PIVOTX['paths']['db_path']."ser_tags.php" );
+    $file_time = 0;
+    $time_stamp_filename = $PIVOTX['paths']['db_path']."ser_tags.php.log";
+    if( file_exists($time_stamp_filename) ){                
+        $file_time = (int)readAFile($time_stamp_filename);
+    }
+    
+    $current_time = time();
+    $time_out = 60 * $PIVOTX['config']->get('tag_cache_timeout');
+    $file_exists = file_exists($PIVOTX['paths']['db_path']."ser_tags.php");
+    $time_delta = $current_time - $file_time; 
+    
+
     // If the cached version is fresh enough, we restore that
-    if ( (file_exists($PIVOTX['paths']['db_path']."ser_tags.php"))  &&
-        (filectime($PIVOTX['paths']['db_path']."ser_tags.php") > (time() - (60 * $PIVOTX['config']->get('tag_cache_timeout') ))) ) {
+    if ( $file_exists  &&  $time_delta < $time_out ) 
+    {
 
         // Just load it..
         $data = loadSerialize($PIVOTX['paths']['db_path']."ser_tags.php");
@@ -125,7 +140,8 @@ function getTagCosmosFlat($max=0,$weblogname,$match,$exclude=array()) {
             if (getExtension($entry)=="tag") {
                 list($tagname) = explode(".", $entry);
                 $tagname = urldecode($tagname);
-                $tagfile = implode("",file($PIVOTX['paths']['db_path']."tagdata/".$entry));
+
+                $tagfile = readAFile( $PIVOTX['paths']['db_path']."tagdata/".$entry ); 
                 $tagfile = explode(",", $tagfile);
                 if(!in_array($tagname, $exclude)) {
                     if ($tagname!="") {
@@ -147,6 +163,8 @@ function getTagCosmosFlat($max=0,$weblogname,$match,$exclude=array()) {
         $tagdir->close();
 
         saveSerialize($PIVOTX['paths']['db_path']."ser_tags.php", $tagcosmos);
+        // Update file last changed time:
+        writeFile($time_stamp_filename, (string)time());
 
         $tagcosmos = $tagcosmos[$weblogname];
     }
@@ -511,7 +529,9 @@ function writeTag($tag, $entrycode) {
 
     if(file_exists($PIVOTX['paths']['db_path']."tagdata/$sFileName"))   {
 
-        $aFileArr = explode(",",implode("",file($PIVOTX['paths']['db_path']."tagdata/$sFileName")));
+        $txt = readAFile( $PIVOTX['paths']['db_path']."tagdata/$sFileName" );
+
+        $aFileArr = explode(",", $txt);
 
         if(!in_array($entrycode, $aFileArr))    {
 
@@ -574,9 +594,12 @@ function deleteTag($tag, $entrycode) {
         return "<b>ERROR: You must create ".$PIVOTX['paths']['db_path']."tagdata and set the permissions to world writable!!! Bailing out.";
     }
 
-    if(file_exists($PIVOTX['paths']['db_path']."tagdata/".$sFileName.".tag"))   {
+    if(file_exists($PIVOTX['paths']['db_path']."tagdata/".$sFileName.".tag"))   
+    {
 
-        $aFileArr = explode(",",implode("",file($PIVOTX['paths']['db_path']."tagdata/".$sFileName.".tag")));
+        $txt = readAFile($PIVOTX['paths']['db_path']."tagdata/".$sFileName.".tag"); 
+
+        $aFileArr = explode(",", $txt);
 
         if(in_array($entrycode, $aFileArr)) {
 
@@ -1009,9 +1032,13 @@ function makeRelatedTags($tag, $p_aAllTags)    {
                 writeFile($PIVOTX['paths']['db_path']."tagdata/$filename", implode(",",$aRelTags) );
             }
     
-        } else {
-    
-            $aRelArray = explode(",", implode("", file($PIVOTX['paths']['db_path']."tagdata/$filename")));
+        } 
+        else 
+        {
+
+            $txt = readAFile( $PIVOTX['paths']['db_path']."tagdata/$filename" ); 
+            
+            $aRelArray = explode(",", $txt);
             $bMustWrite = false;
     
             foreach($p_aAllTags as $sThisOne)   {
