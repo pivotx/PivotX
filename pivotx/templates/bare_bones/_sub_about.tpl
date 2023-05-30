@@ -1,7 +1,7 @@
 <h3>[[t]]About[[/t]]</h3>
 
 <p>This is the 'Bare Bones' template for 
-    <a href="http://www.pivotx.net" title="PivotX: a GPL weblog tool.">PivotX</a>. 
+    <a href="https://github.com/pivotx" title="PivotX: a GPL weblog tool.">PivotX</a>. 
     It's not much to look at, but it's a good start to
     write your own templates. It contains most of the usual tags you'd like to
     have in a template, with a minimum of CSS/HTML.</p>

@@ -22,7 +22,7 @@
         [[/if]]
      </small>
 
-    <em>[[ $build ]]</em> &nbsp; - &nbsp; &copy; [[ $year ]], <a href="http://www.pivotx.net" target="_blank">[[t]]The PivotX Team[[/t]]</a>
+    <em>[[ $build ]]</em> &nbsp; - &nbsp; &copy; [[ $year ]], <a href="https://github.com/pivotx" target="_blank">[[t]]The PivotX Team[[/t]]</a>
         - <a href="index.php?page=about">[[t]]About[[/t]]</a>.
 
     [[ hook name="footer-end" ]]

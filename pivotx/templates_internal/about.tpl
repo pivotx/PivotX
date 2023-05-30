@@ -22,7 +22,7 @@
     contributions made by several other people. They are listed below. 
 </p>
 <p>
-    [[t]]Visit our website at:[[/t]] <a href="http://pivotx.net/">pivotx.net</a>
+    [[t]]Visit our website at GitHub:[[/t]] <a href="https://github.com/pivotx">github.com/pivotx</a>
 </p>
 
 <h2>[[t]]The PivotX Team[[/t]]</h2>
@@ -34,12 +34,12 @@
 <li><strong>Bob den Otter</strong> [[t]]aka[[/t]] 'bob'. [[t]]Code[[/t]],
 [[t]]architecture[[/t]]. [[t]]Contact[[/t]]: bob [@] pivotx.net</li>
 <li><strong>Hans F. Nordhaug</strong> [[t]]aka[[/t]] 'hansfn'. [[t]]Code[[/t]],
-[[t]]architecture[[/t]]. [[t]]Contact[[/t]]: hansfn [@] pivotx.net</li>
+[[t]]architecture[[/t]]. [[t]]Contact[[/t]]: hansfn [@] gmail.com</li>
 <li><strong>Kevin Pascal</strong> [[t]]aka[[/t]] 'griswald' - [[t]]Head of Support[[/t]], 
 [[t]]website maintenance[[/t]]. [[t]]contact[[/t]]: admin [@] pivotx.net</li>
 </ul>
 
-<p>[[t]]Note: please don't use these email addresses for support questions. Please use our forum for those: [[/t]] <a href="http://forum.pivotx.net">forum.pivotx.net</a></p>
+<p>[[t]]Note: Please don't use these email addresses for support questions. Please use our <a href="https://github.com/pivotx/PivotX/issues">issue tracker</a>[[/t]]</p>
 
 <h3>[[t]]Official contributors[[/t]] <span>[[t]](support and additional coding)[[/t]]<span></h3>
 
