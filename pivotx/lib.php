@@ -1682,7 +1682,7 @@ function paraWeblogNeeded($weblog, $categories = "") {
  * @param string $dir
  * @return array
  */
-function themeList($dir) {
+function themeList($dir="") {
     global $PIVOTX;
 
     if ($dir=="") {
