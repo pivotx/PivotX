@@ -115,12 +115,10 @@ class EntriesFlat {
 <p>If you can read this, you have successfully installed [[tt tag="PivotX"]]. 
 Yay!! To help you further on your way, the following links might be of use to you:</p>
 <ul>
-<li>PivotX.net - <a href="http://pivotx.net">The official PivotX website</a></li>
-<li>The online documentation at <a href="http://book.pivotx.net">PivotX Help</a> should be of help.</li>
-<li>Get help on <a href="http://forum.pivotx.net">the PivotX forum</a></li>
-<li>Browse for <a href="http://themes.pivotx.net">PivotX Themes</a></li>
-<li>Get more <a href="http://extensions.pivotx.net">PivotX Extensions</a></li>
-<li>Follow <a href="http://twitter.com/pivotx">@pivotx on Twitter</a></li>
+<li><a href="https://github.com/pivotx">PivotX @ GitHub</a></li>
+<li>Read <a href="https://github.com/pivotx/PivotX-book">the PivotX Book</a></li>
+<li>Get more <a href="https://github.com/pivotx/PivotX-extensions">PivotX Extensions</a></li>
+<li>Follow <a href="https://twitter.com/pivotx">@pivotx on Twitter</a></li>
 </ul>
 <p>And, of course: Have fun with PivotX!</p>',
                 'body' => '
@@ -146,7 +144,7 @@ To see how this works, edit this entry in the PivotX administration by going to 
                     '0' => array(
                         'name' => 'Bob',
                         'email' => '',
-                        'url' => 'http://pivotx.net',
+                        'url' => 'https://github.com/pivotx',
                         'ip' => '127.0.0.1',
                         'date' => $now.'-10',
                         'comment' => 'Hi! This is what a comment looks like!',

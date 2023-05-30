@@ -864,10 +864,20 @@ function makePagesTable($sql) {
     }
 
     $query2 = "INSERT INTO `$tablename` (`uid`, `title`, `uri`, `subtitle`, `introduction`, `body`, `convert_lb`, `template`, `status`, `date`, `publish_date`, `edit_date`, `chapter`, `sortorder`, `user`, `allow_comments`, `keywords`) VALUES
-(1, '%title%', 'about', '', '<p>Hi! This website runs on <a href=\"http://pivotx.net\">PivotX</a>, the coolest free and open tool to power your blog and website. To change this text, edit ''<tt>About PivotX</tt>'', under ''<tt>Pages</tt>'' in the PivotX backend.</p>', '<p>PivotX is a feature rich weblogging tool that is simple enough for the novice     weblogger to use and complex enough to meet the demands of advanced webmasters.     It can be used to publish a variety of websites from the most basic weblog to very advanced CMS style solutions.</p>\r\n<p>PivotX is - if we do say so ourselves - quite an impressive piece of software. It     is made even better through the use of several external libraries. We thank their     authors for the time taken to develop these very useful tools and for making     them available to others.</p>\r\n<p>Development of PivotX (originally Pivot) started back in 2001 and has continuously     forged ahead thanks to the efforts of a lot     of dedicated and very talented people. The PivotX core team is still very active     but keep in mind that PivotX would not be what it is today without the valuable     contributions made by several other people.</p>', 5, '', 'publish', '%now%-00', '%now%-00', '%now%-00', 1, 10, '$username', 1, ''); ";
+(1, '%title%', 'about', '', '<p>Hi! This website runs on <a href=\"https://github.com/pivotx\">PivotX</a>, the coolest free and open tool to power your blog and website. To change this text, edit ''<tt>About PivotX</tt>'', under ''<tt>Pages</tt>'' in the PivotX backend.</p>', 
+'<p>PivotX is a feature rich weblogging tool that is simple enough for the novice weblogger to use and complex enough to meet the demands of advanced webmasters. It can be used to publish a variety of websites from the most basic weblog to very advanced CMS style solutions.</p>
+<p>PivotX is - if we do say so ourselves - quite an impressive piece of software. It is made even better through the use of several external libraries. We thank their authors for the time taken to develop these very useful tools and for making them available to others.</p>
+<p>Development of PivotX (originally Pivot) started back in 2001 and has continuously forged ahead thanks to the efforts of a lot of dedicated and very talented people. The PivotX core team is still very active but keep in mind that PivotX would not be what it is today without the valuable contributions made by several other people.</p>', 5, '', 'publish', '%now%-00', '%now%-00', '%now%-00', 1, 10, '$username', 1, ''); ";
 
     $query3 = "INSERT INTO `$tablename` (`uid`, `title`, `uri`, `subtitle`, `introduction`, `body`, `convert_lb`, `template`, `status`, `date`, `publish_date`, `edit_date`, `chapter`, `sortorder`, `user`, `allow_comments`, `keywords`) VALUES
-(2, '%title%', 'links', '', '<p>Some links to sites with more information:</p>\r\n<ul>\r\n<li>PivotX - <a href=\"http://pivotx.net\">The PivotX website</a></li>\r\n<li>Get help on <a href=\"http://forum.pivotx.net\">the PivotX forum</a></li>\r\n<li>Read <a href=\"http://book.pivotx.net\">the PivotX documentation</a></li>\r\n<li>Browse for <a href=\"http://themes.pivotx.net\">PivotX Themes</a></li>\r\n<li>Get more <a href=\"http://extensions.pivotx.net\">PivotX Extensions</a></li>\r\n<li>Follow <a href=\"http://twitter.com/pivotx\">@pivotx on Twitter</a></li>\r\n</ul>\r\n<p><small>To change these links, edit ''<tt>Links</tt>'', under ''<tt>Pages</tt>'' in the PivotX backend.</small></p>', '', 5, '', 'publish', '%now%-01', '%now%-01', '%now%-01', 1, 10, '$username', 1, '');";
+(2, '%title%', 'links', '', '<p>Some links to sites with more information:</p>
+<ul>
+<li><a href=\"https://github.com/pivotx\">PivotX @ GitHub</a></li>
+<li>Read <a href=\"https://github.com/pivotx/PivotX-book\">the PivotX Book</a></li>
+<li>Get more <a href=\"https://github.com/pivotx/PivotX-extensions\">PivotX Extensions</a></li>
+<li>Follow <a href=\"https://twitter.com/pivotx\">@pivotx on Twitter</a></li>
+</ul>
+<p><small>To change these links, edit ''<tt>Links</tt>'', under ''<tt>Pages</tt>'' in the PivotX backend.</small></p>', '', 5, '', 'publish', '%now%-01', '%now%-01', '%now%-01', 1, 10, '$username', 1, '');";
 
 
     $now = date("Y-m-d-H-i", getCurrentDate());
@@ -976,12 +986,10 @@ function makeEntriesTable($sql) {
     $query2 = "INSERT INTO `$tablename` (`uid`, `title`, `uri`, `subtitle`, `introduction`, `body`, `convert_lb`, `status`, `date`, `publish_date`, `edit_date`, `user`, `allow_comments`, `keywords`, `via_link`, `via_title`, `comment_count`, `comment_names`, `trackback_count`, `trackback_names`) VALUES
 (1, '%version%', '%uri-version%', '', '<p>If you can read this, you have successfully installed [[tt tag=\"PivotX\"]]. Yay!! To help you further on your way, the following links might be of use to you:</p>
 <ul>
-<li>PivotX.net - <a href=\"http://pivotx.net\">The official PivotX website</a></li>
-<li>The online documentation at <a href=\"http://book.pivotx.net\">PivotX Help</a> should be of help.</li>
-<li>Get help on <a href=\"http://forum.pivotx.net\">the PivotX forum</a></li>
-<li>Browse for <a href=\"http://themes.pivotx.net\">PivotX Themes</a></li>
-<li>Get more <a href=\"http://extensions.pivotx.net\">PivotX Extensions</a></li>
-<li>Follow <a href=\"http://twitter.com/pivotx\">@pivotx on Twitter</a></li>
+<li><a href=\"https://github.com/pivotx\">PivotX @ GitHub</a></li>
+<li>Read <a href=\"https://github.com/pivotx/PivotX-book\">the PivotX Book</a></li>
+<li>Get more <a href=\"https://github.com/pivotx/PivotX-extensions\">PivotX Extensions</a></li>
+<li>Follow <a href=\"https://twitter.com/pivotx\">@pivotx on Twitter</a></li>
 </ul>
 <p>And, of course: Have fun with PivotX!</p>', '<h3>More</h3>
 <p>All text that you write in the \'body\' part of the entry will only appear on the entry\'s own page. To see how this works, edit this entry in the PivotX administration by going to \'Entries &amp; Pages\' &raquo; \'Entries\' &raquo; \'Edit\'.</p>', 0, 'publish', '%now%-00', '%now%-00', '%now%-00', '$username', 1, 'pivot pivotx', '', '', 1, 'Bob', 0, '');";
@@ -1072,7 +1080,7 @@ function makeCommentsTable($sql) {
         $query1 = trimQuery($query1);
     }
 
-    $query2 = "INSERT INTO `$tablename` VALUES(1, 'entry', 1, 'Bob', '', 'http://pivotx.net', '127.0.0.1', '', '%now%-10', 'Hi! This is what a comment looks like!', 0, 0, 0, 0, 0);";
+    $query2 = "INSERT INTO `$tablename` VALUES(1, 'entry', 1, 'Bob', '', 'https://github.com/pivotx', '127.0.0.1', '', '%now%-10', 'Hi! This is what a comment looks like!', 0, 0, 0, 0, 0);";
 
     $now = date("Y-m-d-H-i", getCurrentDate());
     $query2 = str_replace("%now%", $now, $query2);

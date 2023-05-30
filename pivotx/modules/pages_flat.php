@@ -65,7 +65,7 @@ class PagesFlat {
                 'title' => __('About PivotX'),
                 'subtitle' => '',
                 'template' => '',
-                'introduction' => "<p>Hi! This website runs on <a href=\"http://pivotx.net\">PivotX</a>,
+                'introduction' => "<p>Hi! This website runs on <a href=\"https://github.com/pivotx\">PivotX</a>,
                 the coolest free and open tool to power your blog and website. To change this text, edit '<tt>About PivotX</tt>',
                 under '<tt>Pages</tt>' in the PivotX backend.</p>",
                 'body' => '<p>PivotX is a feature rich weblogging tool that is simple enough for the novice
@@ -105,12 +105,10 @@ what it is today without the valuable contributions made by several other people
                 'template' => '',
                 'introduction' => '<p>Some links to sites with more information:</p>
 <ul>
-<li>PivotX - <a href="http://pivotx.net">The PivotX website</a></li>
-<li>Get help on <a href="http://forum.pivotx.net">the PivotX forum</a></li>
-<li>Read <a href="http://book.pivotx.net">the PivotX documentation</a></li>
-<li>Browse for <a href="http://themes.pivotx.net">PivotX Themes</a></li>
-<li>Get more <a href="http://extensions.pivotx.net">PivotX Extensions</a></li>
-<li>Follow <a href="http://twitter.com/pivotx">@pivotx on Twitter</a></li>
+<li><a href="https://github.com/pivotx">PivotX @ GitHub</a></li>
+<li>Read <a href="https://github.com/pivotx/PivotX-book">the PivotX Book</a></li>
+<li>Get more <a href="https://github.com/pivotx/PivotX-extensions">PivotX Extensions</a></li>
+<li>Follow <a href="https://twitter.com/pivotx">@pivotx on Twitter</a></li>
 </ul>
 <p><small>To change these links, edit \'<tt>Links</tt>\', under \'<tt>Pages</tt>\' in the PivotX backend.</small></p>',
                 'body' => '',
