@@ -1562,7 +1562,7 @@ EOM;
 
 
         // If $query_log is filled, output the executed queries..
-        if (count($GLOBALS['query_log'])>0) {
+        if (is_array($GLOBALS['query_log']) && (count($GLOBALS['query_log']) > 0)) {
             sort($GLOBALS['query_log']);
 
             $debugcode .= sprintf("<div id=\"pxdb-box-queries\" class=\"pxdb-box%s\">

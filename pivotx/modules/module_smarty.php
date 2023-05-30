@@ -1752,7 +1752,7 @@ function smarty_feed($params, $text, &$smarty) {
     $output = "";
 
 
-    if (count($rss->items)>0) {
+    if (is_array($rss->items) && count($rss->items) > 0) {
 
         // Slice it, so no more than '$amount' items will be shown.
         $rss->items = array_slice($rss->items, 0, $amount);

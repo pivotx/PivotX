@@ -710,7 +710,7 @@ class ajaxhelper {
 
         $news = "";
 
-        if (count($rss->items)>0) {
+        if (is_array($rss->items) && count($rss->items) > 0) {
 
             // Slice it, so no more than 4 items will be shown.
             $rss->items = array_slice($rss->items, 0, 4);
@@ -753,7 +753,7 @@ class ajaxhelper {
 
         $news = "";
 
-        if (count($rss->items)>0) {
+        if (is_array($rss->items) && count($rss->items) > 0) {
 
             // Slice it, so no more than 8 items will be shown.
             $rss->items = array_slice($rss->items, 0, 8);
@@ -846,7 +846,7 @@ class ajaxhelper {
 
         $output = "";
 
-        if (count($rss->items)>0) {
+        if (is_array($rss->items) && count($rss->items) > 0) {
 
             // Slice it, so no more than '$amount' items will be shown.
             $rss->items = array_slice($rss->items, 0, $amount);

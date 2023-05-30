@@ -91,7 +91,6 @@ class BaseConfig {
 
         if (!$this->verifyConfig()) {
             $this->fixConfig();
-
             $this->saveConfig(true);
         }
     }
@@ -125,7 +124,7 @@ class BaseConfig {
             ksort($this->data);
         }
 
-        if (count($this->data) <= 0) {
+        if ($this->count() <= 0) {
             return false;
         }
 
@@ -227,16 +226,13 @@ class Config extends BaseConfig {
     protected function fixConfig() {
         if ($this->count() < 5) {
             $this->readOld();
-
             $this->setChanged();
         }
 
         $default = getDefaultConfig();
         foreach($default as $key=>$value) {
-
             if (!isset($this->data[$key])) {
                 $this->data[$key] = $value;
-
                 $this->setChanged();
             }
         }
@@ -451,11 +447,14 @@ class Users extends BaseConfig {
     }
 
     protected function fixConfig() {
-        if (count($this->data) < 5) {
+        if ($this->count() < 1) {
             $this->readOld();
-
             $this->setChanged();
         }
+	if ($this->count() < 1) {
+            $this->data = [];
+            $this->setChanged();
+	}
     }
 
     protected function organizeConfig() {
@@ -905,7 +904,6 @@ class Weblogs extends BaseConfig {
     public function fixConfig() {
         if ($this->count() < 1) {
             $this->readOld();
-
             $this->setChanged();
         }
 
@@ -1596,29 +1594,21 @@ class Categories extends BaseConfig {
     }
 
     protected function fixConfig() {
-        $save = false;
+        if ($this->count() < 1) {
+            $this->readOld();
+            $this->setChanged();
+        }
 
         if ($this->count() < 1) {
-            // hmm, couldn't find the data.. Perhaps try to import it from old Pivot 1.x
-            $this->readOld();
-            $save = true;
-        }
-
-        if ($this->count()<1) {
-            // if there still are no categories, load the defaults
             $this->data = getDefaultCategories();
-            $save = true;
-        }
-
-        if ($save) {
-            $this->saveConfig(true);
+            $this->setChanged();
         }
     }
 
     protected function organizeConfig() {
         usort($this->data, array($this, 'sort'));
 
-        if (count($this->data) > 0) {
+        if ($this->count() > 0) {
             return true;
         }
 
