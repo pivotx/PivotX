@@ -404,25 +404,6 @@ function clearOnUnload() {
 }
 
 
-/** 
- * Get the PivotX news to display on the dashboard.
- */
-function getPivotxNews() {
-    
-    $.ajax({
-        type: "POST",
-        url: "./ajaxhelper.php",
-        data: "function=getPivotxNews",
-        success: function(html){
-            html = html.split(/--split--/g);
-            jQuery('#newsholder').html( html[0] );
-            jQuery('#forumpostholder').html( html[1] );
-        }
-    });
-    
-} 
-
-
 /**
  * Show more newsitems..
  */
