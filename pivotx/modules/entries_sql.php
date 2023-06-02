@@ -1163,10 +1163,10 @@ class EntriesSql {
             
             // A bit of a nasty hack, but needed when we have to insert tags for a new entry,
             // and $db is not yet aware of the new $uid.
-            $GLOBALS['db']->entry['uid'] = $this->entry['uid'];
-
+            if (isset($GLOBALS['db'])) {
+                $GLOBALS['db']->entry['uid'] = $this->entry['uid'];
+            }
         }
-
 
         // We will also need to save the comments and trackbacks.. We should
         // try to prevent doing unneeded queries, so we only insert comments
