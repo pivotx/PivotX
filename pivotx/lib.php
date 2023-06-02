@@ -22,7 +22,6 @@ DEFINE('INPIVOTX', TRUE);
 
 $version = "3.0.0-rc2";
 $codename = "Back from the dead";
-$svnrevision = '$Rev$';
 
 $minrequiredphp = "7.3.0";
 $minrequiredmysql = "4.1";
@@ -201,19 +200,6 @@ function isInstalled() {
     }
 }
 
-/**
- * Returns our SVN Revision number
- *
- * @return integer
- */
-function getSvnRevision() {
-    global $svnrevision;
-    
-    $id = substr($svnrevision, 6);
-    return intval(substr($id, 0, strlen($id) - 2));
-}
-
-
 
 /**
  * Determines which page needs to be shown, and calls the handler for that page
@@ -328,7 +314,6 @@ function renderTemplate($template, $page="") {
     $PIVOTX['template']->assign('codename', $codename);
     $PIVOTX['template']->assign('year', date("Y"));
     if (isset($PIVOTX['config'])) {
-        $PIVOTX['template']->assign('svnbuild', getSvnRevision() . "-" . $PIVOTX['config']->get('db_version') );    
         $PIVOTX['template']->assign('now', formatDate('', $PIVOTX['config']->get('fulldate_format')));
         $PIVOTX['template']->assign('config', $PIVOTX['config']->getConfigArray() );
     }

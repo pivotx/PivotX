@@ -17,8 +17,7 @@
             - <a href="modules/module_debug.php#bottom" onclick="void(debugwin = window.open('modules/module_debug.php#bottom', 'debugwin', 'status=yes, scrollbars=yes, resizable=yes, width=700, height=300')); return false;">[[t]]View debug logs[[/t]]</a>
             - [[ $timetaken ]] [[t]]sec.[[/t]], [[ $memtaken ]]
             - [[t]]using[[/t]] [[ $config.db_model ]] db[[ if $config.db_model=="mysql" ]]
-            - [[ $query_count ]] [[t]]queries[[/t]] ([[ $timetaken_sql ]] [[t]]sec.[[/t]])[[/if]]
-            - [[t]]build[[/t]] #[[$svnbuild]].
+            - [[ $query_count ]] [[t]]queries[[/t]] ([[ $timetaken_sql ]] [[t]]sec.[[/t]])[[/if]].
         [[/if]]
      </small>
 
