@@ -103,7 +103,7 @@ class OutputSystem {
     /**
      * (internal) Compare two codes
      */
-    public static function _cmpCodes(&$a,&$b) {
+    public static function _cmpCodes($a, $b) {
         if ($a['_priority'] < $b['_priority']) {
             return -1;
         }
@@ -120,7 +120,7 @@ class OutputSystem {
     /**
      * (internal) Compare two filters
      */
-    public static function _cmpFilters(&$a,&$b) {
+    public static function _cmpFilters($a, $b) {
         if ($a['_priority'] < $b['_priority']) {
             return -1;
         }
