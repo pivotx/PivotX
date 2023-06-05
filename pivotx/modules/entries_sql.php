@@ -811,8 +811,8 @@ class EntriesSql {
                 }
             }
         }
-        
-        if($params['count_only']===true) {
+
+        if (isset($params['count_only']) && ($params['count_only']===true)) {
             // if we only want to count - override the select, group and order
             $qry['select'] = 'count(e.uid) as number';
             unset($qry['order']);
@@ -889,13 +889,13 @@ class EntriesSql {
                 foreach($tempfields as $tempfield) {
                     foreach($entries as $key=>$entry) {
                         if ($entries[$key]['uid'] == $tempfield['target_uid']) {
-                            if (!is_array($entries[ $key ]['extrafields'])) {
+                            if (!isset($entries[ $key ]['extrafields'])) {
                                 $entries[ $key ]['extrafields'] = array();
                             }
                             
                             // Check if it's a serialised value..
-                            if (is_array(unserialize($temp_field['value']))) {
-                                $temp_field['value'] = unserialize($temp_field['value']);
+                            if (is_array(unserialize($tempfield['value']))) {
+                                $tempfield['value'] = unserialize($tempfield['value']);
                             }
                         
                             $entries[ $key ]['extrafields'][ $tempfield['fieldkey'] ] = $tempfield['value'];
