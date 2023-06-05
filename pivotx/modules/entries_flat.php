@@ -487,7 +487,7 @@ automagically be published in this section of your weblog.</p>',
             $filename=$this->set_filename($code);
         }
 
-        if (!$this->read_entry_filename($filename, FALSE, $force)) {
+        if (!$this->read_entry_filename($filename, FALSE)) {
             return FALSE;
         }
 
@@ -534,8 +534,8 @@ automagically be published in this section of your weblog.</p>',
         $filteronuser = false;
         $filteronstatus = false;
 
-        $params['orderby'] = getDefault($params['orderby'], 'date'); 
-        $params['order'] = getDefault($params['order'], 'asc'); 
+        $params['orderby'] = $params['orderby'] ?? 'date';
+        $params['order'] = $params['order'] ?? 'asc';
         if (!empty($params['status'])) {
             $filteronstatus = true;
         }
@@ -953,21 +953,24 @@ automagically be published in this section of your weblog.</p>',
     function set_entry( $entry ) {
 
         $this->entry = $entry;
+        $code = $this->entry['code'] ?? '';
 
-        if ( $this->entry['code'] == '>' ) {
+        if ($code == '>') {
             if (is_array ( $this->date_index )) {
                 ksort( $this->date_index );
                 $max = end( $this->date_index );
                 $max = key( $this->date_index );
                 $max = $max + 1;
-                $this->entry['code'] = $max;
+                $code = $max;
             } else {
-                $this->entry['code'] = 1;
+                $code = 1;
             }
+            $this->entry['code'] = $code;
         }
+
         // UID also needs to be set to be consistent with the 
         // data/result from the SQL db.
-        $this->entry['uid'] = $this->entry['code'];
+        $this->entry['uid'] = $code;
 
         $this->entry['link'] = makeFileLink($this->entry, '', '');
 
