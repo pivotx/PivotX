@@ -3470,9 +3470,9 @@ function smarty_paging($params, &$smarty) {
         foreach ($subweblogs as $subweblog) {
             $subweblog = $PIVOTX['weblogs']->getSubweblog('', $subweblog);
             // Only add categories from subweblogs that have any categories assigned.
-            if (count($subweblog['categories']) > 0) {
-            // if (is_array($subweblog['categories']) && (count($subweblog['categories'])) > 0) {
-                $cats[] = $subweblog['categories'];
+            $subweblog_cats = $subweblog['categories'] ?? [];
+            if (count($subweblog_cats) > 0) {
+                $cats[] = $subweblog_cats;
             }
         }
     }
