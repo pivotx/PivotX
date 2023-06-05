@@ -1463,7 +1463,9 @@ class Weblogs extends BaseConfig {
                 if (strpos($value, ",")>0) {
                     $value = explode(",", $value);
                 } else {
-                    $value = [ $value ];
+                    if ($key == "categories") {
+                        $value = [ $value ];
+                    }
                 }
 
                 $this->data[$weblogname]['sub_weblog'][$sub][$key] = $value;
