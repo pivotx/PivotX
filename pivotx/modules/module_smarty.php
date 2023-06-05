@@ -474,18 +474,16 @@ function smarty_backtrace($params, &$smarty) {
 function smarty_body($params, &$smarty) {
 
     $vars = $smarty->get_template_vars();
+    $body = '';
 
     // Don't add an anchor if 'noanchor' is set or if body contains so little 
     // content that the [[more]] tag will not insert a link to the body.
-    if (!$params['noanchor'] && (strlen($vars['body'])>5)) {
- 
-        $anchorname = getDefault($params['anchorname'], 'body-anchor');
-        
+    if (empty($params['noanchor']) && (strlen($vars['body'])>5)) {
+        $anchorname = $params['anchorname'] ?? 'body-anchor';
         $body = sprintf('<a id="%s"></a>', $anchorname);
     }
 
-    $body .= parse_intro_or_body($vars['body'], $params['strip'], $vars['convert_lb']);
-
+    $body .= parse_intro_or_body($vars['body'], ($params['strip'] ?? false), $vars['convert_lb']);
 
     return $body;
 
@@ -921,9 +919,9 @@ function smarty_commcount($params, &$smarty) {
         $commcount++; 
     }
 
-    $text0 = getDefault($params['text0'], __("No comments"), true);
-    $text1 = getDefault($params['text1'], __("One comment"));
-    $textmore = getDefault($params['textmore'], __("%num% comments"));
+    $text0 = $params['text0'] ?? __("No comments");
+    $text1 = $params['text1'] ?? __("One comment");
+    $textmore = $params['textmore'] ?? __("%num% comments");
 
     // special case: If comments are disabled, and there are no
     // comments, just return an empty string..
@@ -965,7 +963,7 @@ function smarty_commentform($params, &$smarty) {
 
     $params = cleanParams($params);
 
-    $template = getDefault($params['template'], "_sub_commentform.html");
+    $template = $params['template'] ?? '_sub_commentform.html';
 
     // Initialise the IP blocklist.
     $blocklist = new IPBlock();
@@ -1057,6 +1055,9 @@ function smarty_commentlink($params, &$smarty) {
 function smarty_comments($params, $format, &$smarty) {
     global $PIVOTX, $temp_comment;
 
+    $output = '';
+    $awaiting_moderation = false;
+
     if (isset($format)) {
 
         $params = cleanParams($params);
@@ -1067,14 +1068,14 @@ function smarty_comments($params, $format, &$smarty) {
             <cite class='comment'><strong>%name%</strong> %url% - %date% %editlink%</cite>";
         }
 
-        $order = getDefault($params['order'], "ascending");
-        $format_reply = getDefault($params['format_reply'], "Reply on %name%");
-        $format_forward = getDefault($params['format_forward'], "Replied on %name%");
-        $format_backward = getDefault($params['format_backward'], "This is a reply on %name%");
-        $entrydate = getDefault($params['date'], "%day%-%month%-&rsquo;%ye% %hour24%:%minute%");
-        $default_gravatar = getDefault($params['default_gravatar'], "http://pivotx.net/p64.gif");
-        $gravatar_size = getDefault($params['gravatar_size'], 64);
-
+        $order = $params['order'] ?? "ascending";
+        $format_reply = $params['format_reply'] ?? 'Reply on %name%';
+        $format_forward = $params['format_forward'] ?? 'Replied on %name%';
+        $format_backward = $params['format_backward'] ?? 'This is a reply on %name%';
+        $entrydate = $params['date'] ?? '%day%-%month%-&rsquo;%ye% %hour24%:%minute%';
+        // $default_gravatar = $params['default_gravatar'] ?? "http://pivotx.net/p64.gif";
+        $default_gravatar = $params['default_gravatar'] ?? 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=64';
+        $gravatar_size = $params['gravatar_size'] ?? 64;
 
         // If %editlink% is not present, insert it right after %date%..
         if (strpos($format, "%editlink%")==0){
@@ -2807,8 +2808,8 @@ function _smarty_link_page($params, &$smarty) {
 
     if (!empty($page['uid'])) {
 
-        $text = getDefault($params['text'], $page['title']);
-        $title = getDefault($params['title'], cleanAttributes($page['title']));
+        $text = $params['text'] ?? $page['title'];
+        $title = $params['title'] ?? cleanAttributes($page['title']);
 
         $pagelink = makePageLink($page['uri'], $page['title'], $page['uid'], $page['date']);
         
@@ -2817,11 +2818,12 @@ function _smarty_link_page($params, &$smarty) {
             $pagelink = getHost() . $pagelink;
         }
 
-        if ($params['query'] !='' ) {
+        $query = $params['query'] ?? '';
+        if ($query != '') {
             if (strpos($link,"?")>0) {
-               $pagelink .= '&amp;'.$params['query'];
+               $pagelink .= '&amp;' . $query;
             } else {
-               $pagelink .= '?'.$params['query'];
+               $pagelink .= '?' . $query;
             }
         }
         
@@ -2836,8 +2838,7 @@ function _smarty_link_page($params, &$smarty) {
     } else {
         debug(sprintf("Can't create page link since uid isn't set. (Page '%s')", $params['page']));
         return '';
-    }    
-    
+    }
 }
 
 
@@ -3100,7 +3101,8 @@ function smarty_nextentry($params) {
         $categories = explode(",",safeString($params['category']));
         $categories = array_map("trim", $categories);
     } else {
-        $categories = ($params['incategory']==true ? $PIVOTX['db']->entry['category'] : $PIVOTX['weblogs']->getCategories() );
+        $incategory = $params['incategory'] ?? false;
+        $categories = ($incategory == true ? $PIVOTX['db']->entry['category'] : $PIVOTX['weblogs']->getCategories() );
     }
     
     do {
@@ -3193,7 +3195,7 @@ function smarty_nextpage($params, &$smarty) {
         debug('The page list is empty. Possible orphan page?'); 
         return; 
     }
-    if ($params['sortorder'] == 'reverse') {
+    if (isset($params['sortorder']) && ($params['sortorder'] == 'reverse')) {
         $pages = array_reverse($pages, true);
     }
 
@@ -3212,7 +3214,7 @@ function smarty_nextpage($params, &$smarty) {
         $text = getDefault($params['text'], '&nbsp;&nbsp;&raquo; <a href="%link%">%title%</a>');
         $cutoff = getDefault($params['cutoff'], 20);
         $title  = (strlen($nextpage['title'])>2) ? $nextpage['title'] : substr($nextpage['introduction'],0,100);
-        $link   = makePageLink($nextpage['uri'], $nextpage['title'], $nextpage['uid'], $nextpage['date'], $params['weblog']);
+        $link   = makePageLink($nextpage['uri'], $nextpage['title'], $nextpage['uid'], $nextpage['date'], ($params['weblog'] ?? ''));
         $output = $text;
         $output = str_replace("%link%", $link, $output);
         $output = str_replace("%title%", trimText($title,$cutoff), $output);
@@ -3728,7 +3730,8 @@ function smarty_previousentry($params) {
         $categories = explode(",",safeString($params['category']));
         $categories = array_map("trim", $categories);
     } else {
-        $categories = ($params['incategory']==true ? $PIVOTX['db']->entry['category'] : $PIVOTX['weblogs']->getCategories() );
+        $incategory = $params['incategory'] ?? false;
+        $categories = ($incategory == true ? $PIVOTX['db']->entry['category'] : $PIVOTX['weblogs']->getCategories() );
     }
     
     do {      
@@ -3821,7 +3824,7 @@ function smarty_previouspage($params, &$smarty) {
 
     // We will find the previous page by searching the array in reverse order.
     // This means that have to reverse it, if sortorder isn't reverse ;-)
-    if ($params['sortorder'] != 'reverse') {
+    if (!isset($params['sortorder']) || ($params['sortorder'] != 'reverse')) {
         $pages = array_reverse($pages, true);
     }
 
@@ -3839,7 +3842,7 @@ function smarty_previouspage($params, &$smarty) {
 
     if ($prevpage) {
         $title  = (strlen($prevpage['title'])>2) ? $prevpage['title'] : substr($prevpage['introduction'],0,100);
-        $link   = makePageLink($prevpage['uri'], $prevpage['title'], $prevpage['uid'], $prevpage['date'], $params['weblog']);
+        $link   = makePageLink($prevpage['uri'], $prevpage['title'], $prevpage['uid'], $prevpage['date'], ($params['weblog'] ?? ''));
         $output = $text;
         $output = str_replace("%link%", $link, $output);
         $output = str_replace("%title%", trimText($title,$cutoff), $output);
@@ -4160,7 +4163,8 @@ function smarty_self($params) {
 
     $params = cleanParams($params);
 
-    if ($params['includehostname']==1) {
+    $includehostname = $params['includehostname'] ?? 0;
+    if ($includehostname == 1) {
         $output = $PIVOTX['paths']['host'];
     } else {
         $output = "";
