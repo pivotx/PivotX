@@ -1104,11 +1104,12 @@ class Form {
 
         return $result;
 
-
     }
 
 
     function setvalues($values) {
+
+        $result = array();
 
         foreach ($this->fields as $key => $field) {
             if (isset($values[ $field['name'] ] )) {
@@ -1129,6 +1130,8 @@ class Form {
 
     function setvalue($fieldname, $value) {
 
+        $result = array();
+
         foreach ($this->fields as $key => $field) {
             if ($field['name']==$fieldname) {
 
@@ -1143,8 +1146,6 @@ class Form {
         return $result;
 
     }
-
-
 
 
     function clearpost() {

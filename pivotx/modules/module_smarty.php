@@ -724,7 +724,7 @@ function smarty_category($params, &$smarty) {
                 continue;
             }
             
-            if (!$params['link']) {                
+            if (empty($params['link'])) {
                 $output[] = $thiscat['display'];
             } else {
 
@@ -3245,6 +3245,9 @@ function smarty_pagelist($params, &$smarty) {
     $chapterend = $params['chapterend'] ?? "</ul>";
     $dateformat = $params['dateformat'] ?? "%day%-%month%-&rsquo;%ye% %hour24%:%minute%";
 
+    $onlychapter_bool = false;
+    $excludechapter_bool = false;
+
     // If we use 'isactive', set up the $pageuri and $isactive vars.
     if (!empty($params['isactive'])) {
         // Get the current page uri.
@@ -3269,7 +3272,6 @@ function smarty_pagelist($params, &$smarty) {
         $excludechapter_arr = array_map('trim', $excludechapter_arr);
         $excludechapter_arr = array_map('strtolower', $excludechapter_arr);
     }
-
 
     $chapters = $PIVOTX['pages']->getIndex();
     $output = "";
@@ -3318,14 +3320,9 @@ function smarty_pagelist($params, &$smarty) {
 
         $pages = array();
 
-        if ($params['sort'] == 'title') {
-            $pages_sort_key = 'title';
-        } else if ($params['sort'] == 'uri') {
-            $pages_sort_key = 'uri';
-        } else if ($params['sort'] == 'date') {
-            $pages_sort_key = 'date';
-        } else {
-            // Just picking a unique key (when there is no sorting).
+        $pages_sort_key = $params['sort'] ?? '';
+        if (!in_array($pages_sort_key, ['title', 'uri', 'date'])) {
+            // Just picking a unique key (when there is no or unknown sorting).
             unset($params['sort']);
             $pages_sort_key = 'uri';
         }
@@ -3333,7 +3330,7 @@ function smarty_pagelist($params, &$smarty) {
         // Iterate through the pages
         foreach ($chapter['pages'] as $page) {
 
-            if(in_array($page['uri'], explode(",",$params['exclude']))) {
+            if(in_array($page['uri'], explode(",", $params['exclude'] ?? ''))) {
                 continue;
             }
 
@@ -5104,7 +5101,8 @@ function smarty_weblogtitle($params) {
 
     $output=$PIVOTX['weblogs']->get('', 'name');
 
-    if ($params['strip']==true) {
+    $strip = $params['strip'] ?? false;
+    if ($strip == true) {
         $output = strip_tags($output);
     } else if (!empty($params['internal'])) {
         $output = $PIVOTX['weblogs']->getCurrent();

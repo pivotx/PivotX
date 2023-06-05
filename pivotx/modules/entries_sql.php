@@ -657,10 +657,10 @@ class EntriesSql {
             $params['date'] = "";
             $qry['limit'] = intval($params['offset']) . ", " . $params['show'];
         } else {
-            $qry['limit'] = $params['show'];
+            $qry['limit'] = $params['show'] ?? '';
         }
 
-        if (substr($params['orderby'],0,12) == "extrafields_") {
+        if (isset($params['orderby']) && (substr($params['orderby'],0,12) == "extrafields_")) {
             if(empty($params['extrafields']) ) {
                 $qry['select'] .= ", ef.target_uid, ef.value";
                 $qry['leftjoin'][$this->extrafieldstable." AS ef"] = "e.uid = ef.target_uid";

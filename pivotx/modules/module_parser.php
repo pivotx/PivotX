@@ -1143,7 +1143,7 @@ class Parser {
                 ($PIVOTX['config']->get('root') == "w:".$this->modifier['weblog']) &&
                 empty($this->modifier['category']) && empty($this->modifier['archive']) && !$offset) {
             $this->modifier['home'] = true;
-        } else if (($this->modifier['uri']=="") && ($PIVOTX['config']->get('root') == "")) {
+        } else if (empty($this->modifier['uri']) && ($PIVOTX['config']->get('root') == "")) {
             $this->modifier['home'] = true;
         }
 
@@ -2426,11 +2426,7 @@ function cms_tag_weblog($params, $format){
     }
 
     // See if we should override the offset..
-    if (!empty($params['offset'])) {
-        $offset = intval($params['offset']);
-    } else {
-        $offset = intval($subweblog['offset']);
-    }
+    $offset = intval($params['offset'] ?? ($subweblog['offset'] ?? 0));
 
     // Set the 'number of entries' that we want to show..
     // Note: 'showme' is deprecated. included for backwards compatibility.
