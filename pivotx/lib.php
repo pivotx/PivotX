@@ -364,8 +364,7 @@ function renderTemplate($template, $page="") {
     
         $format = "\n<!-- Time taken in total: %s sec. Template: %s -->\n";
 
-        // If $query_log is filled, output the executed queries..
-        if (($PIVOTX['config']->get('db_model') != "flat") && $PIVOTX['config']->get('log_queries') && count($GLOBALS['query_log'])>0 ) {
+        if (displayQueryLog()) {
             sort($GLOBALS['query_log']);
             debug_printr($GLOBALS['query_log']);
         }
@@ -4787,7 +4786,15 @@ function getCurrentDate() {
 }
 
 
-
+function displayQueryLog() {
+    global $PIVOTX;
+    if ($PIVOTX['config']->get('db_model') == "flat") return false;
+    if ($PIVOTX['config']->get('log_queries') && (count($GLOBALS['query_log']) > 0)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 
 /**

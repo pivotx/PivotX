@@ -1556,9 +1556,7 @@ EOM;
             </pre>
             </div>", $boxclass, implode("\n", $modifiers));
 
-
-        // If $query_log is filled, output the executed queries..
-        if (($PIVOTX['config']->get('db_model') != "flat") && (count($GLOBALS['query_log']) > 0)) {
+        if (displayQueryLog()) {
             sort($GLOBALS['query_log']);
 
             $debugcode .= sprintf("<div id=\"pxdb-box-queries\" class=\"pxdb-box%s\">
@@ -1568,10 +1566,9 @@ EOM;
                 </div>", $boxclass, implode("\n", $GLOBALS['query_log']));
 
             // perhaps also log to file
-            if ( $PIVOTX['config']->get('log_queries') && $PIVOTX['config']->get('debug_logfile') ) {
+            if ($PIVOTX['config']->get('debug_logfile')) {
                 debug_printr($GLOBALS['query_log']);
             }
-
         }
 
         if (empty($GLOBALS['debug_log'])) {

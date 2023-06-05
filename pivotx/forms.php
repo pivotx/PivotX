@@ -2323,7 +2323,7 @@ EOM;
         'name' => 'debug_logfile',
         'label' => __('Log Queries to file'),
         'value' => '',
-        'text' => makeJtip(__('Log Queries to file'), __('Log all MySQL queries also to the debug file. Use this when you are investigation performance issues, but turn it off on production websites. Only works when \'Debug\' is enabled.'))
+        'text' => makeJtip(__('Log Queries to file'), __('Log all MySQL queries also to the debug file. Use this when you are investigation performance issues, but turn it off on production websites. Only works when \'Log Queries\' is enabled.'))
     ));
 
     $form->add( array(
