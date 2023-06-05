@@ -294,11 +294,10 @@ class sql {
             
             //echo "<pre>\n"; print_r($query); echo "</pre>";
             
-            $GLOBALS['query_log'][] = $query . " -- $querytimetaken sec. ";
-            
+            if ($PIVOTX['config']->get('log_queries')) {
+                $GLOBALS['query_log'][] = $query . " -- $querytimetaken sec. ";
+            }
         }
-
-        
 
         if (!$this->sql_result) {
 

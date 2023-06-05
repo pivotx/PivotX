@@ -1625,7 +1625,7 @@ EOM;
             'type' => 'text',
             'name' => "$key#offset",
             'label' => __('Offset'),
-            'value' => intval($weblog['sub_weblog'][$key]['offset']),
+            'value' => intval($weblog['sub_weblog'][$key]['offset'] ?? 0),
             'error' => __('Error'),
             'size' => 10,
             'isrequired' => 1,
@@ -2315,15 +2315,15 @@ EOM;
         'name' => 'log_queries',
         'label' => __('Log Queries'),
         'value' => '',
-        'text' => makeJtip(__('Log Queries'), __('Log all MySQL queries in the debug log. Use this when you are investigation performance issues, but turn it off on production websites.'))
+        'text' => makeJtip(__('Log Queries'), __('Log all MySQL queries in the Debug Bar. Use this when you are investigation performance issues, but turn it off on production websites. Only works when \'Debug\' is enabled.'))
     ));
 
     $form->add( array(
         'type' => 'checkbox',
         'name' => 'debug_logfile',
-        'label' => __('Log to file'),
+        'label' => __('Log Queries to file'),
         'value' => '',
-        'text' => makeJtip(__('Log to file'), __('Log the debug output to a file. Use this when you are investigation performance issues, but turn it off on production websites. Only works when \'Debug\' is enabled.'))
+        'text' => makeJtip(__('Log Queries to file'), __('Log all MySQL queries also to the debug file. Use this when you are investigation performance issues, but turn it off on production websites. Only works when \'Debug\' is enabled.'))
     ));
 
     $form->add( array(
