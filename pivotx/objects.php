@@ -1455,15 +1455,15 @@ class Weblogs extends BaseConfig {
     function set($weblogname, $key, $value) {
 
         if (isset($this->data[$weblogname])) {
-
             if (strpos($key, "#")>0) {
                 // we're setting something in a subweblog
                 // we get these as linkdump#categories = linkdump,books,movies
                 list($sub, $key) = explode("#", str_replace("[]", "", $key));
 
-
                 if (strpos($value, ",")>0) {
                     $value = explode(",", $value);
+                } else {
+                    $value = [ $value ];
                 }
 
                 $this->data[$weblogname]['sub_weblog'][$sub][$key] = $value;
