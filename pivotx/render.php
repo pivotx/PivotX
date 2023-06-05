@@ -141,7 +141,7 @@ if (!empty($_GET['t'])) {
 // Get a requested 'searchpage' from the URL..
 if (isset($_GET['q'])) {
     $action = "search";
-    $modifier['uri'] = getDefault($_POST['q'], $_GET['q']);
+    $modifier['uri'] = $_POST['q'] ?? $_GET['q'];
 }
 
 // Get a requested 'special page' from the URL..
@@ -167,7 +167,7 @@ if (defined('PIVOTX_WEBLOG') || !empty($_GET['w']) || !empty($_POST['w'])) {
     if (defined('PIVOTX_WEBLOG')) {
         $weblog = PIVOTX_WEBLOG;
     } else {
-        $weblog = trim( getDefault($_GET['w'], $_POST['w']));
+        $weblog = trim($_GET['w'] ?? $_POST['w']);
     }
     if ($action == '') {
         $action = "weblog";

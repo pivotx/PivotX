@@ -304,7 +304,7 @@ class EntriesSql {
 
         $res = $this->sql->fetch_row();
 
-        if ($res['uid']>0) {
+        if ($res && ($res['uid'] > 0)) {
             return intval($res['uid']);
         } else {
             return false;

@@ -2129,7 +2129,9 @@ function smarty_getpage($params, &$smarty) {
             $smarty->assign('oldpage', $vars['entry']);
         }
     } else {
-        $smarty->assign('oldpage', $vars['page']);
+        if (isset($vars['page'])) {
+            $smarty->assign('oldpage', $vars['page']);
+        }
     }
 
     // get the new page, and set it in $smarty. First we set all variables, and

@@ -2967,8 +2967,9 @@ function formatEntry($entry, $format) {
     }
 
     foreach ($entry as $key => $value) {
+        if ($key == "comments") continue;
         if (is_array($value)) {
-            $value = implode(', ',$value);
+            $value = implode(', ', $value);
         }
         $format=str_replace("%$key%", $value, $format);
     }
