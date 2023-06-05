@@ -1518,7 +1518,7 @@ class Weblogs extends BaseConfig {
             $weblogname = key($this->data);
         }
 
-        return $this->data[$weblogname][$key];
+        return ($this->data[$weblogname][$key] ?? '');
 
     }
 
@@ -2787,7 +2787,7 @@ class Paging {
 
     function sanity_check($action) {
         global $PIVOTX;
-        list($action,$dummy) = explode('|',$action);
+        @list($action,$dummy) = explode('|',$action);
         if (($action != "next") && ($action != "prev") &&
             ($action != "curr") && ($action != "digg")) {
             return "<!-- snippet {$this->name} error: unknow action '$action' -->\n";
@@ -2841,21 +2841,21 @@ class Paging {
 
         // Setting the text for the links
         if ($action == "next") {
-            $text = getDefault($params['format'], __("Next page")." &#187;" );
+            $text = $params['format'] ?? __("Next page") . ' &#187;';
         } elseif ($action == "prev") {
-            $text = getDefault($params['format'], "&#171; ".__("Previous page"));
+            $text = $params['format'] ?? '&#171; ' . __("Previous page");
         } elseif ($action == "digg") {
-            $text_prev = getDefault($params['format_prev'], "&#171; ".__("Previous page"));
-            $text_next = getDefault($params['format_next'], __("Next page")." &#187;" );
+            $text_prev = $params['format_prev'] ?? '&#171; ' . __("Previous page");
+            $text_next = $params['format_next'] ?? __("Next page") . ' &#187;';
         } else {
-            $text = getDefault($params['format'], __("Displaying entries %num_from%-%num_to% of %num_tot%") );
+            $text = $params['format'] ?? __("Displaying entries %num_from%-%num_to% of %num_tot%");
         }
 
         // Get the maximum amount of pages to show.
-        $max_digg_pages = getDefault($params['maxpages'], 9);
+        $max_digg_pages = $params['maxpages'] ?? 9;
 
         // Get the id to attach to the <ul> for Digg style navigation.
-        $digg_id = getDefault($params['id'], "pages");
+        $digg_id = $params['id'] ?? 'pages';
 
         // Start the real work.
         $eachcatshash = md5(implodeDeep("", $cats));
@@ -2864,6 +2864,7 @@ class Paging {
             // Check if this is in our simple cache?
             list($temp_tot, $num_tot) = $PIVOTX['cache']->get('paging', $eachcatshash); 
         } else {
+            $num_tot = 0;
 
             // Get the total amount of entries. How we do this depends on the used DB-model..
             // What we do is we get the amount of entries for each item in $cats.
@@ -2902,7 +2903,7 @@ class Paging {
             $PIVOTX['cache']->set('paging', $eachcatshash, array($temp_tot, $num_tot));
         }
 
-        $offset = intval($modifier['offset']);
+        $offset = intval($modifier['offset'] ?? 0);
         $num_pages = ceil($num_tot / $amountperpage);
 
         if ($num_tot == 0) {
@@ -2930,10 +2931,7 @@ class Paging {
         } else {
             if ($num_tot == 0) {
                 return "<!-- snippet {$this->name} (curr): no current entries -->\n";
-            } else {
-                $num = min($num,$num_tot);
             }
-
         }
 
         $num_from = $offset * $amountperpage + 1;
@@ -2949,8 +2947,9 @@ class Paging {
         }
 
         $site_url = getDefault($PIVOTX['weblogs']->get($Current_weblog, 'site_url'), $PIVOTX['paths']['site_url']);
-        
-        if ( (!empty($modifier['category']) || $params['catsinlink']==true) && $params['category']!="*" ) {
+
+        $catsinlink = $params['catsinlink'] ?? false;
+        if ( (!empty($modifier['category']) || $catsinlink == true) && $params['category']!="*" ) {
             // Ensure that we get a sorted list of unique categories in 
             // the URL - better SEO, one unique URL.
             $catslink = implodeDeep(",",$cats);
@@ -2960,13 +2959,13 @@ class Paging {
         }
  
         if ($PIVOTX['config']->get('mod_rewrite')==0) {
-            if ( (!empty($modifier['category']) || $params['catsinlink']==true) && $params['category']!="*" ) {
+            if ( (!empty($modifier['category']) || $catsinlink == true) && $params['category']!="*" ) {
                 $link = $site_url . "?c=" . $catslink . "&amp;o=";
             } else {
                 $link = $site_url . "?o=";
             }
         } else {
-            if ( (!empty($modifier['category']) || $params['catsinlink']==true) && $params['category']!="*" ) {
+            if ( (!empty($modifier['category']) || $catsinlink == true) && $params['category']!="*" ) {
                 $categoryname = getDefault( $PIVOTX['config']->get('localised_category_prefix'), "category");
                 $link = $site_url . $categoryname . "/" . $catslink . "/";
             } else {
