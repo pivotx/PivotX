@@ -23,7 +23,7 @@
  * Protecting against direct loading and changing of central PivotX
  * variable through $_GET/$_POST/$_SERVER/$_COOKIE.
  */
-if ( (strpos($pivotx_path,"tp://")>0) || (strpos($pivotx_path,"tps://")>0) ) { 
+if ( isset($pivotx_path) && ((strpos($pivotx_path,"tp://")>0) || (strpos($pivotx_path,"tps://")>0)) ) { 
     die('no off-site paths');
 }
 $scriptname = basename((isset($_SERVER['PATH_INFO'])) ? $_SERVER['PATH_INFO'] : $_SERVER['PHP_SELF']);

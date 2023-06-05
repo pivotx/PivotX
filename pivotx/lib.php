@@ -2170,7 +2170,7 @@ function cleanParams($params) {
 
         if (is_array($param)) {
             $params[$key] = cleanParams($params[$key]);
-        } else if (is_string($param)) {
+        } else if (!empty($param) && is_string($param)) {
             $params[$key] = str_replace("&nbsp;", ' ', $params[$key]);
             $params[$key] = @html_entity_decode($params[$key], ENT_QUOTES, 'UTF-8');    
             
@@ -3449,10 +3449,9 @@ function getDaysInMonth($month, $year) {
 }
 
 
-
 function getDateRange($date, $unit) {
 
-    list($yr,$mo,$da,$ho,$mi) = explode("-",$date);
+    @list($yr,$mo,$da,$ho,$mi) = explode("-",$date);
 
     $yr_min = $yr_max = $yr;
     $mo_min = $mo_max = $mo;

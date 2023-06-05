@@ -382,6 +382,8 @@ class Parser {
         // Execute a hook, if present.
         $PIVOTX['extensions']->executeHook('before_parse', $this->modifier );
 
+        $date = $this->modifier['date'] ?? '';
+
         // If we're previewing, we need to set the posted values as the entry,
         // otherwise get an entry from the DB.
         if (!empty($_GET['previewentry'])) {
@@ -397,13 +399,13 @@ class Parser {
         } else {
 
             // Get the entry from the DB..
-            $entry = $PIVOTX['db']->read_entry($this->modifier['uri'], $this->modifier['date']);
+            $entry = $PIVOTX['db']->read_entry($this->modifier['uri'], $date);
 
         }
 
         if ( empty($entry['code']) && empty($entry['uid']) && empty($_GET['previewentry']) ) {
             // We try to 'guess' an entry..
-            $entry = $PIVOTX['db']->guess_entry($this->modifier['uri'], $this->modifier['date']);
+            $entry = $PIVOTX['db']->guess_entry($this->modifier['uri'], $date);
             
             // If we did find an (old) entry, do a 301 redirect.
             if ( !empty($entry['uid']) && !empty($entry['link']) ) {

@@ -58,6 +58,7 @@ function getTagCosmos($max=0, $weblogname='', $match='', $exclude='') {
         ksort($tagcosmos['tags']);
 
         // We determine what the min and max-value in the cosmos is.
+        $tagcosmos['maxvalue'] = $tagcosmos['minvalue'] = reset($tagcosmos['tags']);
         foreach($tagcosmos['tags'] as $key => $value)   {
             $tagcosmos['maxvalue'] = max($tagcosmos['maxvalue'], $value);
             $tagcosmos['minvalue'] = min($tagcosmos['minvalue'], $value);
@@ -250,7 +251,7 @@ function getTagCosmosMysql($max=0,$weblogname='', $match='', $exclude= array()) 
     }
     
     $database->build_select($qry);    
-    $database->query($query);
+    $database->query();
 
     //echo nl2br(htmlentities($database->get_last_query()));
     

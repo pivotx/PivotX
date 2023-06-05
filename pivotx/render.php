@@ -78,7 +78,7 @@ if (!isInstalled()) {
 }
 
 // No trailing slashes on the URI, plz.
-$_GET['uri'] = stripTrailingSlash($_GET['uri']);
+$_GET['uri'] = stripTrailingSlash($_GET['uri'] ?? '');
 
 // Check if we need to get the parameters from a 'non crufty' URL..
 if (!empty($_GET['rewrite'])) {
@@ -233,7 +233,7 @@ if (isset($_GET['date']) && $_GET['date']!="") {
 if (empty($modifier)) {
     
     $root = getDefault( $PIVOTX['config']->get('root'), "");
-    list($root, $root_modifier) = explode(":", $root);
+    @list($root, $root_modifier) = explode(":", $root);
 
     // Either it's 'p' for 'page', or we fall back to 'w' for 'weblog'
     if ($root == "p") {

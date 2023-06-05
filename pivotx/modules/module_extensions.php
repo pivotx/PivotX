@@ -910,7 +910,7 @@ class Extensions {
 
             if (function_exists($hook['parameters'])) {
                 $functionname = $hook['parameters'];
-                $temp_output[] = $functionname($action);
+                $temp_output[] = $functionname();
             } else {
                 debug("Extensions: Couldn't run " . $hook['parameters'] . "(). Not defined.");
             }
@@ -1091,7 +1091,7 @@ class Extensions {
             case 'defer_file':
             
                 // Handling targets (URLs) with queries.
-                list ($basetarget,$dummy) = explode('?',  $target);
+                @list ($basetarget,$dummy) = explode('?',  $target);
 
                 if (file_exists($PIVOTX['paths']['extensions_path'].$basetarget)) {
 

@@ -110,7 +110,7 @@ class OutputSystem {
         if ($a['_priority'] > $b['_priority']) {
             return +1;
         }
-        $ret = strcasecmp($a['tag'],$b['tag']);
+        $ret = strcasecmp($a['tag'] ?? '', $b['tag'] ?? '');
         if ($ret != 0) {
             return $ret;
         }
