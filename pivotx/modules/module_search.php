@@ -826,6 +826,8 @@ function getWordFlat($word) {
     global $search_all, $index_file, $PIVOTX, $matches_pages, $matches_entries;
 
     $found = false;
+    $valid_matches_entries = $matches_pages = [];
+    $valid_matches_pages = $matches_entries = [];
 
     $key = searchIndexKey($word);
     if(isset($index_file[ $key ][ $word ])) {

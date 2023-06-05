@@ -579,7 +579,7 @@ class Extensions {
         return (count($my_hooks)>0);
     }
 
-    function haveHook($type, $action) {
+    function haveHook($type, $action="") {
         
     	$my_hooks = $this->getHooks($type, $action);
 
@@ -1007,7 +1007,6 @@ class Extensions {
         global $PIVOTX;
 
         $str = str_replace("[[pivotx_dir]]", $PIVOTX['paths']['pivotx_url'], $str);
-        $str = str_replace("[[log_dir]]", $PIVOTX['paths']['log_url'], $str);
         $str = str_replace("[[template_dir]]", $PIVOTX['paths']['templates_path'], $str);
 
         return $str;
