@@ -7,7 +7,7 @@
     [[ tagcloud ]]
     </div>
 
-  <div class="block">
+    <div class="block">
       <h3>[[t]]Archives[[/t]]</h3>
         <!-- Javascript enabled Jumpmenu for the archives --> 
       <select id="archivemenu" style='display:none;'> 
@@ -15,6 +15,7 @@
         [[archive_list unit='month' order='desc' format='<option value="%url%">%st_monname% %st_year%</option>' ]] 
         </select>   
     
+      [[ require_jquery ]]
       <script type='text/javascript'>  
         jQuery(document).ready(function() {  
           jQuery("#archivemenu").show();  
@@ -35,7 +36,7 @@
         </ul>   
       </noscript> 
 
-        <h3>[[t]]Categories[[/t]]</h3>
+      <h3>[[t]]Categories[[/t]]</h3>
       <ul>[[category_list format="<li><a href='%url%'>%display%</a></li>"]]</ul>
     </div>
 

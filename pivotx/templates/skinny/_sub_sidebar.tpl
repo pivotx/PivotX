@@ -51,6 +51,7 @@
             [[archive_list unit='month' order='desc' format='<option value="%url%">%st_monname% %st_year%</option>' ]] 
         </select>   
 
+        [[ require_jquery ]]
         <script type='text/javascript'>  
             jQuery(document).ready(function() {  
                 jQuery("#archivemenu").show();  
