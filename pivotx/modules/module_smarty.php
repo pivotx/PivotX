@@ -140,6 +140,7 @@ class PivotxSmarty extends Smarty {
         $this->register_function('print_r', 'smarty_print_r');
         $this->register_function('register_as_visitor_link', 'smarty_register_as_visitor_link');
         $this->register_function('registered', 'smarty_registered');
+        $this->register_function('require_jquery', 'smarty_require_jquery');
         $this->register_function('rssbutton', 'smarty_rssbutton');
         $this->register_function('remember', 'smarty_remember');
         $this->register_function('resetpage', 'smarty_resetpage');
@@ -853,7 +854,7 @@ function smarty_category_list($params, &$smarty) {
 
             // Check if it's the active one..
             if (in_array($catinfo['name'], $modifiercats)) {
-                $active = $params['isactive'];
+                $active = $params['isactive'] ?? '';
             } else {
                 $active = "";
             }
@@ -2855,8 +2856,8 @@ function _smarty_link_weblog($params, &$smarty) {
   
     $weblog = $PIVOTX['weblogs']->getWeblog($params['weblog']);
 
-    $text = getDefault($params['text'], $weblog['name']);
-    $title = getDefault($params['title'], cleanAttributes($weblog['name']));
+    $text = $params['text'] ?? $weblog['name'];
+    $title = $params['title'] ?? cleanAttributes($weblog['name']);
 
     $link = $weblog['link'];
     
@@ -2865,7 +2866,7 @@ function _smarty_link_weblog($params, &$smarty) {
         $link = getHost() . $link;
     }
 
-    if ($params['query'] !='' ) {
+    if (!empty($params['query'])) {
         if (strpos($link,"?")>0) {
             $link .= '&amp;'.$params['query'];
         } else {
@@ -3872,8 +3873,6 @@ function smarty_print_r($params, &$smarty) {
 
 }
 
-
-
 /**
  * Returns the text 'registered' if the current visitor is (logged in and) registered.
  *
@@ -3919,8 +3918,6 @@ function smarty_register_as_visitor_link($params) {
     }
     return "<a href='$url' class='pivotx-system-links'>$linktext</a>";
 }
-
-
 
 /**
  * Inserts previously filled fields for commenting. They can come from either
@@ -4029,9 +4026,6 @@ function smarty_remember($params, &$smarty) {
 
 }
 
-
-
-
 /**
  * Resets the [[ $page ]] variable back to what it was, before it was
  * set by [[ getpage ]].
@@ -4056,7 +4050,18 @@ function smarty_resetpage($params, &$smarty) {
     return "";
 }
 
+/**
+ * Includes jQuery in the header if not already done or disabled. 
+ */
+function smarty_require_jquery() {
+    global $PIVOTX;
 
+    if ($PIVOTX['config']->get('never_jquery') == 1) {
+        debug("JQuery is disabled by the 'never_jquery' config option.");
+    } else {
+        $PIVOTX['extensions']->addHook('after_parse', 'callback', 'jqueryIncludeCallback');
+    }
+}
 
 /**
  * Insert a button with a link to the RSS XML feed.
