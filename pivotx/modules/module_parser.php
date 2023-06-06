@@ -2548,15 +2548,10 @@ function cms_tag_weblog($params, $format){
             $output .= $PIVOTX['template']->fetch("db:".$templatekey, $cachekey);
     
         }        
-        
     } else {
-        
         // No entries match, output the 'noresult' text..
-        $output = getDefault($params['noresult'], "<!-- no results for this subweblog -->");
-        
+        $output = $params['noresult'] ?? '<!-- no results for this subweblog -->';
     }
-
-
 
     // Re-enable caching, if desired..
     if($PIVOTX['config']->get('smarty_cache')){
@@ -2574,7 +2569,6 @@ function cms_tag_weblog($params, $format){
     }
 
     return $output;
-
 }
 
 

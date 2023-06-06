@@ -2951,7 +2951,8 @@ class Paging {
         $site_url = getDefault($PIVOTX['weblogs']->get($Current_weblog, 'site_url'), $PIVOTX['paths']['site_url']);
 
         $catsinlink = $params['catsinlink'] ?? false;
-        if ( (!empty($modifier['category']) || $catsinlink == true) && $params['category']!="*" ) {
+        $category = $params['category'] ?? '';
+        if ( (!empty($modifier['category']) || $catsinlink == true) && ($category != '*')) {
             // Ensure that we get a sorted list of unique categories in 
             // the URL - better SEO, one unique URL.
             $catslink = implodeDeep(",",$cats);
@@ -2961,13 +2962,13 @@ class Paging {
         }
  
         if ($PIVOTX['config']->get('mod_rewrite')==0) {
-            if ( (!empty($modifier['category']) || $catsinlink == true) && $params['category']!="*" ) {
+            if ( (!empty($modifier['category']) || $catsinlink == true) && ($category != '*')) {
                 $link = $site_url . "?c=" . $catslink . "&amp;o=";
             } else {
                 $link = $site_url . "?o=";
             }
         } else {
-            if ( (!empty($modifier['category']) || $catsinlink == true) && $params['category']!="*" ) {
+            if ( (!empty($modifier['category']) || $catsinlink == true) && ($category != '*')) {
                 $categoryname = getDefault( $PIVOTX['config']->get('localised_category_prefix'), "category");
                 $link = $site_url . $categoryname . "/" . $catslink . "/";
             } else {
@@ -3059,6 +3060,7 @@ class Paging {
                 }
             } else {
                 // Display all links/listed pages.
+                $page = 0;
                 $start = 0;
                 $stop = 100;
             }
