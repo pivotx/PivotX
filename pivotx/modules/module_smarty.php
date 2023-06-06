@@ -3514,9 +3514,9 @@ function smarty_pivotxbutton() {
     $image   = $PIVOTX['paths']['pivotx_url'].'pics/pivotxbutton.png' ;
     $alttext = __('Powered by'). " " . strip_tags($build) ;
 
-    $output  = '<a href="http://www.pivotx.net/" title="'.$alttext.'" class="badge">' ;
+    $output  = '<a href="https://github.com/pivotx/" title="'.$alttext.'" class="badge">' ;
     $output .= '<img src="'.$image.'" width="'.$width.'" height="'.$height.'" alt="'.$alttext.'" ' ;
-    $output .= 'class="badge" longdesc="http://www.pivotx.net/" /></a>';
+    $output .= 'class="badge" longdesc="github.com/pivotx/" /></a>';
 
     return $output;
 }
