@@ -656,8 +656,8 @@ class EntriesSql {
         if(!empty($params['offset'])) {
             $params['date'] = "";
             $qry['limit'] = intval($params['offset']) . ", " . $params['show'];
-        } else {
-            $qry['limit'] = $params['show'] ?? '';
+        } else if (!empty($params['show'])) {
+            $qry['limit'] = $params['show'];
         }
 
         if (isset($params['orderby']) && (substr($params['orderby'],0,12) == "extrafields_")) {
@@ -813,8 +813,9 @@ class EntriesSql {
         }
 
         if (isset($params['count_only']) && ($params['count_only']===true)) {
-            // if we only want to count - override the select, group and order
+            // if we only want to count - override the select and unset unwanted query parts.
             $qry['select'] = 'count(e.uid) as number';
+            unset($qry['limit']);
             unset($qry['order']);
             unset($qry['group']);
             
