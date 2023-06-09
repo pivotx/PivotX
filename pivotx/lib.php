@@ -1123,29 +1123,6 @@ function makeValuepairs($array, $key, $value) {
 
 }
 
-/**
- * Convert a PHP array into an associative array for javascript..
- *
- * @param array $array
- * @return string;
- */
-function makeJsVars($array) {
-    
-    if (!is_array($array) || empty($array)) {
-        return "{}";
-    }
-    
-    $output = array();
-    
-    foreach ($array as $key=>$value) {
-        $output[] = sprintf('"%s": "%s"', $key, str_replace("\n", "\\n", addslashes($value)));
-    }
-    
-    $output = "{ ". implode(",\n", $output) . " }";
-    
-    return $output;
-    
-}
 
 
 /**
@@ -5326,15 +5303,6 @@ function check_version($currentversion, $requiredversion) {
  */
 function make_valuepairs($array, $key, $value) {
     return makeValuepairs($array, $key, $value);
-}
-
-/**
- * Deprecated function. Kept for backwards compatibility.
- *
- * @see makeJsVars()
- */
-function make_jsvars($array) {
-    return makeJsVars($array);
 }
 
 /**

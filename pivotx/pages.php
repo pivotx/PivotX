@@ -2642,6 +2642,7 @@ function pageUseredit() {
 
     if (!isset($_GET['user'])) {
         $PIVOTX['template']->assign('title', __('Users') . " &raquo; " .__('Create New User'));
+        $user = [];
     } else {
         $PIVOTX['template']->assign('title', __('Users') . " &raquo; " .__('Edit User'));
 
@@ -2686,7 +2687,7 @@ function pageUseredit() {
             // so the errors can be fixed.
             $title = addslashes(__("Edit User"));
             $link = addslashes("index.php?page=useredit&retry=1");
-            $vars = makeJsVars($val);
+            $vars = json_encode($val);
             $script = "<script type=\"text/javascript\">
     jQuery(function($) {
     openDialog(\"$title\", \"$link\", 540, 520 , $vars);
@@ -2719,7 +2720,7 @@ function pageUseredit() {
         // Loop all categories, and Allow/disallow users in the set categories..
         // TODO: Do this after checking if we can edit/create user?
         foreach($allcats as $cat) {
-            if(in_array($cat, $val['categories'])){
+            if (is_array($val['categories']) && in_array($cat, $val['categories'])){
                 // we can post to this cat.
                 $PIVOTX['categories']->allowUser($cat, $val['username']);
             } else {
@@ -2788,7 +2789,7 @@ function pageUseredit() {
                     // so the errors can be fixed.
                     $title = addslashes(__("Edit User"));
                     $link = addslashes("index.php?page=useredit&user={$user['username']}&retry=1");
-                    $vars = makeJsVars($val);
+                    $vars = json_encode($val);
                     $script = "<script type=\"text/javascript\">
                     jQuery(function($) {
                     openDialog(\"$title\", \"$link\", 540, 520 , $vars);
@@ -2884,7 +2885,7 @@ function pageUseredit() {
                     // so the errors can be fixed.
                     $title = addslashes(__("Create New User"));
                     $link = addslashes("index.php?page=useredit&retry=1");
-                    $vars = makeJsVars($val);
+                    $vars = json_encode($val);
                     $script = "<script type=\"text/javascript\">
                     jQuery(function($) {
                     openDialog(\"$title\", \"$link\", 540, 520 , $vars);
@@ -3038,7 +3039,7 @@ function pageCategoryedit() {
             // so the errors can be fixed.
             $title = addslashes(__("Edit User"));
             $link = addslashes("index.php?page=categoryedit&retry=1");
-            $vars = makeJsVars($val);
+            $vars = json_encode($val);
             $script = "<script type=\"text/javascript\">
     jQuery(function($) {
     openDialog(\"$title\", \"$link\", 460, 440 , $vars);
@@ -3077,7 +3078,7 @@ function pageCategoryedit() {
 
                     $title = addslashes($title);
                     $link = addslashes("index.php?page=categoryedit&retry=1");
-                    $vars = makeJsVars($cat);
+                    $vars = json_encode($cat);
                     $script = "<script type=\"text/javascript\">
 jQuery(function($) {
     openDialog(\"$title\", \"$link\", 460, 440 , $vars);
