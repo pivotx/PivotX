@@ -1618,20 +1618,24 @@ EOM;
      * @return string
      */
     function getDebugCodeServerHelper($name, $var, $server_log, $padding) {
-
         $server_log[] = "<strong>$name</strong>";
         if (!empty($var)) {
             foreach($var as $key => $value) {
                 if (is_array($value)) {
                     foreach($value as $key2=>$value2) {
-                        $value[$key2] = sprintf("%s => '%s'", $key2, htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                        if (is_array($value2)) {
+                            $text2 = '[ ' . implode(', ', $value2) . ' ]';
+                        } else {
+                            $text2 = $value2;
+                        }
+                        $value[$key2] = sprintf("%s => '%s'", $key2, htmlentities($text2, ENT_QUOTES, 'UTF-8'));
                     }
-                    $value = "array(" . implode(', ', $value) . ")";
+                    $text = '[ ' . implode(', ', $value) . ' ]';
                 } else {
-                    $value = htmlentities($value, ENT_QUOTES, 'UTF-8');
+                    $text = htmlentities($value, ENT_QUOTES, 'UTF-8');
                 }
-                $value = getDefault(trim($value), "<em>(empty)</em>");
-                $server_log[] = sprintf('%-'.$padding.'s => %s', $key, $value);
+                $text = getDefault(trim($text), "<em>(empty)</em>");
+                $server_log[] = sprintf('%-'.$padding.'s => %s', $key, $text);
             }
         } else {
             $server_log[] = "<em>(empty)</em>";
