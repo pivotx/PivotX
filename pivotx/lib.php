@@ -127,14 +127,13 @@ function initializePivotX($loadextensions=true) {
     require_once($PIVOTX['paths']['pivotx_path'].'modules/module_debug.php');
 
     // Check if the admin pages should be run over HTTPS
-    if (defined('PIVOTX_INADMIN') && empty($_SERVER['HTTPS']) && 
+    if (defined('PIVOTX_INADMIN') && !isHttps() &&
             ($PIVOTX['config']->get('force_admin_https')==1)) {
         $location = "https://" . $_SERVER['HTTP_HOST'] .
             $PIVOTX['paths']['pivotx_url'] . 'index.php';
         header("Location: ".$location);
         exit;
     }
-
 
     $PIVOTX['session'] = new Session();
     $PIVOTX['users'] = new Users();
@@ -2803,7 +2802,6 @@ function isEmail($theAdr) {
 }
 
 
-
 /**
  * Checks whether the text is an URL or not.
  *
@@ -2813,6 +2811,21 @@ function isEmail($theAdr) {
 function isUrl($url) {
 
     return (preg_match("/((ftp|https?):\/\/)?([a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)+(com\b|edu\b|biz\b|org\b|gov\b|in(?:t|fo)\b|mil\b|net\b|name\b|museum\b|coop\b|aero\b|[a-z][a-z]\b|[0-9]{1,3})/i",$url));
+
+}
+
+
+/**
+ * Checks whether HTTP or HTTPS is used. Doesn't check port number.
+ * 
+ * @return boolean
+ */
+function isHttps() {
+
+    $https = $_SERVER['HTTPS'] ?? 'off';
+    $forward_proto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+
+    return (($https !== 'off') || (strtolower($forward_proto) == 'https'));
 
 }
 

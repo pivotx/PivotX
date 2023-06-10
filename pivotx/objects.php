@@ -1992,9 +1992,7 @@ class Session {
 
         // Select the secure bit for the session cookie. Setting it to true if
         // using HTTPS which stops sidejacking / session hijacking.
-        // If we're on regular HTTP, $_SERVER['HTTPS'] will be 'empty' on Apache 
-        // servers, and have a value of 'off' on IIS servers.  
-        if (empty($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS'])=="off" ) {
+        if (!isHttps()) {
             $this->cookie_secure = false;
         } else {
             $this->cookie_secure = true;

@@ -196,7 +196,7 @@ class Messages {
         // Check for 'preferred_admin_location'.
         if( $PIVOTX['config']->get('preferred_admin_location') ) {
                                   
-            $request_url = (empty($_SERVER['HTTPS']) ? "http://" : "https://" ) . $_SERVER['HTTP_HOST'] .
+            $request_url = (isHttps() ? "https://" : "http://" ) . $_SERVER['HTTP_HOST'] .
                 str_replace("/index.php", "/", $_SERVER['REQUEST_URI']);
             $request = parse_url(stripTrailingSlash($request_url)); 
             

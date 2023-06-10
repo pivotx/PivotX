@@ -2,7 +2,7 @@
 
 /**
  * Two Kings Form Class, to construct web based forms, do validation and
- * handle the output.
+ * handle the output. Slightly modified for PivotX.
  *
  * For more information, read: http://twokings.eu/tools/
  *
@@ -45,16 +45,9 @@ class Form {
         // Set up the default HTML for the various form elements
         $this->init_html();
 
-        // Determine the protocol to use.
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=="on") {
-            $protocol = "https://";
-        } else {
-            $protocol = "http://";
-        }
-
         // Set the 'action' attribute for the form. (whereto it will submit)
         if ($action=="") {
-            $action = $protocol . $_SERVER['HTTP_HOST'] .
+            $action = (isHttps() ? "https://" : "http://" ) . $_SERVER['HTTP_HOST'] .
                 htmlspecialchars($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'];
         }
 
