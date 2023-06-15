@@ -69,7 +69,8 @@ class ajaxhelper {
 
         $minsize=11;
         $maxsize=19;
-        $amount = getDefault($_POST['amount'], 20);
+        $sizefixed = false;
+        $amount = $_POST['amount'] ?? 20;
         $output = __("Suggestions") . ": ";
 
         $htmllinks = array();
@@ -81,16 +82,18 @@ class ajaxhelper {
             return;
         }
 
-        /*
-         TODO: investigate if this is still needed, and improve it
-         if(empty($tagcosmos) || (($tagcosmos['maxvalue']-$tagcosmos['minvalue'])==0)) {
-             return;
-         }
-         */
+        // If by accident, all tags have the same count ...
+        if (($tagcosmos['maxvalue']-$tagcosmos['minvalue']) == 0) {
+            $sizefixed = true;
+            $nSize = ($minsize + $maxsize) / 2;
+        }
+
         foreach($tagcosmos['tags'] as $key => $value)   {
 
             // Calculate the size, depending on value.
-            $nSize = $minsize + ( ($value-$tagcosmos['minvalue']) / ($tagcosmos['maxvalue']-$tagcosmos['minvalue']) ) * ($maxsize - $minsize);
+            if (!$sizefixed) {
+                $nSize = $minsize + ( ($value-$tagcosmos['minvalue']) / ($tagcosmos['maxvalue']-$tagcosmos['minvalue']) ) * ($maxsize - $minsize);
+            }
 
             // Write the tags, we add events to them using jquery.
             $htmllinks[$key] = sprintf("<a style=\"font-size:%1.1fpx;\" rel=\"tag\" title=\"%s: %s, %s %s\">%s</a>\n",
