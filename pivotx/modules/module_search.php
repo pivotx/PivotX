@@ -450,13 +450,16 @@ function searchIndex($str_a, $only='', $weblog='', $category='', &$searchresults
     // Load the indices for the $words, if we're using flat files..
     loadSearchIndex($words);
 
-    $n = count($words);
-    for($i=0; $i < $n; $i++) {
-        // getWord sets $matches_entries and $matches_pages used below.
-        $res = getWord($words[$i]);
-        if($res) {
-            $found_words[] = $orig_words[$i];
+    if (count($words) > 0) {
+        for ($i=0; $i < count($words); $i++) {
+            // getWord sets $matches_entries and $matches_pages used below.
+            $res = getWord($words[$i]);
+            if($res) {
+                $found_words[] = $orig_words[$i];
+            }
         }
+    } else {
+        $matches_entries = $matches_pages = [];
     }
 
     $do_or_if_nand = getDefault($PIVOTX['config']->get('search_result_or_if_nand'),'1',true);
