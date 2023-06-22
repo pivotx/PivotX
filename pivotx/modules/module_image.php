@@ -108,21 +108,15 @@ initializePivotX(false);
 
 <?php
 
-
-
-
 require_once($pivotx_path.'modules/module_imagefunctions.php');
 
 // -- main --
 
-if(!$img) {
-    $img =  $_GET['image'];
-}
+$img ??= $_GET['image'];
 
 // get original image attributes
 $attr = get_image_attributes( $img );
 $img = new Attributes($attr['name'],$attr['w'],$attr['h'],$attr['x'],$attr['y'], $attr['link']);
-
 
 if(isset($_GET['crop'])) {
     // create the thumbnail!
@@ -132,9 +126,7 @@ if(isset($_GET['crop'])) {
     print_crop_editor();
 }
 
-
 // -- main --
-
 
 // Nothing to change from here
 // -------------------------------
@@ -171,8 +163,6 @@ function get_image_attributes(&$img) {
 
 }
 
-
-
 function create_thumbnail() {
     global $img;
     
@@ -190,12 +180,10 @@ function create_thumbnail() {
     }
 }
 
-
-
 class Image {
     var $name, $w, $h, $x, $y, $type;
 
-    function __construct($n,$w,$h,$x,$y,$type,$link) {
+    function __construct($n, $w, $h, $x, $y, $type = '', $link = '') {
         $this->name = $n;
         $this->w    = $w;
         $this->h    = $h;
@@ -206,14 +194,12 @@ class Image {
     }
 }
 
-
-
 class Attributes extends Image {
 
     var $ext, $new_name, $org_name;
 
     function __construct($n,$w,$h,$x,$y, $link) {
-        $this->Image($n,$w,$h,$x,$y, $type, $link);
+        parent::__construct($n, $w, $h, $x, $y, '', $link);
 
         $this->ext = getExtension($this->name);
         if ($this->ext != '') {
@@ -225,9 +211,6 @@ class Attributes extends Image {
         }
     }
 }
-
-
-
 
 function print_crop_editor() {
     global $host, $img, $PIVOTX;
@@ -301,7 +284,6 @@ function print_crop_editor() {
             <input type="hidden" name="crop_w" id="crop_w" />
             <input type="hidden" name="crop_h" id="crop_h" />
             <input type="hidden" name="type" id="type" />
-            <input type="hidden" name="factor" id="factor" value="<?php echo $factor; ?>" />
             <input type="submit" value="<?php _e("Create Thumbnail"); ?>" />
         </form>
     </p>
