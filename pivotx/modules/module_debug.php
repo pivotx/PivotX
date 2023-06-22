@@ -162,31 +162,36 @@ function debug($output) {
         }
 
         $date = date("Y-m-d H:i:s");
+        $mem = "";
+        $function = "";
+        $timetaken = 0;
 
-        if(function_exists('memory_get_usage')) {
-            $mem = " ( ". memory_get_usage() ." ) ";
-        } else {
-            $mem = "";
+        if (function_exists('memory_get_usage')) {
+            $mem =  '-- ' . memory_get_usage() . ' bytes';
         }
-
 
         // fix the filename
         if (function_exists("debug_backtrace")) {
             $backtrace = debug_backtrace();
             $file = basename(dirname($backtrace[0]['file'])). '/' . basename($backtrace[0]['file']);
             $line = $backtrace[0]['line'];
-            $function = $backtrace[1]['function'];
+            if (isset($backtrace[1])) {
+                $function = $backtrace[1]['function'];
+            }
         }
 
         if (function_exists("timeTaken")) {
-            $timetaken = timeTaken();
-        } else {
-            $timetaken = 0;
+            $timetaken = '-- ' . timeTaken() . ' s';
         }
 
         if ( ($file.$function) != $debug_last ) {
-            $output = sprintf("<div class='timetaken'>%s - %s -- %s:%s / %s() --  %s </div>%s\n",
-                        $date, $timetaken, $file, $line, $function, $mem, $output);
+            if (!empty($function)) {
+                $output = sprintf("<div class='timetaken'>%s -- %s -- %s:%s / %s() %s</div>%s\n",
+                            $date, $timetaken, $file, $line, $function, $mem, $output);
+            } else {
+                $output = sprintf("<div class='timetaken'>%s %s -- %s:%s %s</div>%s\n",
+                            $date, $timetaken, $file, $line, $mem, $output);
+            }
             $debug_last = $file.$function;
         } else {
             $output = sprintf("%s\n", $output);
