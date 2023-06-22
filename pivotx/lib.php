@@ -20,10 +20,10 @@
 
 DEFINE('INPIVOTX', TRUE);
 
-$version = "3.0.0-rc2";
+$version = "3.0.0-rc3";
 $codename = "Back from the dead";
 
-$minrequiredphp = "7.3.0";
+$minrequiredphp = "7.4.0";
 $minrequiredmysql = "4.1";
 $dbversion = "11"; // Used to track if it's necessary to upgrade the DB.
 

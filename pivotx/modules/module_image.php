@@ -181,7 +181,7 @@ function create_thumbnail() {
 }
 
 class Image {
-    var $name, $w, $h, $x, $y, $type;
+    var $name, $w, $h, $x, $y, $type, $link;
 
     function __construct($n, $w, $h, $x, $y, $type = '', $link = '') {
         $this->name = $n;
