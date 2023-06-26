@@ -490,14 +490,14 @@ class Users extends BaseConfig {
             foreach(explode('|', trim($Cfg['users'])) as $inc => $user){
                 $userdata = array();
                 $userdata['username'] = $user;
-                foreach(explode('|-|' , $Cfg['user-' . $user]) as $private => $val){
-                    list($Nprivate, $Nval) = explode('|', $val);
-                    if ($Nprivate == 'nick') {
+                foreach(explode('|-|' , $Cfg['user-' . $user]) as $var => $val){
+                    list($Nvar, $Nval) = explode('|', $val);
+                    if ($Nvar == 'nick') {
                         $userdata['nickname'] = $Nval;
-                    } elseif ($Nprivate == 'pass') {
+                    } elseif ($Nvar == 'pass') {
                         $userdata['md5_pass'] = $Nval;
                     } else {
-                        $userdata[$Nprivate] = $Nval;
+                        $userdata[$Nvar] = $Nval;
                     }
                 }
                 list($userdata['language']) = explode("_",$userdata['language']);
@@ -2133,7 +2133,7 @@ class Session {
                         $PIVOTX['users']->updateUser($savedsess['username'], array('lastseen'=>time()) );
                         $_SESSION['user']['lastseen'] = time();
 
-                        // Set the session cookie as session privateiable.
+                        // Set the session cookie as session variable.
                         $_SESSION['pivotxsession'] = $sessioncookie;
 
                         return true;

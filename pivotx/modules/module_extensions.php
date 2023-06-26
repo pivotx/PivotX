@@ -1472,7 +1472,7 @@ function thickboxIncludeCallback(&$html) {
         OutputSystem::LOC_HEADEND,
         'script',
         array(),
-        "\n\t\tprivate tb_pathToImage = \"". $PIVOTX['paths']['pivotx_url'] ."pics/loadingAnimation.gif\";\n\t"
+        "\n\t\tvar tb_pathToImage = \"". $PIVOTX['paths']['pivotx_url'] ."pics/loadingAnimation.gif\";\n\t"
     );
 
     OutputSystem::instance()->addCode(

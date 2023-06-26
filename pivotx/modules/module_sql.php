@@ -398,7 +398,7 @@ class sql {
 
 
     /**
-     * Quote privateiable to make safe to use in a SQL query. If you pass
+     * Quote variable to make safe to use in a SQL query. If you pass
      * $skipquotes as true, the string will just have added slashes, otherwise it
      * will be wrapped in quotes for convenience
      *

@@ -46,15 +46,14 @@ class EntriesFlat {
     private $allow_write;
     private $global_reindex;
 
-    // some helper privateiables
+    // some helper variables
     private $all_cats;
 
     // public functions
 
     function __construct($loadindex=TRUE, $allow_write=TRUE) {
         global $PIVOTX;
-        
-        //init privates..
+
         static $initialisationchecks;
 
         // Logname will be phased out eventually, since all will be based on categories.
