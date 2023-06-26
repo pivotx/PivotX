@@ -25,40 +25,44 @@ require dirname(dirname(__FILE__))."/lamer_protection.php";
 class EntriesFlat {
 
     // the name of the log
-    var $logname;
+    private $logname;
 
     // the data for the current entry
-    var $entry;
+    private $entry;
 
     // nice, big arrays with all the dates, categories and uris..
-    var $date_index;
-    var $cat_index;
-    var $uri_index;
+    private $date_index;
+    private $cat_index;
+    private $uri_index;
 
     // a somewhat smaller array for the entries that share the same
     // directory as the current entry
-    var $update_mode;
-    var $updated;
-    var $entry_index;
-    var $entry_index_filename;
+    private $update_mode;
+    private $updated;
+    private $entry_index;
+    private $entry_index_filename;
 
-    // some helper variables
-    var $all_cats;
+    private $allow_index;
+    private $allow_write;
+    private $global_reindex;
+
+    // some helper privateiables
+    private $all_cats;
 
     // public functions
 
     function __construct($loadindex=TRUE, $allow_write=TRUE) {
         global $PIVOTX;
         
-        //init vars..
+        //init privates..
         static $initialisationchecks;
 
         // Logname will be phased out eventually, since all will be based on categories.
         $this->logname = "standard";
 
-        $this->entry = Array('code' => '', 'id' => '',  'template' => '',  'date' => '',  
+        $this->entry = ['code' => '', 'id' => '',  'template' => '',  'date' => '',  
             'user' => '',  'title' => '',  'subtitle' => '',  'introduction' => '',  'body' => '', 
-            'media' => '',  'links' => '',  'uri' => '',  'filename' => '',  'category' => '');
+            'media' => '',  'links' => '',  'uri' => '',  'filename' => '',  'category' => ''];
 
         $this->entry_index_filename = "";
         $this->entry_index = Array();

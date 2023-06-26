@@ -1667,6 +1667,8 @@ EOM;
         $categories = $PIVOTX['categories']->getCategories();
         $categories = makeValuepairs($categories, 'name', 'display');
 
+        $feed = '';
+
         // Loop through the entries..
         foreach ($entries as $entry) {
 
@@ -1784,7 +1786,7 @@ EOM;
      * @param array $comment
      * @return string
      */
-    function _renderFeedComments($feed_template, $amount=10, $comments) {
+    function _renderFeedComments($feed_template, $amount, $comments) {
         global $PIVOTX;
 
         $i = 0;

@@ -92,7 +92,7 @@ function getTagCosmos($max=0, $weblogname='', $match='', $exclude='') {
  * @see getTagCosmos
  *
  */
-function getTagCosmosFlat($max=0,$weblogname,$match,$exclude=array()) {
+function getTagCosmosFlat($max, $weblogname, $match, $exclude=[]) {
     global $PIVOTX;
 
     // If the cached version is fresh enough, we restore that

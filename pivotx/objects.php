@@ -36,11 +36,12 @@
  */
 class BaseConfig {
 
-    var $configfile = '';
-    var $backup_configfile = '';
-    var $data = array();
-    var $changed = false;
-    var $upgraded = false;
+    private $configfile = '';
+    private $backup_configfile = '';
+    private $changed = false;
+    private $upgraded = false;
+
+    protected $data = [];
 
     /**
      * Constructor
@@ -489,14 +490,14 @@ class Users extends BaseConfig {
             foreach(explode('|', trim($Cfg['users'])) as $inc => $user){
                 $userdata = array();
                 $userdata['username'] = $user;
-                foreach(explode('|-|' , $Cfg['user-' . $user]) as $var => $val){
-                    list($Nvar, $Nval) = explode('|', $val);
-                    if ($Nvar == 'nick') {
+                foreach(explode('|-|' , $Cfg['user-' . $user]) as $private => $val){
+                    list($Nprivate, $Nval) = explode('|', $val);
+                    if ($Nprivate == 'nick') {
                         $userdata['nickname'] = $Nval;
-                    } elseif ($Nvar == 'pass') {
+                    } elseif ($Nprivate == 'pass') {
                         $userdata['md5_pass'] = $Nval;
                     } else {
-                        $userdata[$Nvar] = $Nval;
+                        $userdata[$Nprivate] = $Nval;
                     }
                 }
                 list($userdata['language']) = explode("_",$userdata['language']);
@@ -888,8 +889,8 @@ class Users extends BaseConfig {
  */
 class Weblogs extends BaseConfig {
 
-    var $default;
-    var $current;
+    private $default;
+    private $current;
 
     public function __construct() {
         parent::__construct('ser_weblogs.php');
@@ -1158,7 +1159,7 @@ class Weblogs extends BaseConfig {
      * @param string $weblogname
      * @return array
      */
-    function getSubweblog($weblogname='', $subweblogname) {
+    function getSubweblog($weblogname, $subweblogname) {
 
         // if no weblogname was given, use the 'current'..
         if (empty($weblogname)) { $weblogname = $this->getCurrent(); }
@@ -1973,7 +1974,8 @@ class Categories extends BaseConfig {
  */
 class Session {
 
-    var $permsessions, $logins, $maxlogins, $message;
+    private $cookie_domain, $cookie_httponly, $cookie_lifespan, $cookie_name, $cookie_path, $cookie_secure;
+    private $permsessions, $logins, $maxlogins, $message;
     /**
      * Initialisation
      *
@@ -2131,7 +2133,7 @@ class Session {
                         $PIVOTX['users']->updateUser($savedsess['username'], array('lastseen'=>time()) );
                         $_SESSION['user']['lastseen'] = time();
 
-                        // Set the session cookie as session variable.
+                        // Set the session cookie as session privateiable.
                         $_SESSION['pivotxsession'] = $sessioncookie;
 
                         return true;
@@ -2524,8 +2526,9 @@ class Session {
  */
 class Pages {
 
-    var $index;
-    var $currentpage;
+    private $db;
+    private $index;
+    private $currentpage;
 
     /**
      * Initialisation
@@ -2778,8 +2781,8 @@ class Pages {
  * @author Hans Fredrik Nordhaug <hansfn@gmail.com>, The PivotX dev. Team.
  */
 class Paging {
-    var $offset;
-    var $name;
+    private $offset;
+    private $name;
 
     function __construct($name) {
         $this->name = $name;
@@ -3121,11 +3124,11 @@ class Paging {
  */
 class Simplecache {
     
-    var $cache;
-    var $stats;
-    var $keepstats;
-    var $itemlimit;
-    var $memlimit;
+    private $cache;
+    private $stats;
+    private $keepstats;
+    private $itemlimit;
+    private $memlimit;
 
     function __construct() {
         global $PIVOTX;
@@ -3163,7 +3166,7 @@ class Simplecache {
      * @param mixed $value
      * @return bool
      */
-    function set($type="general", $key, $value) {
+    function set($type, $key, $value) {
         
         // Check if the $type and $key are OK
         if (empty($key) || (!is_string($key) && !is_integer($key) ) || !is_string($type)) {
@@ -3194,7 +3197,7 @@ class Simplecache {
      * @param array $values
      * @return bool
      */
-    function setMultiple($type="general", $values) {
+    function setMultiple($type, $values) {
         
         // Check if the $type and $key are OK
         if (empty($values) || !is_array($values) || !is_string($type)) {
@@ -3217,7 +3220,7 @@ class Simplecache {
      * @param string $key
      * @return mixed
      */
-    function get($type="general", $key) {
+    function get($type, $key) {
     
         if ($this->keepstats) {
             $this->stats['gets'][$type][$key]++;
@@ -3299,11 +3302,11 @@ class Simplecache {
 
 class Minify {
     
-    var $html;
-    var $head;
-    var $jsfiles;
-    var $cssfiles;
-    var $base;
+    private $html;
+    private $head;
+    private $jsfiles;
+    private $cssfiles;
+    private $base;
     
     function __construct($html) {
         global $PIVOTX;
@@ -3557,10 +3560,10 @@ class Minify {
  */
 class Events {
 
-    var $data;
-    var $filename;
-    var $edit_timeout;
-    var $maxevents;
+    private $data;
+    private $filename;
+    private $edittimeout;
+    private $maxevents;
 
     function __construct() {
         global $PIVOTX;

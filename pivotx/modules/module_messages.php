@@ -38,9 +38,10 @@ require dirname(dirname(__FILE__))."/lamer_protection.php";
  */
 class Messages {
 
-    var $filelist;
-    var $messages;
-    var $warnings;
+    private $badextensions;
+    private $filelist;
+    private $messages;
+    private $warnings;
 
     /**
      * Initialise the Messages object.

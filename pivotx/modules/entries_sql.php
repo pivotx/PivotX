@@ -26,33 +26,23 @@ require_once(dirname(__FILE__)."/module_sql.php");
  */
 class EntriesSql {
 
-    // the name of the log
-    var $logname;
+    private $sql;
 
     // the data for the current entry
-    var $entry;
+    private $entry;
 
     // a nice and big array with all the dates.
-    var $date_index;
+    private $date_index;
 
-    // a somewhat smaller array for the entries that share the same
-    // directory as the current entry
-    var $update_mode;
-    var $updated;
-    var $entry_index;
-    var $entry_index_filename;
-
-    // pointer to where we are..
-    var $pointer;
-
-    // some names and stuff..
-    var $weblog;
-    var $entriestable;
-    var $commentstable;
-    var $trackbackstable;
-    var $tagstable;
-    var $categoriestable;
-
+    // tables
+    private $categoriestable;
+    private $chapterstable;
+    private $commentstable;
+    private $entriestable;
+    private $extrafieldstable;
+    private $pagestable;
+    private $tagstable;
+    private $trackbackstable;
 
     // public functions
 
@@ -61,14 +51,7 @@ class EntriesSql {
 
         static $initialisationchecks;
 
-        //init vars..
-
-        // Logname will be phased out eventually, since all will be based on categories.
-        $this->logname = "standard";
-
-        $this->entry = Array('code' => '', 'id' => '',  'template' => '',  'date' => '',  'user' => '',  'title' => '',  'subtitle' => '',  'introduction' => '',  'body' => '',  'media' => '',  'links' => '',  'url' => '',  'filename' => '',  'category' => '');
-
-        $this->update_mode=TRUE;
+        $this->entry = ['code' => '', 'id' => '',  'template' => '',  'date' => '',  'user' => '',  'title' => '',  'subtitle' => '',  'introduction' => '',  'body' => '',  'media' => '',  'links' => '',  'url' => '',  'filename' => '',  'category' => ''];
 
         // Set the names for the tables we use.
         $this->entriestable = safeString($PIVOTX['config']->get('db_prefix')."entries", true);
@@ -137,13 +120,7 @@ class EntriesSql {
 
             $initialisationchecks = true;            
         }
-        
-
     }
-
-
-
- 
 
     /**
      * Gets an array of archives - mysql implementation.
@@ -152,10 +129,10 @@ class EntriesSql {
      * "db/ser-archives.php" isn't used.
      *
      * @param boolean $force ignored, only used by flat file implementation.
-     * @param string $unit the unit of the archives.
+     * @param string $unit the unit of the archives. Default month.
      * @return array
      */
-    function getArchiveArray($force=FALSE, $unit) {
+    function getArchiveArray($force=FALSE, $unit='month') {
         global $PIVOTX;
 
         $Archive_array=array();
@@ -204,12 +181,7 @@ class EntriesSql {
         }
 
         return $Archive_array;
-
     }
-
-
-
-
 
     function disallow_write() {
         $this->allow_write=FALSE;
@@ -684,13 +656,13 @@ class EntriesSql {
             $orderby = "e.date";
         }
 
-        if ($params['order'] == "random") {
+        $order = $params['order'] ?? '';
+        if ($order == 'random') {
             $qry['order'] = "RAND()";
-        } elseif($params['order']=="desc") {
+        } elseif ($order == 'desc') {
             $qry['order'] = $orderby . " DESC";
         } else {
             $qry['order'] = $orderby . " ASC";
-
         }
 
         if(!empty($params['uid'])) {

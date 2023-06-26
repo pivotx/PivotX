@@ -2907,7 +2907,7 @@ function _smarty_link_entry($params, &$smarty) {
         debug("Can't create entry link since uid isn't set.");
         return '';
     } elseif (!$PIVOTX['db']->entry_exists($params['uid'])) {
-        debug("Can't create entry link since there is no entry with uid ${params['uid']}.");
+        debug("Can't create entry link since there is no entry with uid {$params['uid']}.");
         return '';
     }
 

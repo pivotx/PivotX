@@ -34,13 +34,15 @@ require dirname(dirname(__FILE__))."/lamer_protection.php";
  */
 class Extensions {
 
-    var $active;
-    var $filenames;
-    var $list;
-    var $full_list;
-    var $hooks;
-    var $hidearray;
-    var $scanned;
+    private $active;
+    private $filenames;
+    private $full_list;
+    private $hidearray;
+    private $hooks;
+    private $list;
+    private $value;
+
+    public $safemode;
 
     /**
      * Initialise the Extensions object.
@@ -1470,7 +1472,7 @@ function thickboxIncludeCallback(&$html) {
         OutputSystem::LOC_HEADEND,
         'script',
         array(),
-        "\n\t\tvar tb_pathToImage = \"". $PIVOTX['paths']['pivotx_url'] ."pics/loadingAnimation.gif\";\n\t"
+        "\n\t\tprivate tb_pathToImage = \"". $PIVOTX['paths']['pivotx_url'] ."pics/loadingAnimation.gif\";\n\t"
     );
 
     OutputSystem::instance()->addCode(

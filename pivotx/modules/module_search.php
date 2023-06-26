@@ -431,7 +431,7 @@ function weighSearchResult(&$result, $params) {
  * @param string $category Selects if you want to search inside a specific category.
  * @return string The search results as a list (in HTML code).
  */
-function searchIndex($str_a, $only='', $weblog='', $category='', &$searchresults) {
+function searchIndex($str_a, $only, $weblog, $category, &$searchresults) {
     global $index_file, $matches_entries, $matches_pages, $PIVOTX;
 
     require_once $PIVOTX['paths']['pivotx_path'].'includes/strip_punctuation.php';

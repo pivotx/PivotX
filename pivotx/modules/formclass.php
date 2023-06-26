@@ -1227,9 +1227,9 @@ class Form {
     * @return bool
     * @param $pFile File to upload.
     * @param $pDirectory Upload directory.
-    * @param $pMaxFileSize Maximum filesize. Default value = 2048 kb.
+    * @param $pMaxFileSize Maximum filesize.
     */
-    function handleUpload($pFile, $pDirectory = './', $pMaxFileSize = 2048, $pAllowedTypes, $pFieldName) {
+    function handleUpload($pFile, $pDirectory, $pMaxFileSize, $pAllowedTypes, $pFieldName) {
 
         debug('handleupload: '.$pFile . " = " . $_FILES[$pFieldName]['name'] );
 

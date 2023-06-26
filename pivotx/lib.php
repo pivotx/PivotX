@@ -443,10 +443,6 @@ function renderErrorpage($error, $additionalinfo) {
 
 }
 
-
-
-
-
 /**
  * Custom error handler for the SQL object. We don't want to output the entire error message to the user,
  * but instead print a slightly more helpful message without breaking the page layout.
@@ -455,7 +451,7 @@ function renderErrorpage($error, $additionalinfo) {
  * @param string $sql_query
  * @param integer $error_no
  */
-function setError($type='general', $error_msg, $sql_query='', $error_no='') {
+function setError($type, $error_msg, $sql_query='', $error_no='') {
     global $PIVOTX;
 
     $error_text = '';
@@ -611,7 +607,7 @@ function checkDB($sites_path = '') {
     // to tell people, hence the ugly HTML output.
     if (!file_exists($pivotx_path . $sites_path . "db") || 
             !is_writeable($pivotx_path . $sites_path . "db")) {
-        $error = sprintf(__("The directory '<tt>%s</tt>' is not writeable."), "pivotx/${sites_path}db/");
+        $error = sprintf(__("The directory '<tt>%s</tt>' is not writeable."), "pivotx/{$sites_path}db/");
         echo "<h1>PivotX: ". __("Fatal Error") ."</h1>";
         echo "<p>$error</p>";
         die();
@@ -625,7 +621,7 @@ function checkDB($sites_path = '') {
     // The same goes for the cache/ folder.
     if (!file_exists($pivotx_path . $sites_path . "db/cache") || 
             !is_writeable($pivotx_path . $sites_path . "db/cache")) {
-        $error = sprintf(__("The directory '<tt>%s</tt>' is not writeable."), "pivotx/${sites_path}db/cache/");
+        $error = sprintf(__("The directory '<tt>%s</tt>' is not writeable."), "pivotx/{$sites_path}db/cache/");
         echo "<h1>PivotX: ". __("Fatal Error") ."</h1>";
         echo "<p>$error</p>";
         die();
@@ -2527,7 +2523,7 @@ function backup($what) {
     } elseif ($what == 'db-directory') { 
         addDirToZip($zipfile, $db_path, array('cache', 'rsscache'));
     } elseif ($what == 'entries') {
-        foreach (glob("${db_path}standard-*", GLOB_MARK) as $directory) {
+        foreach (glob("{$db_path}standard-*", GLOB_MARK) as $directory) {
             addDirToZip($zipfile, $directory);
         }
     } else {
@@ -2539,7 +2535,7 @@ function backup($what) {
     $zipped = $zipfile->file();
 
     // trigger a download.
-    $basename="pivotx_${what}_".date("Ymd").".zip";
+    $basename="pivotx_{$what}_".date("Ymd").".zip";
     header("Content-disposition: attachment; filename=$basename");
     header("Content-type: application/zip");
     header("Pragma: no-cache");
@@ -4034,7 +4030,7 @@ function getEditlink($name, $uid, $prefix, $postfix, $type="entry") {
  * @param integer $count
  * @return string
  */
-function getEditCommentLink($uid=0, $number) {
+function getEditCommentLink($uid, $number) {
     global $PIVOTX;
 
     if (isset($_COOKIE['pivotxsession'])) {
@@ -4061,7 +4057,7 @@ function getEditCommentLink($uid=0, $number) {
  * @param integer $count
  * @return string
  */
-function getEditTrackbackLink($uid=0, $number) {
+function getEditTrackbackLink($uid, $number) {
     global $PIVOTX;
 
     if (isset($_COOKIE['pivotxsession'])) {
@@ -4522,9 +4518,7 @@ function safeString($str, $strict=false, $extrachars="") {
         "\xC5\xBB"=>'Z', "\xC5\xBC"=>'z', "\xC5\xBD"=>'Z', "\xC5\xBE"=>'z',
         ));
    
-    // utf8_decode assumes that the input is ISO-8859-1 characters encoded 
-    // with UTF-8. This is OK since we want US-ASCII in the end.
-    $str = trim(utf8_decode($str));
+    $str = trim(mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8'));
     
     $str = strtr($str, array("\xC4"=>"Ae", "\xC6"=>"AE", "\xD6"=>"Oe", "\xDC"=>"Ue", "\xDE"=>"TH",
         "\xDF"=>"ss", "\xE4"=>"ae", "\xE6"=>"ae", "\xF6"=>"oe", "\xFC"=>"ue", "\xFE"=>"th"));
@@ -5503,7 +5497,7 @@ function get_current_date() {
  *
  * @see getEditCommentLink()
  */
-function get_editcommentlink($uid=0, $number) {
+function get_editcommentlink($uid, $number) {
     return getEditCommentLink($uid, $number); 
 }
 

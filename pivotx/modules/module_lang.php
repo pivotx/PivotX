@@ -137,7 +137,10 @@ function lang($a='', $b='', $c='') {
  */
 class Languages {
     
-    var $default = 'en';
+    private $code;
+    private $codes;
+    private $default = 'en';
+    private $name;
 
     function __construct($language='') {
         global $l10n, $PIVOTX;
@@ -256,6 +259,9 @@ class px_Locale {
 
     var $month;
     var $month_abbrev;
+
+    var $number;
+    var $ordinal;
 
     var $meridiem;
 

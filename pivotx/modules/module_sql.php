@@ -27,21 +27,23 @@ $return_silent = false;
 class sql {
 
     // mysql database credentials
-    var $dbhost;
-    var $dbuser;
-    var $dbpass;
-    var $dbase;
+    private $dbhost;
+    private $dbuser;
+    private $dbpass;
+    private $dbase;
+    private $dbport;
+    private $type;
 
-    var $sql_query;
-    var $sql_link;
-    var $sql_result;
-    var $last_query;
-    var $last_num_results;
-    var $num_affected_rows;
-    var $halt_on_sql_error;
-    var $silent_after_failed_connect;
-    var $return_silent;
-    var $error_handler;
+    private $allow_functions;
+    private $cached_query;
+    private $sql_link;
+    private $sql_result;
+    private $last_query;
+    private $last_num_results;
+    private $num_affected_rows;
+    private $halt_on_sql_error;
+    private $silent_after_failed_connect;
+    private $error_handler;
 
     function __construct($type="", $dbase="", $host="", $user="", $pass="", $port="") {
         global $cfg;
@@ -196,7 +198,7 @@ class sql {
      * @param string $error_no
      *
      */
-    function error( $error_msg="", $sql_query, $error_no )  {
+    function error($error_msg, $sql_query, $error_no)  {
         global $cfg;
 
         // if no error message was given, use the mysql error:
@@ -396,7 +398,7 @@ class sql {
 
 
     /**
-     * Quote variable to make safe to use in a SQL query. If you pass
+     * Quote privateiable to make safe to use in a SQL query. If you pass
      * $skipquotes as true, the string will just have added slashes, otherwise it
      * will be wrapped in quotes for convenience
      *

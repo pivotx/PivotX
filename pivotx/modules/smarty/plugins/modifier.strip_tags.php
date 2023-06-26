@@ -27,6 +27,7 @@
  * @return  string
  */
 function smarty_modifier_strip_tags($string) {
+    $allowable_tags = '';
     switch(func_num_args()) {
         case 1:
             $replace_with_space = true;
@@ -36,11 +37,9 @@ function smarty_modifier_strip_tags($string) {
             if($arg === 1 || $arg === true || $arg === '1' || $arg === 'true') {
                 // for full legacy support || $arg === 'false' should be included
                 $replace_with_space = true;
-                $allowable_tags = '';
             } elseif($arg === 0 || $arg === false || $arg === '0' || $arg === 'false') {
                 // for full legacy support || $arg === 'false' should be removed
                 $replace_with_space = false;
-                $allowable_tags = '';
             } else {
                 $replace_with_space = true;
                 $allowable_tags = $arg;
