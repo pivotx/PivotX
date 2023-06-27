@@ -66,7 +66,7 @@ function searchIndexKey($str) {
 function createSearchIndex ($start, $stop, $time) {
     global $PIVOTX, $output;
 
-    $entries = $PIVOTX['db']->db_lowlevel->date_index;
+    $entries = $PIVOTX['db']->db_lowlevel->get_date_index();
 
     $count = 0;
 

@@ -757,8 +757,9 @@ function pageEntry() {
         }
 
         // only notify if entry is published, and is either new or status changed to publish.
+        $oldstatus = $entry['oldstatus'] ?? '';
         if (($entry['status']=="publish") && !$PIVOTX['config']->get('disable_new_entry_notifications')) {
-           if ( ($entry['code']==">") || ($entry['oldstatus']!="publish") ) {
+           if (($entry['code'] == '>') || ($oldstatus != 'publish')) {
                $notified = sendMailNotification('entry',$PIVOTX['db']->entry);
                $notified = "<br /><br />" . $notified;
            }

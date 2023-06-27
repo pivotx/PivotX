@@ -30,8 +30,7 @@ require dirname(dirname(__FILE__))."/lamer_protection.php";
  */
 class db {
 
-    private $db_lowlevel;
-
+    public $db_lowlevel;
     public $db_type;
 
     /**
@@ -480,7 +479,7 @@ class db {
 
         $this->db_lowlevel->save_entry($update_index);
 
-        $this->entry = $this->db_lowlevel->entry;
+        $this->entry = $this->db_lowlevel->get_entry();
 
         return true;
 

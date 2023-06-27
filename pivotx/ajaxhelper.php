@@ -861,7 +861,7 @@ class ajaxhelper {
                 $link_text = sprintf("<img src='%sincludes/timthumb.php?h=%s&amp;src=%s' alt='%s' title='%s'>",
                     $PIVOTX['paths']['pivotx_url'], $height, $file['path'], $file['name'], $file['name']
                 );
-                $extra_style = "style='height: ${height}px; margin-bottom: 5px;'";
+                $extra_style = "style='height: {$height}px; margin-bottom: 5px;'";
             } else {
                 $link_text = $file['name'];
                 $extra_style = "";

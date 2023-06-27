@@ -409,7 +409,7 @@ function normalizeTag($tag){
 function writeTagIndex ($start, $stop, $time) {
     global $PIVOTX, $output;
 
-    $entries = $PIVOTX['db']->db_lowlevel->date_index;
+    $entries = $PIVOTX['db']->db_lowlevel->get_date_index();
     $count = 0;
     $date = date( 'Y-m-d-H-i' );
 

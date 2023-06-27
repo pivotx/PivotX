@@ -345,6 +345,14 @@ class EntriesSql {
 
     }
 
+    /**
+     * Gets the date index.
+     *
+     * @return array
+     */
+    function get_date_index() {
+        return $this->date_index;
+    }
 
     /**
      * Retrieves a full entry as an associative array, and returns it. The $code
@@ -976,6 +984,14 @@ class EntriesSql {
     }
 
 
+    /**
+     * Gets the current entry.
+     *
+     * @return array
+     */
+    function get_entry() {
+        return $this->entry;
+    }
 
 
     /**
