@@ -3095,6 +3095,9 @@ function smarty_nextentry($params) {
     // initialize a temporary db..
     $temp_db = new db(FALSE);
 
+    // we fetch the date
+    $dateformat = getDefault($params['dateformat'], "%dayname% %day% %monthname% %year%");
+
     // we fetch the next one, until we get one that is set to 'publish'
     $get_next_amount = 1;
 
@@ -3136,6 +3139,7 @@ function smarty_nextentry($params) {
         $output=$text;
         $output=str_replace("%link%", $link, $output);
         $output=str_replace("%code%", $next_code, $output);
+	$output=str_replace("%date%", formatDate($temp_entry["date"], $dateformat), $output);
         $output=str_replace("%title%", trimText($title,$cutoff), $output);
         $output=str_replace("%subtitle%", trimText($temp_entry['subtitle'],$cutoff), $output);
         return entifyAmpersand($output);
@@ -3721,6 +3725,9 @@ function smarty_previousentry($params) {
     // initialize a temporary db..
     $temp_db = new db(FALSE);
 
+    // we fetch the date
+    $dateformat = getDefault($params['dateformat'], "%dayname% %day% %monthname% %year%");
+
     // we fetch the next one, until we get one that is set to 'publish'
     $get_prev_amount = 1;
 
@@ -3762,6 +3769,7 @@ function smarty_previousentry($params) {
         $output=$text;
         $output=str_replace("%link%", $link, $output);
         $output=str_replace("%code%", $prev_code, $output);
+	$output=str_replace("%date%", formatDate($temp_entry["date"], $dateformat), $output);    
         $output=str_replace("%title%", trimText($title,$cutoff), $output);
         $output=str_replace("%subtitle%", trimText($temp_entry['subtitle'],$cutoff), $output);
         return entifyAmpersand($output);
