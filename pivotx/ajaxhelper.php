@@ -842,7 +842,7 @@ class ajaxhelper {
         }
         $d->close();
 
-        ksort($folders);
+        arsort($folders);
         ksort($files);
 
         echo "<div id='fileselector'>";
