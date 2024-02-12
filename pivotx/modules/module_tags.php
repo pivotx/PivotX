@@ -57,6 +57,7 @@ function getTagCosmos($max=0, $weblogname='', $match='', $exclude='') {
         ksort($tagcosmos['tags']);
 
         // We determine what the min and max-value in the cosmos is.
+        $tagcosmos['maxvalue'] = $tagcosmos['minvalue'] = reset($tagcosmos['tags']);
         foreach($tagcosmos['tags'] as $key => $value)   {
             $tagcosmos['maxvalue'] = max($tagcosmos['maxvalue'], $value);
             $tagcosmos['minvalue'] = min($tagcosmos['minvalue'], $value);
@@ -90,7 +91,7 @@ function getTagCosmos($max=0, $weblogname='', $match='', $exclude='') {
  * @see getTagCosmos
  *
  */
-function getTagCosmosFlat($max=0,$weblogname,$match,$exclude=array()) {
+function getTagCosmosFlat($max, $weblogname, $match, $exclude=[]) {
     global $PIVOTX;
 
     
@@ -268,7 +269,7 @@ function getTagCosmosMysql($max=0,$weblogname='', $match='', $exclude= array()) 
     }
     
     $database->build_select($qry);    
-    $database->query($query);
+    $database->query();
 
     //echo nl2br(htmlentities($database->get_last_query()));
     
@@ -426,7 +427,7 @@ function normalizeTag($tag){
 function writeTagIndex ($start, $stop, $time) {
     global $PIVOTX, $output;
 
-    $entries = $PIVOTX['db']->db_lowlevel->date_index;
+    $entries = $PIVOTX['db']->db_lowlevel->get_date_index();
     $count = 0;
     $date = date( 'Y-m-d-H-i' );
 

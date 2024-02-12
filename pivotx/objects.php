@@ -40,11 +40,12 @@ require_once(dirname(__FILE__).'/lib.php');
  */
 class BaseConfig {
 
-    var $configfile = '';
-    var $backup_configfile = '';
-    var $data = array();
-    var $changed = false;
-    var $upgraded = false;
+    private $configfile = '';
+    private $backup_configfile = '';
+    private $changed = false;
+    private $upgraded = false;
+
+    protected $data = [];
 
     /**
      * Constructor
@@ -95,7 +96,6 @@ class BaseConfig {
 
         if (!$this->verifyConfig()) {
             $this->fixConfig();
-
             $this->saveConfig(true);
         }
     }
@@ -129,7 +129,7 @@ class BaseConfig {
             ksort($this->data);
         }
 
-        if (count($this->data) <= 0) {
+        if ($this->count() <= 0) {
             return false;
         }
 
@@ -231,16 +231,13 @@ class Config extends BaseConfig {
     protected function fixConfig() {
         if ($this->count() < 5) {
             $this->readOld();
-
             $this->setChanged();
         }
 
         $default = getDefaultConfig();
         foreach($default as $key=>$value) {
-
             if (!isset($this->data[$key])) {
                 $this->data[$key] = $value;
-
                 $this->setChanged();
             }
         }
@@ -455,11 +452,14 @@ class Users extends BaseConfig {
     }
 
     protected function fixConfig() {
-        if (count($this->data) < 5) {
+        if ($this->count() < 1) {
             $this->readOld();
-
             $this->setChanged();
         }
+	if ($this->count() < 1) {
+            $this->data = [];
+            $this->setChanged();
+	}
     }
 
     protected function organizeConfig() {
@@ -893,8 +893,8 @@ class Users extends BaseConfig {
  */
 class Weblogs extends BaseConfig {
 
-    var $default;
-    var $current;
+    private $default;
+    private $current;
 
     public function __construct() {
         parent::__construct('ser_weblogs.php');
@@ -909,7 +909,6 @@ class Weblogs extends BaseConfig {
     public function fixConfig() {
         if ($this->count() < 1) {
             $this->readOld();
-
             $this->setChanged();
         }
 
@@ -1164,7 +1163,7 @@ class Weblogs extends BaseConfig {
      * @param string $weblogname
      * @return array
      */
-    function getSubweblog($weblogname='', $subweblogname) {
+    function getSubweblog($weblogname, $subweblogname) {
 
         // if no weblogname was given, use the 'current'..
         if (empty($weblogname)) { $weblogname = $this->getCurrent(); }
@@ -1461,15 +1460,17 @@ class Weblogs extends BaseConfig {
     function set($weblogname, $key, $value) {
 
         if (isset($this->data[$weblogname])) {
-
             if (strpos($key, "#")>0) {
                 // we're setting something in a subweblog
                 // we get these as linkdump#categories = linkdump,books,movies
                 list($sub, $key) = explode("#", str_replace("[]", "", $key));
 
-
                 if (strpos($value, ",")>0) {
                     $value = explode(",", $value);
+                } else {
+                    if ($key == "categories") {
+                        $value = [ $value ];
+                    }
                 }
 
                 $this->data[$weblogname]['sub_weblog'][$sub][$key] = $value;
@@ -1524,7 +1525,7 @@ class Weblogs extends BaseConfig {
             $weblogname = key($this->data);
         }
 
-        return $this->data[$weblogname][$key];
+        return ($this->data[$weblogname][$key] ?? '');
 
     }
 
@@ -1600,29 +1601,21 @@ class Categories extends BaseConfig {
     }
 
     protected function fixConfig() {
-        $save = false;
+        if ($this->count() < 1) {
+            $this->readOld();
+            $this->setChanged();
+        }
 
         if ($this->count() < 1) {
-            // hmm, couldn't find the data.. Perhaps try to import it from old Pivot 1.x
-            $this->readOld();
-            $save = true;
-        }
-
-        if ($this->count()<1) {
-            // if there still are no categories, load the defaults
             $this->data = getDefaultCategories();
-            $save = true;
-        }
-
-        if ($save) {
-            $this->saveConfig(true);
+            $this->setChanged();
         }
     }
 
     protected function organizeConfig() {
         usort($this->data, array($this, 'sort'));
 
-        if (count($this->data) > 0) {
+        if ($this->count() > 0) {
             return true;
         }
 
@@ -1985,7 +1978,8 @@ class Categories extends BaseConfig {
  */
 class Session {
 
-    var $permsessions, $logins, $maxlogins, $message;
+    private $cookie_domain, $cookie_httponly, $cookie_lifespan, $cookie_name, $cookie_path, $cookie_secure;
+    private $permsessions, $logins, $maxlogins, $message;
     /**
      * Initialisation
      *
@@ -2004,9 +1998,7 @@ class Session {
 
         // Select the secure bit for the session cookie. Setting it to true if
         // using HTTPS which stops sidejacking / session hijacking.
-        // If we're on regular HTTP, $_SERVER['HTTPS'] will be 'empty' on Apache 
-        // servers, and have a value of 'off' on IIS servers.  
-        if (empty($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS'])=="off" ) {
+        if (!isHttps()) {
             $this->cookie_secure = false;
         } else {
             $this->cookie_secure = true;
@@ -2538,8 +2530,9 @@ class Session {
  */
 class Pages {
 
-    var $index;
-    var $currentpage;
+    private $db;
+    private $index;
+    private $currentpage;
 
     /**
      * Initialisation
@@ -2792,8 +2785,8 @@ class Pages {
  * @author Hans Fredrik Nordhaug <hansfn@gmail.com>, The PivotX dev. Team.
  */
 class Paging {
-    var $offset;
-    var $name;
+    private $offset;
+    private $name;
 
     function __construct($name) {
         $this->name = $name;
@@ -2801,7 +2794,7 @@ class Paging {
 
     function sanity_check($action) {
         global $PIVOTX;
-        list($action,$dummy) = explode('|',$action);
+        @list($action,$dummy) = explode('|',$action);
         if (($action != "next") && ($action != "prev") &&
             ($action != "curr") && ($action != "digg")) {
             return "<!-- snippet {$this->name} error: unknow action '$action' -->\n";
@@ -2855,21 +2848,21 @@ class Paging {
 
         // Setting the text for the links
         if ($action == "next") {
-            $text = getDefault($params['format'], __("Next page")." &#187;" );
+            $text = $params['format'] ?? __("Next page") . ' &#187;';
         } elseif ($action == "prev") {
-            $text = getDefault($params['format'], "&#171; ".__("Previous page"));
+            $text = $params['format'] ?? '&#171; ' . __("Previous page");
         } elseif ($action == "digg") {
-            $text_prev = getDefault($params['format_prev'], "&#171; ".__("Previous page"));
-            $text_next = getDefault($params['format_next'], __("Next page")." &#187;" );
+            $text_prev = $params['format_prev'] ?? '&#171; ' . __("Previous page");
+            $text_next = $params['format_next'] ?? __("Next page") . ' &#187;';
         } else {
-            $text = getDefault($params['format'], __("Displaying entries %num_from%-%num_to% of %num_tot%") );
+            $text = $params['format'] ?? __("Displaying entries %num_from%-%num_to% of %num_tot%");
         }
 
         // Get the maximum amount of pages to show.
-        $max_digg_pages = getDefault($params['maxpages'], 9);
+        $max_digg_pages = $params['maxpages'] ?? 9;
 
         // Get the id to attach to the <ul> for Digg style navigation.
-        $digg_id = getDefault($params['id'], "pages");
+        $digg_id = $params['id'] ?? 'pages';
 
         // Start the real work.
         $eachcatshash = md5(implodeDeep("", $cats));
@@ -2878,6 +2871,7 @@ class Paging {
             // Check if this is in our simple cache?
             list($temp_tot, $num_tot) = $PIVOTX['cache']->get('paging', $eachcatshash); 
         } else {
+            $num_tot = 0;
 
             // Get the total amount of entries. How we do this depends on the used DB-model..
             // What we do is we get the amount of entries for each item in $cats.
@@ -2916,7 +2910,7 @@ class Paging {
             $PIVOTX['cache']->set('paging', $eachcatshash, array($temp_tot, $num_tot));
         }
 
-        $offset = intval($modifier['offset']);
+        $offset = intval($modifier['offset'] ?? 0);
         $num_pages = ceil($num_tot / $amountperpage);
 
         if ($num_tot == 0) {
@@ -2944,10 +2938,7 @@ class Paging {
         } else {
             if ($num_tot == 0) {
                 return "<!-- snippet {$this->name} (curr): no current entries -->\n";
-            } else {
-                $num = min($num,$num_tot);
             }
-
         }
 
         $num_from = $offset * $amountperpage + 1;
@@ -2963,8 +2954,10 @@ class Paging {
         }
 
         $site_url = getDefault($PIVOTX['weblogs']->get($Current_weblog, 'site_url'), $PIVOTX['paths']['site_url']);
-        
-        if ( (!empty($modifier['category']) || $params['catsinlink']==true) && $params['category']!="*" ) {
+
+        $catsinlink = $params['catsinlink'] ?? false;
+        $category = $params['category'] ?? '';
+        if ( (!empty($modifier['category']) || $catsinlink == true) && ($category != '*')) {
             // Ensure that we get a sorted list of unique categories in 
             // the URL - better SEO, one unique URL.
             $catslink = implodeDeep(",",$cats);
@@ -2974,13 +2967,13 @@ class Paging {
         }
  
         if ($PIVOTX['config']->get('mod_rewrite')==0) {
-            if ( (!empty($modifier['category']) || $params['catsinlink']==true) && $params['category']!="*" ) {
+            if ( (!empty($modifier['category']) || $catsinlink == true) && ($category != '*')) {
                 $link = $site_url . "?c=" . $catslink . "&amp;o=";
             } else {
                 $link = $site_url . "?o=";
             }
         } else {
-            if ( (!empty($modifier['category']) || $params['catsinlink']==true) && $params['category']!="*" ) {
+            if ( (!empty($modifier['category']) || $catsinlink == true) && ($category != '*')) {
                 $categoryname = getDefault( $PIVOTX['config']->get('localised_category_prefix'), "category");
                 $link = $site_url . $categoryname . "/" . $catslink . "/";
             } else {
@@ -3072,6 +3065,7 @@ class Paging {
                 }
             } else {
                 // Display all links/listed pages.
+                $page = 0;
                 $start = 0;
                 $stop = 100;
             }
@@ -3134,11 +3128,11 @@ class Paging {
  */
 class Simplecache {
     
-    var $cache;
-    var $stats;
-    var $keepstats;
-    var $itemlimit;
-    var $memlimit;
+    private $cache;
+    private $stats;
+    private $keepstats;
+    private $itemlimit;
+    private $memlimit;
 
     function __construct() {
         global $PIVOTX;
@@ -3176,7 +3170,7 @@ class Simplecache {
      * @param mixed $value
      * @return bool
      */
-    function set($type="general", $key, $value) {
+    function set($type, $key, $value) {
         
         // Check if the $type and $key are OK
         if (empty($key) || (!is_string($key) && !is_integer($key) ) || !is_string($type)) {
@@ -3207,7 +3201,7 @@ class Simplecache {
      * @param array $values
      * @return bool
      */
-    function setMultiple($type="general", $values) {
+    function setMultiple($type, $values) {
         
         // Check if the $type and $key are OK
         if (empty($values) || !is_array($values) || !is_string($type)) {
@@ -3230,7 +3224,7 @@ class Simplecache {
      * @param string $key
      * @return mixed
      */
-    function get($type="general", $key) {
+    function get($type, $key) {
     
         if ($this->keepstats) {
             $this->stats['gets'][$type][$key]++;
@@ -3312,11 +3306,11 @@ class Simplecache {
 
 class Minify {
     
-    var $html;
-    var $head;
-    var $jsfiles;
-    var $cssfiles;
-    var $base;
+    private $html;
+    private $head;
+    private $jsfiles;
+    private $cssfiles;
+    private $base;
     
     function __construct($html) {
         global $PIVOTX;
@@ -3570,10 +3564,10 @@ class Minify {
  */
 class Events {
 
-    var $data;
-    var $filename;
-    var $edit_timeout;
-    var $maxevents;
+    private $data;
+    private $filename;
+    private $edittimeout;
+    private $maxevents;
 
     function __construct() {
         global $PIVOTX;

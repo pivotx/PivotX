@@ -21,6 +21,9 @@ initializePivotX(false);
 $PIVOTX['session']->isLoggedIn();
 $PIVOTX['session']->minLevel(1);
 
+if (!extension_loaded('gd')) {
+	debug("Image preview with TimThumb will not work since the GD extension isn't installed/loaded.");
+}
 
 if (isset($_GET['f_target'])) {
 	$target= $_GET['f_target'];

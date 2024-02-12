@@ -9,17 +9,11 @@
  * Two Kings Form Class and all its parts are licensed under the GPL version 2.
  * see: http://www.twokings.eu/tools/license for more information.
  *
- * @version 1.1
  * @author Bob den Otter, bob@twokings.nl
  * @copyright GPL, version 2
  * @link http://twokings.eu/tools/
  *
- * $Rev:: 702                                            $: SVN revision,
- * $Author:: pivotlog                                    $: author and
- * $Date:: 2007-09-22 20:25:00 +0200 (za, 22 sep 2007)   $: date of last commit
- *
  */
-
 
 
 /**

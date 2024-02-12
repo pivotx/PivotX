@@ -211,9 +211,8 @@
         [[ hook name="dashboard-before-news" ]]
 
         <div class="news">
-        <h2 class="sectiontitle"><img src="pics/newspaper.png" alt="" />[[t]]PivotX News[[/t]]<span><a href="http://pivotx.net">[[t]]Visit the website[[/t]] &raquo;</a></span></h2>
             <div id="newsholder">
-                <img src='pics/loadingAnimation.gif' alt='Loading...' width='208' height='13' style='margin: 20px;' />
+                &nbsp;
             </div>
         </div>
 
@@ -244,9 +243,6 @@
 
         [[ if not $config.hide_forumposts ]]
         <div class="news" style="margin-top: 16px;">
-        
-        <h2 class="sectiontitle"><img src="pics/users_forum.png" alt="" />[[t]]The latest Forum posts[[/t]]<span><a href="http://forum.pivotx.net">[[t]]Visit the website[[/t]] &raquo;</a></span></h2>
-
             <div id="forumpostholder">
                 &nbsp;
             </div>
@@ -266,9 +262,6 @@
 //<![CDATA[
 
 jQuery(function($) {
-    // Fetch the latest news..
-    getPivotxNews();
-    
     // Check if we have a session cookie.  
     if (!cookieEnabled()) {
         var html = "<div class='warning'><h2><img src='pics/error.png' alt='' height='16' width='16' style='border-width: 0px; margin-bottom: -3px;' />";

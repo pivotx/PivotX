@@ -382,6 +382,8 @@ class Parser {
         // Execute a hook, if present.
         $PIVOTX['extensions']->executeHook('before_parse', $this->modifier );
 
+        $date = $this->modifier['date'] ?? '';
+
         // If we're previewing, we need to set the posted values as the entry,
         // otherwise get an entry from the DB.
         if (!empty($_GET['previewentry'])) {
@@ -397,13 +399,13 @@ class Parser {
         } else {
 
             // Get the entry from the DB..
-            $entry = $PIVOTX['db']->read_entry($this->modifier['uri'], $this->modifier['date']);
+            $entry = $PIVOTX['db']->read_entry($this->modifier['uri'], $date);
 
         }
 
         if ( empty($entry['code']) && empty($entry['uid']) && empty($_GET['previewentry']) ) {
             // We try to 'guess' an entry..
-            $entry = $PIVOTX['db']->guess_entry($this->modifier['uri'], $this->modifier['date']);
+            $entry = $PIVOTX['db']->guess_entry($this->modifier['uri'], $date);
             
             // If we did find an (old) entry, do a 301 redirect.
             if ( !empty($entry['uid']) && !empty($entry['link']) ) {
@@ -1191,7 +1193,7 @@ class Parser {
                 ($PIVOTX['config']->get('root') == "w:".$this->modifier['weblog']) &&
                 empty($this->modifier['category']) && empty($this->modifier['archive']) && !$has_offset) {
             $this->modifier['home'] = true;
-        } else if (($this->modifier['uri']=="") && ($PIVOTX['config']->get('root') == "")) {
+        } else if (empty($this->modifier['uri']) && ($PIVOTX['config']->get('root') == "")) {
             $this->modifier['home'] = true;
         }
 
@@ -1232,7 +1234,6 @@ class Parser {
             $autodiscovery .= sprintf("\t<link rel=\"alternate\" type=\"application/atom+xml\" title=\"%s (%s)\" href=\"%s\" />\n",
                 $feedtitle, __("Atom feed"), makeFeedLink("atom") );
 
-
             if ($PIVOTX['config']->get('feed_posts_only')!=1) {
                 $feedlink_params = array('content' => 'comments');
                 $autodiscovery .= sprintf("\t<link rel=\"alternate\" type=\"application/rss+xml\" title=\"%s (%s)\" href=\"%s\" />\n",
@@ -1241,10 +1242,9 @@ class Parser {
                     $feedtitle, __("Atom feed for comments"), makeFeedLink("atom", $feedlink_params) );
             }
 
-
-	    if ($this->modifier['category']!="") {
-
-                $feedcategory = $PIVOTX['categories']->getCategory($this->modifier['category']);
+            $category = $this->modifier['category'] ?? '';
+            if ($category != '') {
+                $feedcategory = $PIVOTX['categories']->getCategory($category);
                 if (count($feedcategory) > 0 ) {
                     $feedtitle = $PIVOTX['config']->get('sitename') . ' &raquo; ' . __('category') . ' ' . $feedcategory['display'];
                     $feedtitle = encodeText($feedtitle);
@@ -1258,16 +1258,12 @@ class Parser {
                 }
             }
 
-
-
-
             // Add a hook to insert RSS and ATOM autodiscovery-tag
             $PIVOTX['extensions']->addHook(
                 'after_parse',
                 'insert_before_close_head',
                 $autodiscovery
                 );
-
         }
 
         // If we've enabled XML-RPC / the MetaWeblog API, insert the auto-discovery tags...
@@ -1575,9 +1571,7 @@ EOM;
             </pre>
             </div>", $boxclass, implode("\n", $modifiers));
 
-
-        // If $query_log is filled, output the executed queries..
-        if (count($GLOBALS['query_log'])>0) {
+        if (displayQueryLog()) {
             sort($GLOBALS['query_log']);
 
             $debugcode .= sprintf("<div id=\"pxdb-box-queries\" class=\"pxdb-box%s\">
@@ -1587,10 +1581,9 @@ EOM;
                 </div>", $boxclass, implode("\n", $GLOBALS['query_log']));
 
             // perhaps also log to file
-            if ( $PIVOTX['config']->get('log_queries') && $PIVOTX['config']->get('debug_logfile') ) {
+            if ($PIVOTX['config']->get('debug_logfile')) {
                 debug_printr($GLOBALS['query_log']);
             }
-
         }
 
         if (empty($GLOBALS['debug_log'])) {
@@ -1640,20 +1633,24 @@ EOM;
      * @return string
      */
     function getDebugCodeServerHelper($name, $var, $server_log, $padding) {
-
         $server_log[] = "<strong>$name</strong>";
         if (!empty($var)) {
             foreach($var as $key => $value) {
                 if (is_array($value)) {
                     foreach($value as $key2=>$value2) {
-                        $value[$key2] = sprintf("%s => '%s'", $key2, htmlentities($value2, ENT_QUOTES, 'UTF-8'));
+                        if (is_array($value2)) {
+                            $text2 = '[ ' . implode(', ', $value2) . ' ]';
+                        } else {
+                            $text2 = $value2;
+                        }
+                        $value[$key2] = sprintf("%s => '%s'", $key2, htmlentities($text2, ENT_QUOTES, 'UTF-8'));
                     }
-                    $value = "array(" . implode(', ', $value) . ")";
+                    $text = '[ ' . implode(', ', $value) . ' ]';
                 } else {
-                    $value = htmlentities($value, ENT_QUOTES, 'UTF-8');
+                    $text = htmlentities($value, ENT_QUOTES, 'UTF-8');
                 }
-                $value = getDefault(trim($value), "<em>(empty)</em>");
-                $server_log[] = sprintf('%-'.$padding.'s => %s', $key, $value);
+                $text = getDefault(trim($text), "<em>(empty)</em>");
+                $server_log[] = sprintf('%-'.$padding.'s => %s', $key, $text);
             }
         } else {
             $server_log[] = "<em>(empty)</em>";
@@ -1684,6 +1681,8 @@ EOM;
         // Getting category display names
         $categories = $PIVOTX['categories']->getCategories();
         $categories = makeValuepairs($categories, 'name', 'display');
+
+        $feed = '';
 
         // Loop through the entries..
         foreach ($entries as $entry) {
@@ -1802,7 +1801,7 @@ EOM;
      * @param array $comment
      * @return string
      */
-    function _renderFeedComments($feed_template, $amount=10, $comments) {
+    function _renderFeedComments($feed_template, $amount, $comments) {
         global $PIVOTX;
 
         $i = 0;
@@ -2415,14 +2414,15 @@ function cms_tag_weblog($params, $format){
     // $template_vars = $PIVOTX['template']->get_template_vars();
     
     // Get the original state of the entry, so we can reset it afterwards:
-    $old_entry = $PIVOTX['db']->entry;
+    $old_entry = $PIVOTX['db']->entry ?? NULL;
 
-    if ($params['order']=="random") {
-        $order="random";
-    } elseif ($params['order']=="firsttolast" || $params['order']=="asc") {
-        $order="asc";
-    } else {
-        $order="desc";
+    $order = $params['order'] ?? 'desc';
+    if ($order == 'firsttolast') {
+        $order = 'asc';
+    }
+    if (!in_array($order, ['asc', 'desc', 'random'])) {
+        debug("Unsupported order '$order' selected - forcing 'desc'");
+        $order = 'desc';
     }
 
     $output="";
@@ -2444,16 +2444,12 @@ function cms_tag_weblog($params, $format){
     }
 
     // See if we should override the offset..
-    if (!empty($params['offset'])) {
-        $offset = intval($params['offset']);
-    } else {
-        $offset = intval($subweblog['offset']);
-    }
+    $offset = intval($params['offset'] ?? ($subweblog['offset'] ?? 0));
 
     // Set the 'number of entries' that we want to show..
     // Note: 'showme' is deprecated. included for backwards compatibility.
-    $num_entries = getDefault(getDefault($params['amount'], $params['showme']), $subweblog['num_entries']);
-
+    $amount = $params['amount'] ?? ($params['showme'] ?? 0);
+    $num_entries = ($amount > 0) ? $amount : $subweblog['num_entries'];
     
     // If we have an 'offset' parameter, we need to increase the offset by 'o' pages.
     // So, if 'o' is 2, and we publish 12 entries, the offset will be increased
@@ -2523,16 +2519,16 @@ function cms_tag_weblog($params, $format){
             'show' => $num_entries,
             'offset' => $offset,
             'cats' => $cats,
-            'tags' => $params['tags'],
+            'tags' => $params['tags'] ?? '',
             'status' => 'publish',
             'order' => $order,
-            'orderby' => $params['orderby'],
-            'ordertype' => $params['ordertype'],
+            'orderby' => $params['orderby'] ?? '',
+            'ordertype' => $params['ordertype'] ?? '',
             'user' => $username,
-            'start' => $params['start'],
-            'end' => $params['end'],
-            'date' => $params['date'],
-            'uid' => $params['uid']
+            'start' => $params['start'] ?? '',
+            'end' => $params['end'] ?? '',
+            'date' => $params['date'] ?? '',
+            'uid' => $params['uid'] ?? ''
         ));
 
     }
@@ -2573,15 +2569,10 @@ function cms_tag_weblog($params, $format){
             $output .= $PIVOTX['template']->fetch("db:".$templatekey, $cachekey);
     
         }        
-        
     } else {
-        
         // No entries match, output the 'noresult' text..
-        $output = getDefault($params['noresult'], "<!-- no results for this subweblog -->");
-        
+        $output = $params['noresult'] ?? '<!-- no results for this subweblog -->';
     }
-
-
 
     // Re-enable caching, if desired..
     if($PIVOTX['config']->get('smarty_cache')){
@@ -2593,12 +2584,13 @@ function cms_tag_weblog($params, $format){
     //    $PIVOTX['template']->assign($key, $value);
     //}
     
-    // Restore the old entry..
-    if( $old_entry != null) // Testing early allows to avoid triggering unnecessary index udpate (i.e. heavy db file writing)
-    	$PIVOTX['db']->set_entry($old_entry);
+
+    // Restore the old entry (if any)
+    if (!is_null($old_entry)) {
+        $PIVOTX['db']->set_entry($old_entry);
+    }
 
     return $output;
-
 }
 
 
@@ -2681,7 +2673,7 @@ function makeFilelink($data="", $weblog="", $anchor="comm", $parameter="", $para
 
         // Using the entry with the given $code
         // If it's not the current one, we need to load it
-        if (!isset($PIVOTX['db']) || ($uid != $PIVOTX['db']->entry['uid'])) {
+        if (!isset($PIVOTX['db']) || !isset($PIVOTX['db']->entry) || ($uid != $PIVOTX['db']->entry['uid'])) {
             $fl_db = new db(FALSE);
             $fl_db->read_entry($uid);
             $entry = $fl_db->entry;
@@ -2786,7 +2778,7 @@ function makeFilelink($data="", $weblog="", $anchor="comm", $parameter="", $para
     }
 
     $filelink = fixPath($filelink);
-    $filelink = str_replace("%1", $code, $filelink);
+    $filelink = str_replace("%1", $uid, $filelink);
     $filelink = formatDate("", $filelink, $entry['title']);
 
     if ($anchor != "") {
@@ -2822,14 +2814,14 @@ function makeMoreLink($data="", $weblog="", $params=array()) {
 
     $weblogdata = $PIVOTX['weblogs']->getWeblog();
 
-    $title = cleanAttributes($params['title']);
+    $title = cleanAttributes($params['title'] ?? '');
     if( '' != $title ) {
         $title = 'title="'.$title.'" ';
         $title = str_replace("%title%", $data['title'], $title);
     }
 
-    $anchorname = getDefault($params['anchorname'], 'body-anchor', true);
-    $text = getDefault($params['text'], getDefault($weblogdata['read_more'], __('(more)')));
+    $anchorname = $params['anchorname'] ?? 'body-anchor';
+    $text = $params['text'] ?? getDefault($weblogdata['read_more'], __('(more)'));
 
     if( strlen( $data['body'] ) >5 ) {
         $morelink = makeFilelink( $data['code'],'', $anchorname );

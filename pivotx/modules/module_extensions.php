@@ -34,13 +34,15 @@ require dirname(dirname(__FILE__))."/lamer_protection.php";
  */
 class Extensions {
 
-    var $active;
-    var $filenames;
-    var $list;
-    var $full_list;
-    var $hooks;
-    var $hidearray;
-    var $scanned;
+    private $active;
+    private $filenames;
+    private $full_list;
+    private $hidearray;
+    private $hooks;
+    private $list;
+    private $value;
+
+    public $safemode;
 
     /**
      * Initialise the Extensions object.
@@ -579,7 +581,7 @@ class Extensions {
         return (count($my_hooks)>0);
     }
 
-    function haveHook($type, $action) {
+    function haveHook($type, $action="") {
         
     	$my_hooks = $this->getHooks($type, $action);
 
@@ -910,7 +912,7 @@ class Extensions {
 
             if (function_exists($hook['parameters'])) {
                 $functionname = $hook['parameters'];
-                $temp_output[] = $functionname($action);
+                $temp_output[] = $functionname();
             } else {
                 debug("Extensions: Couldn't run " . $hook['parameters'] . "(). Not defined.");
             }
@@ -1007,7 +1009,6 @@ class Extensions {
         global $PIVOTX;
 
         $str = str_replace("[[pivotx_dir]]", $PIVOTX['paths']['pivotx_url'], $str);
-        $str = str_replace("[[log_dir]]", $PIVOTX['paths']['log_url'], $str);
         $str = str_replace("[[template_dir]]", $PIVOTX['paths']['templates_path'], $str);
 
         return $str;
@@ -1095,7 +1096,7 @@ class Extensions {
             case 'defer_file':
             
                 // Handling targets (URLs) with queries.
-                list ($basetarget,$dummy) = explode('?',  $target);
+                @list ($basetarget,$dummy) = explode('?',  $target);
 
                 if (file_exists($PIVOTX['paths']['extensions_path'].$basetarget)) {
 

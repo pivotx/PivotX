@@ -48,8 +48,10 @@ class StreamReader {
 }
 
 class StringReader {
-  var $_pos;
-  var $_str;
+  private $_pos;
+
+  protected $_str;
+  protected $error;
 
   function __construct($str='') {
     $this->_str = $str;
@@ -84,19 +86,19 @@ class StringReader {
 
 
 class FileReader {
-  var $_pos;
-  var $_fd;
-  var $_length;
+  private $_pos;
+  private $_fd;
+  private $_length;
+  private $error;
 
   function __construct($filename) {
     if (file_exists($filename)) {
-
       $this->_length=filesize($filename);
       $this->_pos = 0;
       $this->_fd = fopen($filename,'rb');
       if (!$this->_fd) {
-	$this->error = 3; // Cannot read file, probably permissions
-	return false;
+        $this->error = 3; // Cannot read file, probably permissions
+        return false;
       }
     } else {
       $this->error = 2; // File doesn't exist
@@ -144,6 +146,7 @@ class FileReader {
 // Preloads entire file in memory first, then creates a StringReader 
 // over it (it assumes knowledge of StringReader internals)
 class CachedFileReader extends StringReader {
+
   function __construct($filename) {
     if (file_exists($filename)) {
 
@@ -151,8 +154,8 @@ class CachedFileReader extends StringReader {
       $fd = fopen($filename,'rb');
 
       if (!$fd) {
-	$this->error = 3; // Cannot read file, probably permissions
-	return false;
+        $this->error = 3; // Cannot read file, probably permissions
+        return false;
       }
       $this->_str = fread($fd, $length);
       fclose($fd);

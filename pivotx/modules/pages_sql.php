@@ -20,6 +20,13 @@ require_once(dirname(__FILE__)."/module_sql.php");
  */
 class PagesSql {
 
+    private $chapterstable;
+    private $extrafieldstable;
+    private $index;
+    private $pagestable;
+    private $sql;
+    private $tagstable;
+
     /**
      * Initialisation.
      *

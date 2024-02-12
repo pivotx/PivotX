@@ -25,40 +25,43 @@ require dirname(dirname(__FILE__))."/lamer_protection.php";
 class EntriesFlat {
 
     // the name of the log
-    var $logname;
+    private $logname;
 
     // the data for the current entry
-    var $entry;
+    private $entry;
 
     // nice, big arrays with all the dates, categories and uris..
-    var $date_index;
-    var $cat_index;
-    var $uri_index;
+    private $date_index;
+    private $cat_index;
+    private $uri_index;
 
     // a somewhat smaller array for the entries that share the same
     // directory as the current entry
-    var $update_mode;
-    var $updated;
-    var $entry_index;
-    var $entry_index_filename;
+    private $update_mode;
+    private $updated;
+    private $entry_index;
+    private $entry_index_filename;
+
+    private $allow_index;
+    private $allow_write;
+    private $global_reindex;
 
     // some helper variables
-    var $all_cats;
+    private $all_cats;
 
     // public functions
 
     function __construct($loadindex=TRUE, $allow_write=TRUE) {
         global $PIVOTX;
-        
-        //init vars..
+
         static $initialisationchecks;
 
         // Logname will be phased out eventually, since all will be based on categories.
         $this->logname = "standard";
 
-        $this->entry = Array('code' => '', 'id' => '',  'template' => '',  'date' => '',  
+        $this->entry = ['code' => '', 'id' => '',  'template' => '',  'date' => '',  
             'user' => '',  'title' => '',  'subtitle' => '',  'introduction' => '',  'body' => '', 
-            'media' => '',  'links' => '',  'uri' => '',  'filename' => '',  'category' => '');
+            'media' => '',  'links' => '',  'uri' => '',  'filename' => '',  'category' => ''];
 
         $this->entry_index_filename = "";
         $this->entry_index = Array();
@@ -115,12 +118,10 @@ class EntriesFlat {
 <p>If you can read this, you have successfully installed [[tt tag="PivotX"]]. 
 Yay!! To help you further on your way, the following links might be of use to you:</p>
 <ul>
-<li>PivotX.net - <a href="http://pivotx.net">The official PivotX website</a></li>
-<li>The online documentation at <a href="http://book.pivotx.net">PivotX Help</a> should be of help.</li>
-<li>Get help on <a href="http://forum.pivotx.net">the PivotX forum</a></li>
-<li>Browse for <a href="http://themes.pivotx.net">PivotX Themes</a></li>
-<li>Get more <a href="http://extensions.pivotx.net">PivotX Extensions</a></li>
-<li>Follow <a href="http://twitter.com/pivotx">@pivotx on Twitter</a></li>
+<li><a href="https://github.com/pivotx">PivotX @ GitHub</a></li>
+<li>Read <a href="https://github.com/pivotx/PivotX-book">the PivotX Book</a></li>
+<li>Get more <a href="https://github.com/pivotx/PivotX-extensions">PivotX Extensions</a></li>
+<li>Follow <a href="https://twitter.com/pivotx">@pivotx on Twitter</a></li>
 </ul>
 <p>And, of course: Have fun with PivotX!</p>',
                 'body' => '
@@ -146,7 +147,7 @@ To see how this works, edit this entry in the PivotX administration by going to 
                     '0' => array(
                         'name' => 'Bob',
                         'email' => '',
-                        'url' => 'http://pivotx.net',
+                        'url' => 'https://github.com/pivotx',
                         'ip' => '127.0.0.1',
                         'date' => $now.'-10',
                         'comment' => 'Hi! This is what a comment looks like!',
@@ -471,6 +472,15 @@ automagically be published in this section of your weblog.</p>',
     }
 
     /**
+     * Gets the date index.
+     *
+     * @return array
+     */
+    function get_date_index() {
+        return $this->date_index;
+    }
+
+    /**
      * Retrieves a full entry as an associative array, and returns it. The $code
      * parameter can be a code/uid or an URI. The optional $date parameter helps
      * to narrow it down, if there's more than one option.
@@ -489,7 +499,7 @@ automagically be published in this section of your weblog.</p>',
             $filename=$this->set_filename($code);
         }
 
-        if (!$this->read_entry_filename($filename, FALSE, $force)) {
+        if (!$this->read_entry_filename($filename, FALSE)) {
             return FALSE;
         }
 
@@ -536,8 +546,8 @@ automagically be published in this section of your weblog.</p>',
         $filteronuser = false;
         $filteronstatus = false;
 
-        $params['orderby'] = getDefault($params['orderby'], 'date'); 
-        $params['order'] = getDefault($params['order'], 'asc'); 
+        $params['orderby'] = $params['orderby'] ?? 'date';
+        $params['order'] = $params['order'] ?? 'asc';
         if (!empty($params['status'])) {
             $filteronstatus = true;
         }
@@ -943,6 +953,16 @@ automagically be published in this section of your weblog.</p>',
 
 
     /**
+     * Gets the current entry.
+     *
+     * @return array
+     */
+    function get_entry() {
+        return $this->entry;
+    }
+
+
+    /**
      * Sets the current entry to the contents of $entry - flat file
      * implementation.
      *
@@ -955,21 +975,24 @@ automagically be published in this section of your weblog.</p>',
     function set_entry( $entry ) {
 
         $this->entry = $entry;
+        $code = $this->entry['code'] ?? '';
 
-        if ( $this->entry['code'] == '>' ) {
+        if ($code == '>') {
             if (is_array ( $this->date_index )) {
                 ksort( $this->date_index );
                 $max = end( $this->date_index );
                 $max = key( $this->date_index );
                 $max = $max + 1;
-                $this->entry['code'] = $max;
+                $code = $max;
             } else {
-                $this->entry['code'] = 1;
+                $code = 1;
             }
+            $this->entry['code'] = $code;
         }
+
         // UID also needs to be set to be consistent with the 
         // data/result from the SQL db.
-        $this->entry['uid'] = $this->entry['code'];
+        $this->entry['uid'] = $code;
 
         $this->entry['link'] = makeFileLink($this->entry, '', '');
 

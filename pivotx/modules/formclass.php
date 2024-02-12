@@ -2,21 +2,16 @@
 
 /**
  * Two Kings Form Class, to construct web based forms, do validation and
- * handle the output.
+ * handle the output. Slightly modified for PivotX.
  *
  * For more information, read: http://twokings.eu/tools/
  *
  * Two Kings Form Class and all its parts are licensed under the GPL version 2.
  * see: http://www.twokings.eu/tools/license for more information.
  *
- * @version 1.2
  * @author Bob den Otter, bob@twokings.nl, PivotX dev. team
  * @copyright GPL, version 2
  * @link http://twokings.eu/tools/
- *
- * $Rev:: 702                                            $: SVN revision,
- * $Author:: pivotlog                                    $: author and
- * $Date:: 2007-09-22 20:25:00 +0200 (za, 22 sep 2007)   $: date of last commit
  *
  */
 
@@ -50,16 +45,9 @@ class Form {
         // Set up the default HTML for the various form elements
         $this->init_html();
 
-        // Determine the protocol to use.
-        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']=="on") {
-            $protocol = "https://";
-        } else {
-            $protocol = "http://";
-        }
-
         // Set the 'action' attribute for the form. (whereto it will submit)
         if ($action=="") {
-            $action = $protocol . $_SERVER['HTTP_HOST'] .
+            $action = (isHttps() ? "https://" : "http://" ) . $_SERVER['HTTP_HOST'] .
                 htmlspecialchars($_SERVER['PHP_SELF']) . "?" . $_SERVER['QUERY_STRING'];
         }
 
@@ -1109,11 +1097,12 @@ class Form {
 
         return $result;
 
-
     }
 
 
     function setvalues($values) {
+
+        $result = array();
 
         foreach ($this->fields as $key => $field) {
             if (isset($values[ $field['name'] ] )) {
@@ -1134,6 +1123,8 @@ class Form {
 
     function setvalue($fieldname, $value) {
 
+        $result = array();
+
         foreach ($this->fields as $key => $field) {
             if ($field['name']==$fieldname) {
 
@@ -1148,8 +1139,6 @@ class Form {
         return $result;
 
     }
-
-
 
 
     function clearpost() {
@@ -1238,9 +1227,9 @@ class Form {
     * @return bool
     * @param $pFile File to upload.
     * @param $pDirectory Upload directory.
-    * @param $pMaxFileSize Maximum filesize. Default value = 2048 kb.
+    * @param $pMaxFileSize Maximum filesize.
     */
-    function handleUpload($pFile, $pDirectory = './', $pMaxFileSize = 2048, $pAllowedTypes, $pFieldName) {
+    function handleUpload($pFile, $pDirectory, $pMaxFileSize, $pAllowedTypes, $pFieldName) {
 
         debug('handleupload: '.$pFile . " = " . $_FILES[$pFieldName]['name'] );
 

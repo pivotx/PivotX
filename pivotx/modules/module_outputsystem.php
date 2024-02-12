@@ -103,14 +103,14 @@ class OutputSystem {
     /**
      * (internal) Compare two codes
      */
-    public static function _cmpCodes(&$a,&$b) {
+    public static function _cmpCodes($a, $b) {
         if ($a['_priority'] < $b['_priority']) {
             return -1;
         }
         if ($a['_priority'] > $b['_priority']) {
             return +1;
         }
-        $ret = strcasecmp($a['tag'],$b['tag']);
+        $ret = strcasecmp($a['tag'] ?? '', $b['tag'] ?? '');
         if ($ret != 0) {
             return $ret;
         }
@@ -120,7 +120,7 @@ class OutputSystem {
     /**
      * (internal) Compare two filters
      */
-    public static function _cmpFilters(&$a,&$b) {
+    public static function _cmpFilters($a, $b) {
         if ($a['_priority'] < $b['_priority']) {
             return -1;
         }

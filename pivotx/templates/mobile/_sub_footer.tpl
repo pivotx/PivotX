@@ -1,7 +1,7 @@
 <hr size="1" noshade="noshade" />
 <h2 id="navigation">[[t]]Navigation[[/t]]</h2>
 
-<!-- Javascript enabled Jumpmenu for the pages -->
+    <!-- Javascript enabled Jumpmenu for the pages -->
     <select id='pagemenu' style="display:none;">
 
         [[ pagelist
@@ -47,9 +47,10 @@
         format="<li %active%><a href='%url%'>%st_monname% %st_year%</a></li>"
         isactive="class='activepage'"
     ]]
-     </ul>
+    </ul>
     </noscript>
 
+    [[ require_jquery ]]
     <script type="text/javascript">
     jQuery(document).ready(function() {
         jQuery('#archivemenu').show();
@@ -79,9 +80,6 @@
     [[pivotxbutton]]
     [[rssbutton]]
     [[atombutton]]
-
-<!-- a small 'hack' to make sure jquery is included.. -->
-<!-- [[popup file='icon_pivotx.jpg']] -->
 
 <hr size="1" noshade="noshade" />
 <p><a href="#top">Top</a></p>

@@ -69,7 +69,8 @@ class ajaxhelper {
 
         $minsize=11;
         $maxsize=19;
-        $amount = getDefault($_POST['amount'], 20);
+        $sizefixed = false;
+        $amount = $_POST['amount'] ?? 20;
         $output = __("Suggestions") . ": ";
 
         $htmllinks = array();
@@ -81,16 +82,18 @@ class ajaxhelper {
             return;
         }
 
-        /*
-         TODO: investigate if this is still needed, and improve it
-         if(empty($tagcosmos) || (($tagcosmos['maxvalue']-$tagcosmos['minvalue'])==0)) {
-             return;
-         }
-         */
+        // If by accident, all tags have the same count ...
+        if (($tagcosmos['maxvalue']-$tagcosmos['minvalue']) == 0) {
+            $sizefixed = true;
+            $nSize = ($minsize + $maxsize) / 2;
+        }
+
         foreach($tagcosmos['tags'] as $key => $value)   {
 
             // Calculate the size, depending on value.
-            $nSize = $minsize + ( ($value-$tagcosmos['minvalue']) / ($tagcosmos['maxvalue']-$tagcosmos['minvalue']) ) * ($maxsize - $minsize);
+            if (!$sizefixed) {
+                $nSize = $minsize + ( ($value-$tagcosmos['minvalue']) / ($tagcosmos['maxvalue']-$tagcosmos['minvalue']) ) * ($maxsize - $minsize);
+            }
 
             // Write the tags, we add events to them using jquery.
             $htmllinks[$key] = sprintf("<a style=\"font-size:%1.1fpx;\" rel=\"tag\" title=\"%s: %s, %s %s\">%s</a>\n",
@@ -671,128 +674,6 @@ class ajaxhelper {
 
     }
 
-    /**
-     * Ajax helper function to get the latest news from PivotX.net.
-     *
-     * You can change the URL by setting the 'notifier_url' to a valid URL in
-     * Advanced Configuration.
-     *
-     * @return string
-     *
-     */
-    public static function ext_getPivotxNews() {
-        global $build, $PIVOTX;
-
-        // do not display the news if SafeMode is enabled.
-        if($PIVOTX['extensions']->safemode) {
-            echo "<p>" . __("The latest PivotX news is not available as long as safemode is enabled.") . "</p>";
-            echo "--split--";
-            echo "<p>" . __("The latest PivotX news is not available as long as safemode is enabled.") . "</p>";
-            die();
-        }
-
-        // Setting the labels..
-        $readon = "<img class='readmorelink' src='pics/readmore.png' />";
-        $showmore = __("Show more items");
-
-        // Get the latest PivotX news, fresh from the website.
-
-        include_once($PIVOTX['paths']['pivotx_path'].'includes/magpie/rss_fetch.inc');
-
-        $sqlite_exists = function_exists("sqlite_query") ? "1" : "-1";
-
-        $notifier_request = base64_encode(sprintf("%s|%s|%s|%s|%s", $_SERVER['SERVER_NAME'], phpversion(), 
-            $PIVOTX['db']->db_type, strip_tags($build), $sqlite_exists));
-        $notifier_url = getDefault($PIVOTX['config']->get('notifier_url'), "http://pivotx.net/notifier.xml" ) . 
-            "?" . $notifier_request;
-
-        $rss = fetch_rss($notifier_url);
-
-        $news = "";
-
-        if (count($rss->items)>0) {
-
-            // Slice it, so no more than 4 items will be shown.
-            $rss->items = array_slice($rss->items, 0, 4);
-
-            $count=0;
-
-            foreach($rss->items as $item) {
-                $news .= sprintf("<h3>%s</h3> <p>%s <span class='readmore'><a href='%s'>%s</a></span></p>\n",
-                    $item['title'],
-                    $item['summary'],
-                    $item['link'],
-                    $readon
-                );
-
-                if (($count++)==1) {
-                    $news .= "<p id='newsmoreclick'><a onclick='moreNews();'>$showmore</a></p>\n<div id='newsmore'>";
-                }
-
-            }
-
-            echo $news;
-
-        } else {
-            debug("<p>Oops! I'm afraid I couldn't read the News feed.</p>");
-            echo "<p>" . __("Oops! I'm afraid I couldn't read the News feed.") . "</p>";
-            debug(magpie_error());
-        }
-
-        echo "</div>";
-
-        echo "--split--";
-
-        // If people don't want to see the forum posts, we can end here..
-        if ($PIVOTX['config']->get('hide_forumposts')) {
-            return;
-        }
-        $notifier_url = "http://forum.pivotx.net/feed.xml";
-
-        $rss = fetch_rss($notifier_url);
-
-        $news = "";
-
-        if (count($rss->items)>0) {
-
-            // Slice it, so no more than 8 items will be shown.
-            $rss->items = array_slice($rss->items, 0, 8);
-
-            $count = 0;
-
-            foreach($rss->items as $item) {
-
-                // Get the description, and remove HTML from it..
-                $author = $item['dc']['creator'];
-                $description = str_replace("\n", " ", str_replace("<br", " <br", $item['summary']));
-                $description = strip_tags($author . ": " .$description);
-                $description = trimText($description, 82);
-
-
-                $news .= sprintf("<h3>%s</h3> <p>%s <span class='readmore'><a href='%s'>%s</a></span></p>\n",
-                    htmlspecialchars($item['title'], ENT_NOQUOTES),
-                    $description,
-                    $item['link'],
-                    $readon
-                );
-
-
-                if (($count++)==2) {
-                    $news .= "<p id='forumpostsmoreclick'><a onclick='moreForumPosts();'>$showmore</a></p>\n<div id='forumpostsmore'>";
-                }
-
-            }
-
-            echo $news;
-
-        } else {
-            debug("<p>Oops! I'm afraid I couldn't read the Forum feed.</p>");
-            echo "<p>" . __("Oops! I'm afraid I couldn't read the Forum feed.") . "</p>";
-            debug(magpie_error());
-        }
-
-    }
-
 
     /**
      * Fetches tag-information from one of the various social bookmarking websites.
@@ -846,7 +727,7 @@ class ajaxhelper {
 
         $output = "";
 
-        if (count($rss->items)>0) {
+        if (is_array($rss->items) && count($rss->items) > 0) {
 
             // Slice it, so no more than '$amount' items will be shown.
             $rss->items = array_slice($rss->items, 0, $amount);
@@ -980,7 +861,7 @@ class ajaxhelper {
                 $link_text = sprintf("<img src='%sincludes/timthumb.php?h=%s&amp;src=%s' alt='%s' title='%s'>",
                     $PIVOTX['paths']['pivotx_url'], $height, $file['path'], $file['name'], $file['name']
                 );
-                $extra_style = "style='height: ${height}px; margin-bottom: 5px;'";
+                $extra_style = "style='height: {$height}px; margin-bottom: 5px;'";
             } else {
                 $link_text = $file['name'];
                 $extra_style = "";

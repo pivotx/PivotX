@@ -1,7 +1,6 @@
 <ul>
-    <li><a href="http://pivotx.net/">The PivotX website</a></li>
-    <li><a href="http://forum.pivotx.net/">The PivotX Forums</a></li>
-    <li><a href="http://docs.pivotx.net/">Get PivotX Help</a></li>
+    <li><a href="https://github.com/pivotx">PivotX @ GitHub</a></li>
+    <li>Read <a href="https://github.com/pivotx/PivotX-book">the PivotX Book</a></li>
 </ul>
 
 <p>

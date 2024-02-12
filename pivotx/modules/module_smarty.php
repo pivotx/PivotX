@@ -140,6 +140,7 @@ class PivotxSmarty extends Smarty {
         $this->register_function('print_r', 'smarty_print_r');
         $this->register_function('register_as_visitor_link', 'smarty_register_as_visitor_link');
         $this->register_function('registered', 'smarty_registered');
+        $this->register_function('require_jquery', 'smarty_require_jquery');
         $this->register_function('rssbutton', 'smarty_rssbutton');
         $this->register_function('remember', 'smarty_remember');
         $this->register_function('resetpage', 'smarty_resetpage');
@@ -265,8 +266,8 @@ function smarty_archive_list($params, &$smarty) {
 
     $params = cleanParams($params);
 
-    $Current_weblog = getDefault($params['weblog'], $PIVOTX['weblogs']->getCurrent());
-    $unit = getDefault($params['unit'], "month");
+    $Current_weblog = $params['weblog'] ?? $PIVOTX['weblogs']->getCurrent();
+    $unit = $params['unit'] ?? 'month';
 
     $Archive_array = makeArchiveArray(false, $unit); 
 
@@ -276,9 +277,8 @@ function smarty_archive_list($params, &$smarty) {
     }
 
     // Setting the formatting.
-    $format = getDefault($params['format'], 
-        "<a href=\"%url%\">%st_day% %st_monname% - %en_day% %en_monname% %st_year% </a><br />");
-    $separator = getDefault($params['separator'], "");
+    $format = $params['format'] ??  '<a href="%url%">%st_day% %st_monname% - %en_day% %en_monname% %st_year% </a><br />';
+    $separator = $params['separator'] ?? '';
 
     // If we use 'isactive', set up the $active_arc and $isactive vars.
     if (!empty($params['isactive'])) {
@@ -339,7 +339,7 @@ function smarty_archive_list($params, &$smarty) {
     $counter = 0;
     foreach($mylist as $date) {
         $counter++;
-        $filelink = makeArchiveLink($date, $unit, $params['weblog']);
+        $filelink = makeArchiveLink($date, $unit, ($params['weblog'] ?? ''));
 
         // Check if the current archive is the 'active' one.
         if (!empty($isactive) && (makeArchiveName($date,'',$unit)==$active_arc)) {
@@ -475,18 +475,16 @@ function smarty_backtrace($params, &$smarty) {
 function smarty_body($params, &$smarty) {
 
     $vars = $smarty->get_template_vars();
+    $body = '';
 
     // Don't add an anchor if 'noanchor' is set or if body contains so little 
     // content that the [[more]] tag will not insert a link to the body.
-    if (!$params['noanchor'] && (strlen($vars['body'])>5)) {
- 
-        $anchorname = getDefault($params['anchorname'], 'body-anchor');
-        
+    if (empty($params['noanchor']) && (strlen($vars['body'])>5)) {
+        $anchorname = $params['anchorname'] ?? 'body-anchor';
         $body = sprintf('<a id="%s"></a>', $anchorname);
     }
 
-    $body .= parse_intro_or_body($vars['body'], $params['strip'], $vars['convert_lb']);
-
+    $body .= parse_intro_or_body($vars['body'], ($params['strip'] ?? false), $vars['convert_lb']);
 
     return $body;
 
@@ -665,7 +663,7 @@ function smarty_category($params, &$smarty) {
 
     $params = cleanParams($params);
 
-    $title = getDefault($params['title'], "");
+    $title = $params['title'] ?? "";
 
     // Get the internal name of the categories. The parameters
     // "ignore" and "only" is ignored if "name" is set.
@@ -727,7 +725,7 @@ function smarty_category($params, &$smarty) {
                 continue;
             }
             
-            if (!$params['link']) {                
+            if (empty($params['link'])) {
                 $output[] = $thiscat['display'];
             } else {
 
@@ -736,14 +734,14 @@ function smarty_category($params, &$smarty) {
                 }
 
                 $output[] = sprintf("<a href='%s' %s>%s</a>",
-                    makeCategoryLink($value, $params['weblog']),
+                    makeCategoryLink($value, ($params['weblog'] ?? "")),
                     $thistitle,
                     htmlspecialchars($thiscat['display'], ENT_QUOTES, "utf-8"));
             }
             
         }
  
-        $sep = getDefault($params['sep'], ", ");
+        $sep = $params['sep'] ?? ", ";
 
         return implode($sep, $output);
     } else {
@@ -780,6 +778,7 @@ function smarty_category_list($params, &$smarty) {
     global $PIVOTX;
 
     $params = cleanParams($params);
+    $weblog = $params['weblog'] ?? '';
 
     // Set the categories. Either through the 'category' parameter, or through the current weblog.
     if (!empty($params['category']) && $params['category']=="*") {
@@ -788,13 +787,13 @@ function smarty_category_list($params, &$smarty) {
         $mycats = explode(",",safeString($params['category']));
         $mycats = array_map("trim", $cats); 
     } else {
-        $mycats = $PIVOTX['weblogs']->getCategories($params['weblog']);
+        $mycats = $PIVOTX['weblogs']->getCategories($weblog);
     }
 
     $modifier = $PIVOTX['parser']->modifier;
-    $modifiercats = explode(",", $modifier['category']);
+    $modifiercats = explode(",", ($modifier['category'] ?? ''));
         
-    $format = getDefault($params['format'], "<a href=\"%url%\">%display%</a><br />");
+    $format = $params['format'] ?? '<a href="%url%">%display%</a><br />';
 
     $output = '';
 
@@ -815,7 +814,7 @@ function smarty_category_list($params, &$smarty) {
     }
 
     // See if we need to return a var, instead..
-    if($params['return'] && is_string($params['return'])) {
+    if (isset($params['return']) && is_string($params['return'])) {
         $smarty->assign($params['return'], $mycats);
         return "";
     }
@@ -841,7 +840,7 @@ function smarty_category_list($params, &$smarty) {
                 continue;
             }
             
-            $filelink = makeCategoryLink($cat, $params['weblog']);
+            $filelink = makeCategoryLink($cat, $weblog);
 
             // Skip it, if it's in $ignore, or if it's marked 'hidden'
             if (in_array($catinfo['name'], $ignore) || in_array($catinfo['display'], $ignore) || ($catinfo['hidden']==1) ) {
@@ -855,7 +854,7 @@ function smarty_category_list($params, &$smarty) {
 
             // Check if it's the active one..
             if (in_array($catinfo['name'], $modifiercats)) {
-                $active = $params['isactive'];
+                $active = $params['isactive'] ?? '';
             } else {
                 $active = "";
             }
@@ -921,9 +920,9 @@ function smarty_commcount($params, &$smarty) {
         $commcount++; 
     }
 
-    $text0 = getDefault($params['text0'], __("No comments"), true);
-    $text1 = getDefault($params['text1'], __("One comment"));
-    $textmore = getDefault($params['textmore'], __("%num% comments"));
+    $text0 = $params['text0'] ?? __("No comments");
+    $text1 = $params['text1'] ?? __("One comment");
+    $textmore = $params['textmore'] ?? __("%num% comments");
 
     // special case: If comments are disabled, and there are no
     // comments, just return an empty string..
@@ -965,7 +964,7 @@ function smarty_commentform($params, &$smarty) {
 
     $params = cleanParams($params);
 
-    $template = getDefault($params['template'], "_sub_commentform.html");
+    $template = $params['template'] ?? '_sub_commentform.html';
 
     // Initialise the IP blocklist.
     $blocklist = new IPBlock();
@@ -1011,13 +1010,13 @@ function smarty_commentlink($params, &$smarty) {
 
     $vars = $smarty->get_template_vars();
 
-    $link = makeFileLink($vars['entry'], $params['weblog']);
+    $link = makeFileLink($vars['entry'], ($params['weblog'] ?? ''));
 
     $commcount=intval($vars['commcount']);
 
-    $text0 = getDefault($params['text0'], __("No comments"), true);
-    $text1 = getDefault($params['text1'], __("One comment"));
-    $textmore = getDefault($params['textmore'], __("%num% comments"));
+    $text0 = $params['text0'] ?? __("No comments");
+    $text1 = $params['text1'] ?? __("One comment");
+    $textmore = $params['textmore'] ?? __("%num% comments");
 
     // special case: If comments are disabled, and there are no
     // comments, just return an empty string..
@@ -1057,6 +1056,9 @@ function smarty_commentlink($params, &$smarty) {
 function smarty_comments($params, $format, &$smarty) {
     global $PIVOTX, $temp_comment;
 
+    $output = '';
+    $awaiting_moderation = false;
+
     if (isset($format)) {
 
         $params = cleanParams($params);
@@ -1067,14 +1069,14 @@ function smarty_comments($params, $format, &$smarty) {
             <cite class='comment'><strong>%name%</strong> %url% - %date% %editlink%</cite>";
         }
 
-        $order = getDefault($params['order'], "ascending");
-        $format_reply = getDefault($params['format_reply'], "Reply on %name%");
-        $format_forward = getDefault($params['format_forward'], "Replied on %name%");
-        $format_backward = getDefault($params['format_backward'], "This is a reply on %name%");
-        $entrydate = getDefault($params['date'], "%day%-%month%-&rsquo;%ye% %hour24%:%minute%");
-        $default_gravatar = getDefault($params['default_gravatar'], "http://pivotx.net/p64.gif");
-        $gravatar_size = getDefault($params['gravatar_size'], 64);
-
+        $order = $params['order'] ?? "ascending";
+        $format_reply = $params['format_reply'] ?? 'Reply on %name%';
+        $format_forward = $params['format_forward'] ?? 'Replied on %name%';
+        $format_backward = $params['format_backward'] ?? 'This is a reply on %name%';
+        $entrydate = $params['date'] ?? '%day%-%month%-&rsquo;%ye% %hour24%:%minute%';
+        // $default_gravatar = $params['default_gravatar'] ?? "http://pivotx.net/p64.gif";
+        $default_gravatar = $params['default_gravatar'] ?? 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=64';
+        $gravatar_size = $params['gravatar_size'] ?? 64;
 
         // If %editlink% is not present, insert it right after %date%..
         if (strpos($format, "%editlink%")==0){
@@ -1571,7 +1573,8 @@ function smarty_date($params, &$smarty) {
     $output = formatDate($date, $format);
 
     // Check if we only want 'different dates':
-    if ($params['diffonly']==1) {
+    $diffonly = $params['diffonly'] ?? 0;
+    if ($diffonly == 1) {
         if ($output == $last_output) {
             return "";
         }
@@ -1592,9 +1595,9 @@ function smarty_editlink($params, &$smarty) {
 
     $vars = $smarty->get_template_vars();
 
-    $format = getDefault($params['format'], __('Edit'));
-    $prefix = getDefault($params['prefix'], "");
-    $postfix = getDefault($params['postfix'], "");
+    $format = $params['format'] ?? __('Edit');
+    $prefix = $params['prefix'] ?? '';
+    $postfix = $params['postfix'] ?? '';
 
     $pagetype = $PIVOTX['parser']->modifier['pagetype'];
 
@@ -1752,7 +1755,7 @@ function smarty_feed($params, $text, &$smarty) {
     $output = "";
 
 
-    if (count($rss->items)>0) {
+    if (is_array($rss->items) && count($rss->items) > 0) {
 
         // Slice it, so no more than '$amount' items will be shown.
         $rss->items = array_slice($rss->items, 0, $amount);
@@ -2123,9 +2126,13 @@ function smarty_getpage($params, &$smarty) {
     $pagetype = $PIVOTX['parser']->modifier['pagetype'];
     
     if ($pagetype=="entry" || $pagetype=="weblog" || $pagetype=="archive" ) {
-        $smarty->assign('oldpage', $vars['entry']);
+        if (isset($vars['entry'])) {
+            $smarty->assign('oldpage', $vars['entry']);
+        }
     } else {
-        $smarty->assign('oldpage', $vars['page']);
+        if (isset($vars['page'])) {
+            $smarty->assign('oldpage', $vars['page']);
+        }
     }
 
     // get the new page, and set it in $smarty. First we set all variables, and
@@ -2424,7 +2431,7 @@ function smarty_introduction($params, &$smarty) {
 
     $vars = $smarty->get_template_vars();
 
-    $introduction = parse_intro_or_body($vars['introduction'], $params['strip'], $vars['convert_lb']);
+    $introduction = parse_intro_or_body($vars['introduction'], ($params['strip'] ?? 0), $vars['convert_lb']);
 
     return $introduction;
 
@@ -2487,12 +2494,11 @@ function smarty_latest_comments($params) {
 
     $params = cleanParams($params);
 
-    $latest_comments_format = getDefault($params['format'],
-        "<a href='%url%' title='%date%'><b>%name%</b></a> (%title%): %comm%<br />" );
-    $latest_comments_length = getDefault($params['length'], 100);
-    $latest_comments_trim = getDefault($params['trim'], 16);
-    $latest_comments_count = getDefault($params['count'], 6);
-    $toread_comments_count = $latest_comment_count*2;
+    $latest_comments_format = $params['format'] ?? "<a href='%url%' title='%date%'><b>%name%</b></a> (%title%): %comm%<br />";
+    $latest_comments_length = $params['length'] ?? 100;
+    $latest_comments_trim = $params['trim'] ?? 16;
+    $latest_comments_count = $params['count'] ?? 6;
+    $toread_comments_count = $latest_comments_count*2;
     if ($toread_comments_count < 50) { $toread_comments_count = 50; }
 
     if (!empty($params['category']) && ($params['category']!="*")) {
@@ -2805,8 +2811,8 @@ function _smarty_link_page($params, &$smarty) {
 
     if (!empty($page['uid'])) {
 
-        $text = getDefault($params['text'], $page['title']);
-        $title = getDefault($params['title'], cleanAttributes($page['title']));
+        $text = $params['text'] ?? $page['title'];
+        $title = $params['title'] ?? cleanAttributes($page['title']);
 
         $pagelink = makePageLink($page['uri'], $page['title'], $page['uid'], $page['date']);
         
@@ -2815,11 +2821,12 @@ function _smarty_link_page($params, &$smarty) {
             $pagelink = getHost() . $pagelink;
         }
 
-        if ($params['query'] !='' ) {
+        $query = $params['query'] ?? '';
+        if ($query != '') {
             if (strpos($link,"?")>0) {
-               $pagelink .= '&amp;'.$params['query'];
+               $pagelink .= '&amp;' . $query;
             } else {
-               $pagelink .= '?'.$params['query'];
+               $pagelink .= '?' . $query;
             }
         }
         
@@ -2834,8 +2841,7 @@ function _smarty_link_page($params, &$smarty) {
     } else {
         debug(sprintf("Can't create page link since uid isn't set. (Page '%s')", $params['page']));
         return '';
-    }    
-    
+    }
 }
 
 
@@ -2850,8 +2856,8 @@ function _smarty_link_weblog($params, &$smarty) {
   
     $weblog = $PIVOTX['weblogs']->getWeblog($params['weblog']);
 
-    $text = getDefault($params['text'], $weblog['name']);
-    $title = getDefault($params['title'], cleanAttributes($weblog['name']));
+    $text = $params['text'] ?? $weblog['name'];
+    $title = $params['title'] ?? cleanAttributes($weblog['name']);
 
     $link = $weblog['link'];
     
@@ -2860,7 +2866,7 @@ function _smarty_link_weblog($params, &$smarty) {
         $link = getHost() . $link;
     }
 
-    if ($params['query'] !='' ) {
+    if (!empty($params['query'])) {
         if (strpos($link,"?")>0) {
             $link .= '&amp;'.$params['query'];
         } else {
@@ -2893,7 +2899,7 @@ function _smarty_link_entry($params, &$smarty) {
     if (!empty($params['entry'])) {
         $params['uid'] = $params['entry'];
     } else {
-        $params['uid'] = getDefault($params['uid'], $vars['entry']['uid']);
+        $params['uid'] = $params['uid'] ?? $vars['entry']['uid'];
     }
 
     // Abort immediately if uid isn't set or there is no entry.
@@ -2901,25 +2907,26 @@ function _smarty_link_entry($params, &$smarty) {
         debug("Can't create entry link since uid isn't set.");
         return '';
     } elseif (!$PIVOTX['db']->entry_exists($params['uid'])) {
-        debug("Can't create entry link since there is no entry with uid ${params['uid']}.");
+        debug("Can't create entry link since there is no entry with uid {$params['uid']}.");
         return '';
     }
 
-    $text = getDefault($params['text'], "%title%");
-    $title = getDefault($params['title'], "%title%");
+    $text = $params['text'] ?? "%title%";
+    $title = $params['title'] ?? "%title%";
 
-    $link = makeFileLink($params['uid'], $params['weblog'], "");
+    $link = makeFileLink($params['uid'], ($params['weblog'] ?? ""), "");
         
     // Perhaps add the protocol and hostname, to create a full URL. 
     if (!empty($params['fullurl'])) {
         $link = getHost() . $link;
     }
 
-    if ($params['query'] !='' ) {
+    $query = $params['query'] ?? '';
+    if ($query != '') {
         if (strpos($link,"?")>0) {
-            $link .= '&amp;'.$params['query'];
+            $link .= '&amp;' . $query;
         } else {
-            $link .= '?'.$params['query'];
+            $link .= '?' . $query;
         }
     }
     
@@ -3097,7 +3104,8 @@ function smarty_nextentry($params) {
         $categories = explode(",",safeString($params['category']));
         $categories = array_map("trim", $categories);
     } else {
-        $categories = ($params['incategory']==true ? $PIVOTX['db']->entry['category'] : $PIVOTX['weblogs']->getCategories() );
+        $incategory = $params['incategory'] ?? false;
+        $categories = ($incategory == true ? $PIVOTX['db']->entry['category'] : $PIVOTX['weblogs']->getCategories() );
     }
     
     do {
@@ -3190,7 +3198,7 @@ function smarty_nextpage($params, &$smarty) {
         debug('The page list is empty. Possible orphan page?'); 
         return; 
     }
-    if ($params['sortorder'] == 'reverse') {
+    if (isset($params['sortorder']) && ($params['sortorder'] == 'reverse')) {
         $pages = array_reverse($pages, true);
     }
 
@@ -3209,7 +3217,7 @@ function smarty_nextpage($params, &$smarty) {
         $text = getDefault($params['text'], '&nbsp;&nbsp;&raquo; <a href="%link%">%title%</a>');
         $cutoff = getDefault($params['cutoff'], 20);
         $title  = (strlen($nextpage['title'])>2) ? $nextpage['title'] : substr($nextpage['introduction'],0,100);
-        $link   = makePageLink($nextpage['uri'], $nextpage['title'], $nextpage['uid'], $nextpage['date'], $params['weblog']);
+        $link   = makePageLink($nextpage['uri'], $nextpage['title'], $nextpage['uid'], $nextpage['date'], ($params['weblog'] ?? ''));
         $output = $text;
         $output = str_replace("%link%", $link, $output);
         $output = str_replace("%title%", trimText($title,$cutoff), $output);
@@ -3233,16 +3241,19 @@ function smarty_pagelist($params, &$smarty) {
     
     $params = cleanParams($params);
 
-    $chapterbegin = getDefault($params['chapterbegin'], "<strong>%chaptername%</strong><br /><small>%description%</small><ul>", true);
-    $pageshtml = getDefault($params['pages'], "<li %active%><a href='%link%' title='%subtitle%'>%title%</a></li>");
-    $chapterend = getDefault($params['chapterend'], "</ul>", true);
-    $dateformat = getDefault($params['dateformat'], "%day%-%month%-&rsquo;%ye% %hour24%:%minute%");
+    $chapterbegin = $params['chapterbegin'] ?? "<strong>%chaptername%</strong><br /><small>%description%</small><ul>";
+    $pageshtml = $params['pages'] ?? "<li %active%><a href='%link%' title='%subtitle%'>%title%</a></li>";
+    $chapterend = $params['chapterend'] ?? "</ul>";
+    $dateformat = $params['dateformat'] ?? "%day%-%month%-&rsquo;%ye% %hour24%:%minute%";
+
+    $onlychapter_bool = false;
+    $excludechapter_bool = false;
 
     // If we use 'isactive', set up the $pageuri and $isactive vars.
     if (!empty($params['isactive'])) {
         // Get the current page uri.
         $smartyvars = $smarty->get_template_vars();
-        $pageuri = getDefault($smartyvars['pageuri'], "");
+        $pageuri = $smartyvars['pageuri'] ?? '';
         $isactive = $params['isactive'];
     } else {
         $pageuri = "";
@@ -3262,7 +3273,6 @@ function smarty_pagelist($params, &$smarty) {
         $excludechapter_arr = array_map('trim', $excludechapter_arr);
         $excludechapter_arr = array_map('strtolower', $excludechapter_arr);
     }
-
 
     $chapters = $PIVOTX['pages']->getIndex();
     $output = "";
@@ -3311,14 +3321,9 @@ function smarty_pagelist($params, &$smarty) {
 
         $pages = array();
 
-        if ($params['sort'] == 'title') {
-            $pages_sort_key = 'title';
-        } else if ($params['sort'] == 'uri') {
-            $pages_sort_key = 'uri';
-        } else if ($params['sort'] == 'date') {
-            $pages_sort_key = 'date';
-        } else {
-            // Just picking a unique key (when there is no sorting).
+        $pages_sort_key = $params['sort'] ?? '';
+        if (!in_array($pages_sort_key, ['title', 'uri', 'date'])) {
+            // Just picking a unique key (when there is no or unknown sorting).
             unset($params['sort']);
             $pages_sort_key = 'uri';
         }
@@ -3326,7 +3331,7 @@ function smarty_pagelist($params, &$smarty) {
         // Iterate through the pages
         foreach ($chapter['pages'] as $page) {
 
-            if(in_array($page['uri'], explode(",",$params['exclude']))) {
+            if(in_array($page['uri'], explode(",", $params['exclude'] ?? ''))) {
                 continue;
             }
 
@@ -3340,7 +3345,7 @@ function smarty_pagelist($params, &$smarty) {
             } else {
                 $thisactive = "";
             }
-            $pagelink = makePageLink($page['uri'], $page['title'], $page['uid'], $page['date'], $params['weblog']);
+            $pagelink = makePageLink($page['uri'], $page['title'], $page['uid'], $page['date'], ($params['weblog'] ?? ''));
 
             // add the page to output
             $temp_output = $pageshtml;
@@ -3360,12 +3365,14 @@ function smarty_pagelist($params, &$smarty) {
             if (isset($params['sort'])) {
                 ksort($pages);
             }
-            if ($params['sortorder'] == 'reverse') {
+
+            $sortorder = $params['sortorder'] ?? '';
+            $pagelimit = $params['pagelimit'] ?? '';
+            if ($sortorder == 'reverse') {
                 $pages = array_reverse($pages, true);
             }
-
-            if ($params['pagelimit'] != '') {
-                $pages = array_slice($pages, 0, $params['pagelimit']);
+            if ($pagelimit != '') {
+                $pages = array_slice($pages, 0, $pagelimit);
             }
 
 
@@ -3404,8 +3411,8 @@ function smarty_paging($params, &$smarty) {
 
     $params = cleanParams($params);
 
-    $action = getDefault($params['action'], "digg");
-    $showalways = getDefault($params['showalways'], false);
+    $action = $params['action'] ?? 'digg';
+    $showalways = $params['showalways'] ?? false;
 
     $funcs = new Paging("paging");
 
@@ -3464,14 +3471,14 @@ function smarty_paging($params, &$smarty) {
         foreach ($subweblogs as $subweblog) {
             $subweblog = $PIVOTX['weblogs']->getSubweblog('', $subweblog);
             // Only add categories from subweblogs that have any categories assigned.
-            if (count($subweblog['categories']) > 0) {
-                $cats[] = $subweblog['categories'];
+            $subweblog_cats = $subweblog['categories'] ?? [];
+            if (count($subweblog_cats) > 0) {
+                $cats[] = $subweblog_cats;
             }
         }
     }
 
-    return $funcs->doit($action, $text, $cats, $num_entries, $params);
-
+    return $funcs->doit($action, '', $cats, $num_entries, $params);
 }
 
 
@@ -3507,9 +3514,9 @@ function smarty_pivotxbutton() {
     $image   = $PIVOTX['paths']['pivotx_url'].'pics/pivotxbutton.png' ;
     $alttext = __('Powered by'). " " . strip_tags($build) ;
 
-    $output  = '<a href="http://www.pivotx.net/" title="'.$alttext.'" class="badge">' ;
+    $output  = '<a href="https://github.com/pivotx/" title="'.$alttext.'" class="badge">' ;
     $output .= '<img src="'.$image.'" width="'.$width.'" height="'.$height.'" alt="'.$alttext.'" ' ;
-    $output .= 'class="badge" longdesc="http://www.pivotx.net/" /></a>';
+    $output .= 'class="badge" longdesc="github.com/pivotx/" /></a>';
 
     return $output;
 }
@@ -3528,7 +3535,7 @@ function smarty_permalink($params, &$smarty) {
     $params = cleanParams($params);
 
     $vars = $smarty->get_template_vars();
-    $unit = getDefault($params['unit'], "month");
+    $unit = $params['unit'] ?? 'month';
     $link = makeArchiveLink('', $unit)."#e".$vars['code'];
 
     $text = str_replace('%title%', $vars['title'], $params['text']);
@@ -3625,7 +3632,7 @@ function smarty_popup ($params, &$smarty) {
     $thumbname = $params['description'];
     $org_thumbname = $params['description'];
     $alt = cleanAttributes($params['alt']);
-    $align = getDefault($params['align'], "center");
+    $align = $params['align'] ?? 'center';
     // $border = getDefault($params['border'], 0); -- border is deprecated
 
     $vars = $smarty->get_template_vars();
@@ -3723,7 +3730,8 @@ function smarty_previousentry($params) {
         $categories = explode(",",safeString($params['category']));
         $categories = array_map("trim", $categories);
     } else {
-        $categories = ($params['incategory']==true ? $PIVOTX['db']->entry['category'] : $PIVOTX['weblogs']->getCategories() );
+        $incategory = $params['incategory'] ?? false;
+        $categories = ($incategory == true ? $PIVOTX['db']->entry['category'] : $PIVOTX['weblogs']->getCategories() );
     }
     
     do {      
@@ -3745,8 +3753,8 @@ function smarty_previousentry($params) {
 
     unset($temp_db);
 
-    $text = getDefault($params['text'], '&laquo; <a href="%link%">%title%</a>');
-    $cutoff = getDefault($params['cutoff'], 20);
+    $text = $params['text'] ?? '&laquo; <a href="%link%">%title%</a>';
+    $cutoff = $params['cutoff'] ?? 20;
 
     if ($prev_code) {
         $title= (strlen($temp_entry['title'])>2) ? $temp_entry['title'] : substr($temp_entry['introduction'],0,100);
@@ -3816,7 +3824,7 @@ function smarty_previouspage($params, &$smarty) {
 
     // We will find the previous page by searching the array in reverse order.
     // This means that have to reverse it, if sortorder isn't reverse ;-)
-    if ($params['sortorder'] != 'reverse') {
+    if (!isset($params['sortorder']) || ($params['sortorder'] != 'reverse')) {
         $pages = array_reverse($pages, true);
     }
 
@@ -3829,12 +3837,12 @@ function smarty_previouspage($params, &$smarty) {
         }
     } while (($prevpage !== false) && !(($prevpage['status'] == "publish") && $found));
 
-    $text = getDefault($params['text'], '&laquo; <a href="%link%">%title%</a>');
-    $cutoff = getDefault($params['cutoff'], 20);
+    $text = $params['text'] ?? '&laquo; <a href="%link%">%title%</a>';
+    $cutoff = $params['cutoff'] ?? 20;
 
     if ($prevpage) {
         $title  = (strlen($prevpage['title'])>2) ? $prevpage['title'] : substr($prevpage['introduction'],0,100);
-        $link   = makePageLink($prevpage['uri'], $prevpage['title'], $prevpage['uid'], $prevpage['date'], $params['weblog']);
+        $link   = makePageLink($prevpage['uri'], $prevpage['title'], $prevpage['uid'], $prevpage['date'], ($params['weblog'] ?? ''));
         $output = $text;
         $output = str_replace("%link%", $link, $output);
         $output = str_replace("%title%", trimText($title,$cutoff), $output);
@@ -3864,8 +3872,6 @@ function smarty_print_r($params, &$smarty) {
     echo "\n<br />--</pre>\n</div>&nbsp;\n";
 
 }
-
-
 
 /**
  * Returns the text 'registered' if the current visitor is (logged in and) registered.
@@ -3900,20 +3906,18 @@ function smarty_registered($params) {
 function smarty_register_as_visitor_link($params) {
     global $PIVOTX;
 
-    $weblog = getDefault($params['weblog'], $PIVOTX['weblogs']->getCurrent());
+    $weblog = $params['weblog'] ?? $PIVOTX['weblogs']->getCurrent();
     $url = makeVisitorPageLink('', $weblog);
 
     require_once $PIVOTX['paths']['pivotx_path'].'modules/module_userreg.php';
     $visitors = new Visitors();
     if ($visitors->isLoggedIn()) {
-        $linktext = getDefault($params['linktext_logged_in'], __('account'));
+        $linktext = $params['linktext_logged_in'] ?? __('account');
     } else {
-        $linktext = getDefault($params['linktext'], __('register/login'));
+        $linktext = $params['linktext'] ?? __('register/login');
     }
     return "<a href='$url' class='pivotx-system-links'>$linktext</a>";
 }
-
-
 
 /**
  * Inserts previously filled fields for commenting. They can come from either
@@ -4022,9 +4026,6 @@ function smarty_remember($params, &$smarty) {
 
 }
 
-
-
-
 /**
  * Resets the [[ $page ]] variable back to what it was, before it was
  * set by [[ getpage ]].
@@ -4036,7 +4037,7 @@ function smarty_resetpage($params, &$smarty) {
     global $PIVOTX;
 
     $vars = $smarty->get_template_vars();
-    $oldpage = $vars['oldpage'];
+    $oldpage = $vars['oldpage'] ?? '';
         
     // Set the 'page' variable in smarty to 'oldpage', as it was before [[ getpage ]]
     if (is_array($oldpage)) {
@@ -4049,7 +4050,18 @@ function smarty_resetpage($params, &$smarty) {
     return "";
 }
 
+/**
+ * Includes jQuery in the header if not already done or disabled. 
+ */
+function smarty_require_jquery() {
+    global $PIVOTX;
 
+    if ($PIVOTX['config']->get('never_jquery') == 1) {
+        debug("JQuery is disabled by the 'never_jquery' config option.");
+    } else {
+        $PIVOTX['extensions']->addHook('after_parse', 'callback', 'jqueryIncludeCallback');
+    }
+}
 
 /**
  * Insert a button with a link to the RSS XML feed.
@@ -4089,12 +4101,12 @@ function smarty_search($params, &$smarty) {
     global $PIVOTX;
 
     $params = cleanParams($params);
-    $request_method = getDefault($params['request_method'], 'post');
+    $request_method = $params['request_method'] ?? 'post';
     $request_method = ($request_method != 'post') ? 'get' : 'post'; // Anything not being 'post' is set to 'get'
-    $formname = getDefault($params['formname'], __('Search for words used in entries and pages on this website'));
-    $fieldname = getDefault($params['fieldname'], __('Enter the word[s] to search for here:'));
-    $inputtype = getDefault($params['inputtype'], "text");
-    $placeholder = getDefault($params['placeholder'], __('Enter search terms'));
+    $formname = $params['formname'] ?? __('Search for words used in entries and pages on this website');
+    $fieldname = $params['fieldname'] ?? __('Enter the word[s] to search for here:');
+    $inputtype = $params['inputtype'] ?? "text";
+    $placeholder = $params['placeholder'] ?? __('Enter search terms');
 
     // Set the placeholder to what we're searching, if we're on a searchpage.
     if ($PIVOTX['parser']->modifier['pagetype'] == "search") {
@@ -4103,11 +4115,8 @@ function smarty_search($params, &$smarty) {
     
     $placeholder_js = addslashes($placeholder);
 
-    if ($params['template']!='') {
-        $url = makeSearchLink("t=".$params['template']);
-    } else {
-        $url = makeSearchLink();
-    }
+    $template_param = isset($params['template']) ? 't=' . $params['template'] : '';
+    $url = makeSearchLink($template_param);
 
     $output  = '<form method="'.$request_method.'" action="'.$url.'"  class="pivotx-search">'."\n" ;
     $output .= '<fieldset><legend>'.$formname.'</legend>'."\n" ;
@@ -4117,17 +4126,13 @@ function smarty_search($params, &$smarty) {
     $output .= $placeholder_js.'\';" onfocus="if(this.value==\'' .$placeholder_js;
     $output .= '\') this.value=\'\'; this.select();return true;" />'."\n" ;
 
-    if($params['button'] !== false) {
-        $button_name = getDefault($params['button'], __('Search!'));
+    if (isset($params['button']) && ($params['button'] !== false)) {
+        $button_name = $params['button'] ?? __('Search!');
         $output .= '<input type="submit" class="searchbutton" value="'.$button_name.'" />' ;
     }
 
     // If a weblog as been explicitly selected or we are not on a page, set the weblog.
-    if (isset($params['weblog'])) {
-        $weblog = $params['weblog'];
-    } else {
-        $weblog = trim(getDefault($_GET['w'], $_POST['w']));
-    }
+    $weblog = $params['weblog'] ?? ($_GET['w'] ?? ($_POST['w'] ?? ''));
     if ( !empty($weblog) || ($PIVOTX['parser']->modifier['pagetype'] != "page")) { 
         $weblog = getDefault($weblog, $PIVOTX['weblogs']->getCurrent());
         $output .= '<input type="hidden" name="w" value="'.$weblog.'" />'."\n";
@@ -4162,7 +4167,8 @@ function smarty_self($params) {
 
     $params = cleanParams($params);
 
-    if ($params['includehostname']==1) {
+    $includehostname = $params['includehostname'] ?? 0;
+    if ($includehostname == 1) {
         $output = $PIVOTX['paths']['host'];
     } else {
         $output = "";
@@ -4286,7 +4292,8 @@ function smarty_subtitle($params, &$smarty) {
     $subtitle = parse_string($vars['subtitle']);
 
     // If 'strip=1', we strip html tags from the subtitle.
-    if ($params['strip']==1) {
+    $strip = $params['strip'] ?? 0;
+    if ($strip == 1) {
         $subtitle = strip_tags($subtitle);
     }
 
@@ -4323,13 +4330,13 @@ function smarty_tagcloud($params) {
 
     $params = cleanParams($params);
 
-    $minsize = getDefault($params['minsize'], $PIVOTX['config']->get('tag_min_font'));
-    $maxsize = getDefault($params['maxsize'], $PIVOTX['config']->get('tag_max_font'));
-    $amount = getDefault($params['amount'], $PIVOTX['config']->get('tag_cloud_amount'));
-    $sep = getDefault($params['sep'], ", " );
-    $template = $params['template'];
+    $minsize = $params['minsize'] ?? $PIVOTX['config']->get('tag_min_font');
+    $maxsize = $params['maxsize'] ?? $PIVOTX['config']->get('tag_max_font');
+    $amount = $params['amount'] ?? $PIVOTX['config']->get('tag_cloud_amount');
+    $sep = $params['sep'] ?? ', ';
+    $template = $params['template'] ?? '';
 
-    $underscore = getDefault($params['underscore'], false);
+    $underscore = $params['underscore'] ?? false;
 
     if (!empty($params['exclude'])) {
         $exclude = explode(',', $params['exclude']);
@@ -4421,13 +4428,14 @@ function smarty_tags($params, &$smarty) {
 
     $params = cleanParams($params);
 
-    $text = getDefault($params['text'], __('Used tags').": %tags%" );
-    $sep = getDefault($params['sep'], ", " );
-    $prefix = getDefault($params['prefix'], "" );
-    $postfix = getDefault($params['postfix'], "" );
+    $text = $params['text'] ?? __('Used tags') . ': %tags%';
+    $sep = $params['sep'] ?? ", " ;
+    $prefix = $params['prefix'] ?? '';
+    $postfix = $params['postfix'] ?? '';
 
-    $underscore = getDefault($params['underscore'], false);
-    if ($params['textonly']==true) {
+    $underscore = $params['underscore'] ?? false;
+    $textonly = $params['textonly'] ?? false;
+    if ($textonly == true) {
         // Just the tags, no HTML, no links.. 
         $tags = getTags(false, "", false, $underscore);
     } else {
@@ -4459,8 +4467,9 @@ function smarty_template_dir($params, &$smarty) {
 
     $vars = $smarty->get_template_vars();
     $templatedir = $vars['templatedir'];
+    $base = $params['base'] ?? false;
 
-    if ( empty($templatedir) || ($templatedir=="/") || ($templatedir==".") || ($params['base']==true) ) {
+    if ( empty($templatedir) || ($templatedir=="/") || ($templatedir==".") || ($base == true) ) {
         $path = $PIVOTX['paths']['templates_url'];
     } else {
         $path = $PIVOTX['paths']['templates_url'] . $templatedir . '/' ;
@@ -4526,7 +4535,8 @@ function smarty_title($params, &$smarty) {
     $title = parse_string($vars['title']);
 
     // If 'strip=1', we strip html tags from the title.
-    if ($params['strip']==1) {
+    $strip = $params['strip'] ?? 0;
+    if ($strip == 1) {
         $title = strip_tags($title);
     }
 
@@ -4720,11 +4730,10 @@ function smarty_tt($params) {
 
     $params = cleanParams($params);    
     
-    $tag = $params['tag'];
-    $link = $params['link'];
-    $template = getDefault($params['template'],'');
-
-    $underscore = getDefault($params['underscore'], false);
+    $tag = $params['tag'] ?? '';
+    $link = $params['link'] ?? '';
+    $template = $params['template'] ?? '';
+    $underscore = $params['underscore'] ?? false;
 
     if(strlen($link) > 0) {
         // If the external link doesn't have a protocol prefix, add it.
@@ -5075,7 +5084,8 @@ function smarty_weblogsubtitle($params) {
 
     $output=$PIVOTX['weblogs']->get('', 'payoff');
 
-    if ($params['strip']==true) {
+    $strip = $params['strip'] ?? false;
+    if ($strip == true) {
         $output = strip_tags($output);
     }
 
@@ -5096,7 +5106,8 @@ function smarty_weblogtitle($params) {
 
     $output=$PIVOTX['weblogs']->get('', 'name');
 
-    if ($params['strip']==true) {
+    $strip = $params['strip'] ?? false;
+    if ($strip == true) {
         $output = strip_tags($output);
     } else if (!empty($params['internal'])) {
         $output = $PIVOTX['weblogs']->getCurrent();
@@ -5119,7 +5130,7 @@ function smarty_widgets($params, &$smarty) {
 
     $output = "";
 
-    $PIVOTX['extensions']->executeHook('widget', $output, array('style'=>$params['forcestyle']));
+    $PIVOTX['extensions']->executeHook('widget', $output, [ 'style' => ($params['forcestyle'] ?? '') ]);
 
     return $output;
 

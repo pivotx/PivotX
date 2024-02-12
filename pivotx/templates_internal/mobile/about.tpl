@@ -22,7 +22,7 @@
 </p>
 
 <p>
-    [[t]]Visit our website at:[[/t]] <a href="http://pivotx.net/">pivotx.net</a>
+    [[t]]Visit our website at:[[/t]] <a href="https://github.com/pivotx/">github.com/pivotx</a>
 </p>
 
 

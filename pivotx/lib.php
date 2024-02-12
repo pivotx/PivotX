@@ -20,11 +20,10 @@
 
 DEFINE('INPIVOTX', TRUE);
 
-$version = "3.0.0-rc2";
+$version = "3.0.0-rc3";
 $codename = "Back from the dead";
-$svnrevision = '$Rev$';
 
-$minrequiredphp = "7.3.0";
+$minrequiredphp = "7.4.0";
 $minrequiredmysql = "4.1";
 $dbversion = "11"; // Used to track if it's necessary to upgrade the DB.
 
@@ -128,14 +127,13 @@ function initializePivotX($loadextensions=true) {
     require_once($PIVOTX['paths']['pivotx_path'].'modules/module_debug.php');
 
     // Check if the admin pages should be run over HTTPS
-    if (defined('PIVOTX_INADMIN') && empty($_SERVER['HTTPS']) && 
+    if (defined('PIVOTX_INADMIN') && !isHttps() &&
             ($PIVOTX['config']->get('force_admin_https')==1)) {
         $location = "https://" . $_SERVER['HTTP_HOST'] .
             $PIVOTX['paths']['pivotx_url'] . 'index.php';
         header("Location: ".$location);
         exit;
     }
-
 
     $PIVOTX['session'] = new Session();
     $PIVOTX['users'] = new Users();
@@ -200,19 +198,6 @@ function isInstalled() {
         return true;
     }
 }
-
-/**
- * Returns our SVN Revision number
- *
- * @return integer
- */
-function getSvnRevision() {
-    global $svnrevision;
-    
-    $id = substr($svnrevision, 6);
-    return intval(substr($id, 0, strlen($id) - 2));
-}
-
 
 
 /**
@@ -328,7 +313,6 @@ function renderTemplate($template, $page="") {
     $PIVOTX['template']->assign('codename', $codename);
     $PIVOTX['template']->assign('year', date("Y"));
     if (isset($PIVOTX['config'])) {
-        $PIVOTX['template']->assign('svnbuild', getSvnRevision() . "-" . $PIVOTX['config']->get('db_version') );    
         $PIVOTX['template']->assign('now', formatDate('', $PIVOTX['config']->get('fulldate_format')));
         $PIVOTX['template']->assign('config', $PIVOTX['config']->getConfigArray() );
     }
@@ -379,8 +363,7 @@ function renderTemplate($template, $page="") {
     
         $format = "\n<!-- Time taken in total: %s sec. Template: %s -->\n";
 
-        // If $query_log is filled, output the executed queries..
-        if ( $PIVOTX['config']->get('log_queries') && count($GLOBALS['query_log'])>0 ) {
+        if (displayQueryLog()) {
             sort($GLOBALS['query_log']);
             debug_printr($GLOBALS['query_log']);
         }
@@ -460,10 +443,6 @@ function renderErrorpage($error, $additionalinfo) {
 
 }
 
-
-
-
-
 /**
  * Custom error handler for the SQL object. We don't want to output the entire error message to the user,
  * but instead print a slightly more helpful message without breaking the page layout.
@@ -472,7 +451,7 @@ function renderErrorpage($error, $additionalinfo) {
  * @param string $sql_query
  * @param integer $error_no
  */
-function setError($type='general', $error_msg, $sql_query='', $error_no='') {
+function setError($type, $error_msg, $sql_query='', $error_no='') {
     global $PIVOTX;
 
     $error_text = '';
@@ -628,7 +607,7 @@ function checkDB($sites_path = '') {
     // to tell people, hence the ugly HTML output.
     if (!file_exists($pivotx_path . $sites_path . "db") || 
             !is_writeable($pivotx_path . $sites_path . "db")) {
-        $error = sprintf(__("The directory '<tt>%s</tt>' is not writeable."), "pivotx/${sites_path}db/");
+        $error = sprintf(__("The directory '<tt>%s</tt>' is not writeable."), "pivotx/{$sites_path}db/");
         echo "<h1>PivotX: ". __("Fatal Error") ."</h1>";
         echo "<p>$error</p>";
         die();
@@ -642,7 +621,7 @@ function checkDB($sites_path = '') {
     // The same goes for the cache/ folder.
     if (!file_exists($pivotx_path . $sites_path . "db/cache") || 
             !is_writeable($pivotx_path . $sites_path . "db/cache")) {
-        $error = sprintf(__("The directory '<tt>%s</tt>' is not writeable."), "pivotx/${sites_path}db/cache/");
+        $error = sprintf(__("The directory '<tt>%s</tt>' is not writeable."), "pivotx/{$sites_path}db/cache/");
         echo "<h1>PivotX: ". __("Fatal Error") ."</h1>";
         echo "<p>$error</p>";
         die();
@@ -1139,29 +1118,6 @@ function makeValuepairs($array, $key, $value) {
 
 }
 
-/**
- * Convert a PHP array into an associative array for javascript..
- *
- * @param array $array
- * @return string;
- */
-function makeJsVars($array) {
-    
-    if (!is_array($array) || empty($array)) {
-        return "{}";
-    }
-    
-    $output = array();
-    
-    foreach ($array as $key=>$value) {
-        $output[] = sprintf('"%s": "%s"', $key, str_replace("\n", "\\n", addslashes($value)));
-    }
-    
-    $output = "{ ". implode(",\n", $output) . " }";
-    
-    return $output;
-    
-}
 
 
 /**
@@ -1682,7 +1638,7 @@ function paraWeblogNeeded($weblog, $categories = "") {
  * @param string $dir
  * @return array
  */
-function themeList($dir) {
+function themeList($dir="") {
     global $PIVOTX;
 
     if ($dir=="") {
@@ -2185,7 +2141,7 @@ function cleanParams($params) {
 
         if (is_array($param)) {
             $params[$key] = cleanParams($params[$key]);
-        } else if (is_string($param)) {
+        } else if (!empty($param) && is_string($param)) {
             $params[$key] = str_replace("&nbsp;", ' ', $params[$key]);
             $params[$key] = @html_entity_decode($params[$key], ENT_QUOTES, 'UTF-8');    
             
@@ -2567,7 +2523,7 @@ function backup($what) {
     } elseif ($what == 'db-directory') { 
         addDirToZip($zipfile, $db_path, array('cache', 'rsscache'));
     } elseif ($what == 'entries') {
-        foreach (glob("${db_path}standard-*", GLOB_MARK) as $directory) {
+        foreach (glob("{$db_path}standard-*", GLOB_MARK) as $directory) {
             addDirToZip($zipfile, $directory);
         }
     } else {
@@ -2579,7 +2535,7 @@ function backup($what) {
     $zipped = $zipfile->file();
 
     // trigger a download.
-    $basename="pivotx_${what}_".date("Ymd").".zip";
+    $basename="pivotx_{$what}_".date("Ymd").".zip";
     header("Content-disposition: attachment; filename=$basename");
     header("Content-type: application/zip");
     header("Pragma: no-cache");
@@ -2842,7 +2798,6 @@ function isEmail($theAdr) {
 }
 
 
-
 /**
  * Checks whether the text is an URL or not.
  *
@@ -2852,6 +2807,21 @@ function isEmail($theAdr) {
 function isUrl($url) {
 
     return (preg_match("/((ftp|https?):\/\/)?([a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)+(com\b|edu\b|biz\b|org\b|gov\b|in(?:t|fo)\b|mil\b|net\b|name\b|museum\b|coop\b|aero\b|[a-z][a-z]\b|[0-9]{1,3})/i",$url));
+
+}
+
+
+/**
+ * Checks whether HTTP or HTTPS is used. Doesn't check port number.
+ * 
+ * @return boolean
+ */
+function isHttps() {
+
+    $https = $_SERVER['HTTPS'] ?? 'off';
+    $forward_proto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '';
+
+    return (($https !== 'off') || (strtolower($forward_proto) == 'https'));
 
 }
 
@@ -2982,8 +2952,9 @@ function formatEntry($entry, $format) {
     }
 
     foreach ($entry as $key => $value) {
+        if ($key == "comments") continue;
         if (is_array($value)) {
-            $value = implode(', ',$value);
+            $value = implode(', ', $value);
         }
         $format=str_replace("%$key%", $value, $format);
     }
@@ -3464,10 +3435,9 @@ function getDaysInMonth($month, $year) {
 }
 
 
-
 function getDateRange($date, $unit) {
 
-    list($yr,$mo,$da,$ho,$mi) = explode("-",$date);
+    @list($yr,$mo,$da,$ho,$mi) = explode("-",$date);
 
     $yr_min = $yr_max = $yr;
     $mo_min = $mo_max = $mo;
@@ -4060,7 +4030,7 @@ function getEditlink($name, $uid, $prefix, $postfix, $type="entry") {
  * @param integer $count
  * @return string
  */
-function getEditCommentLink($uid=0, $number) {
+function getEditCommentLink($uid, $number) {
     global $PIVOTX;
 
     if (isset($_COOKIE['pivotxsession'])) {
@@ -4087,7 +4057,7 @@ function getEditCommentLink($uid=0, $number) {
  * @param integer $count
  * @return string
  */
-function getEditTrackbackLink($uid=0, $number) {
+function getEditTrackbackLink($uid, $number) {
     global $PIVOTX;
 
     if (isset($_COOKIE['pivotxsession'])) {
@@ -4613,9 +4583,7 @@ function safeString($str, $strict=false, $extrachars="") {
         "\xC5\xBB"=>'Z', "\xC5\xBC"=>'z', "\xC5\xBD"=>'Z', "\xC5\xBE"=>'z',
         ));
    
-    // utf8_decode assumes that the input is ISO-8859-1 characters encoded 
-    // with UTF-8. This is OK since we want US-ASCII in the end.
-    $str = trim(utf8_decode($str));
+    $str = trim(mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8'));
     
     $str = strtr($str, array("\xC4"=>"Ae", "\xC6"=>"AE", "\xD6"=>"Oe", "\xDC"=>"Ue", "\xDE"=>"TH",
         "\xDF"=>"ss", "\xE4"=>"ae", "\xE6"=>"ae", "\xF6"=>"oe", "\xFC"=>"ue", "\xFE"=>"th"));
@@ -4868,7 +4836,15 @@ function getCurrentDate() {
 }
 
 
-
+function displayQueryLog() {
+    global $PIVOTX;
+    if ($PIVOTX['config']->get('db_model') == "flat") return false;
+    if ($PIVOTX['config']->get('log_queries') && (count($GLOBALS['query_log']) > 0)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 
 /**
@@ -5405,15 +5381,6 @@ function make_valuepairs($array, $key, $value) {
 /**
  * Deprecated function. Kept for backwards compatibility.
  *
- * @see makeJsVars()
- */
-function make_jsvars($array) {
-    return makeJsVars($array);
-}
-
-/**
- * Deprecated function. Kept for backwards compatibility.
- *
  * @see getDefault()
  */
 function get_default($a, $b, $strict=false) {
@@ -5596,7 +5563,7 @@ function get_current_date() {
  *
  * @see getEditCommentLink()
  */
-function get_editcommentlink($uid=0, $number) {
+function get_editcommentlink($uid, $number) {
     return getEditCommentLink($uid, $number); 
 }
 

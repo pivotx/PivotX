@@ -26,7 +26,7 @@ $PIVOTX['image']['local'] = true;
 // Check if GD is installed and with the right version
 if(!extension_loaded('gd')) {
     $PIVOTX['image']['local'] = false;
-    die("Creating thumbs remotely since GD isn't installed/loaded.");
+    die("Failed to create thumbs since GD isn't installed/loaded.");
 } else {
     $gd_version_info = gd_info();
     preg_match('/\d/', $gd_version_info['GD Version'], $match);

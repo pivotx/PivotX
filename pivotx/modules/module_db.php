@@ -30,7 +30,8 @@ require dirname(dirname(__FILE__))."/lamer_protection.php";
  */
 class db {
 
-    var $db_type;
+    public $db_lowlevel;
+    public $db_type;
 
     /**
      * Initialises the db.
@@ -94,10 +95,10 @@ class db {
      * Gets an array of archives.
      *
      * @param boolean $force tells if the cache (if any) should be updated.
-     * @param string $unit the unit of the archives.
+     * @param string $unit the unit of the archives. Default month.
      * @return array
      */
-    function getArchiveArray($force=FALSE, $unit) {
+    function getArchiveArray($force=FALSE, $unit='month') {
 
         return $this->db_lowlevel->getArchiveArray($force, $unit);
 
@@ -478,7 +479,7 @@ class db {
 
         $this->db_lowlevel->save_entry($update_index);
 
-        $this->entry = $this->db_lowlevel->entry;
+        $this->entry = $this->db_lowlevel->get_entry();
 
         return true;
 

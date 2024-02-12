@@ -66,7 +66,7 @@ function searchIndexKey($str) {
 function createSearchIndex ($start, $stop, $time) {
     global $PIVOTX, $output;
 
-    $entries = $PIVOTX['db']->db_lowlevel->date_index;
+    $entries = $PIVOTX['db']->db_lowlevel->get_date_index();
 
     $count = 0;
 
@@ -431,7 +431,7 @@ function weighSearchResult(&$result, $params) {
  * @param string $category Selects if you want to search inside a specific category.
  * @return string The search results as a list (in HTML code).
  */
-function searchIndex($str_a, $only='', $weblog='', $category='', &$searchresults) {
+function searchIndex($str_a, $only, $weblog, $category, &$searchresults) {
     global $index_file, $matches_entries, $matches_pages, $PIVOTX;
 
     require_once $PIVOTX['paths']['pivotx_path'].'includes/strip_punctuation.php';
@@ -450,13 +450,16 @@ function searchIndex($str_a, $only='', $weblog='', $category='', &$searchresults
     // Load the indices for the $words, if we're using flat files..
     loadSearchIndex($words);
 
-    $n = count($words);
-    for($i=0; $i < $n; $i++) {
-        // getWord sets $matches_entries and $matches_pages used below.
-        $res = getWord($words[$i]);
-        if($res) {
-            $found_words[] = $orig_words[$i];
+    if (count($words) > 0) {
+        for ($i=0; $i < count($words); $i++) {
+            // getWord sets $matches_entries and $matches_pages used below.
+            $res = getWord($words[$i]);
+            if($res) {
+                $found_words[] = $orig_words[$i];
+            }
         }
+    } else {
+        $matches_entries = $matches_pages = [];
     }
 
     $do_or_if_nand = getDefault($PIVOTX['config']->get('search_result_or_if_nand'),'1',true);
@@ -826,6 +829,8 @@ function getWordFlat($word) {
     global $search_all, $index_file, $PIVOTX, $matches_pages, $matches_entries;
 
     $found = false;
+    $valid_matches_entries = $matches_entries = [];
+    $valid_matches_pages = $matches_pages = [];
 
     $key = searchIndexKey($word);
     if(isset($index_file[ $key ][ $word ])) {
@@ -897,6 +902,8 @@ function getWordSql($word) {
 
     $entriestable = safeString($PIVOTX['config']->get('db_prefix')."entries", true);
     $pagestable = safeString($PIVOTX['config']->get('db_prefix')."pages", true);
+    $matches_entries = [];
+    $matches_pages = [];
 
     // Set up DB connection
     $database = new sql('mysql',
@@ -1016,20 +1023,20 @@ function searchResult(&$searchresults) {
     $form .= '<input type="submit" class="result-searchbutton" value="'.__('Search!').'" />'."\n" ;
 
     // If a weblog as been explicitly selected or we are not on a page, set the weblog.
-    $weblog = trim( getDefault($_GET['w'], $_POST['w']));
+    $weblog = trim($_GET['w'] ?? $_POST['w']);
     if ( !empty($weblog) || ($PIVOTX['parser']->modifier['pagetype'] != "page")) { 
         $weblog = getDefault($weblog, $PIVOTX['weblogs']->getCurrent());
         $form .= '<input type="hidden" name="w" value="'.$weblog.'" />'."\n";
     }
 
     // If a category as been explicitly selected, set the category.
-    $category = trim( getDefault($_GET['c'], $_POST['c']));
+    $category = trim($_GET['c'] ?? ($_POST['c'] ?? ''));
     if ( !empty($category)) { 
         $form .= '<input type="hidden" name="c" value="'.$category.'" />'."\n";
     }
 
     // Limit the search to entries or pages
-    $only = trim( getDefault($_GET['only'], $_POST['only']));
+    $only = trim($_GET['only'] ?? ($_POST['only'] ?? ''));
     if (!empty($only)) { 
         $checked = array();
         foreach (array('pages','entries','both') as $var) {
