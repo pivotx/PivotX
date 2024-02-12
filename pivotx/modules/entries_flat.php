@@ -1461,7 +1461,7 @@ automagically be published in this section of your weblog.</p>',
     // Write an entry index file.
     function write_entry_index($force=FALSE) {
 
-        $this->make_entry_index_filename();// NOTE: as far as I understand this call does nothing?
+        $this->make_entry_index_filename();
 
         if ($this->global_reindex) {
             //debug("sort index");

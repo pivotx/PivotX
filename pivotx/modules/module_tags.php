@@ -95,24 +95,12 @@ function getTagCosmosFlat($max, $weblogname, $match, $exclude=[]) {
     global $PIVOTX;
 
     
-    // Note that on Windows systems, filectime will show the file creation time
-    // So instead we encode the modification date in a separate file...
-    //$file_time = filectime( $PIVOTX['paths']['db_path']."ser_tags.php" );
-    $file_time = 0;
-    $time_stamp_filename = $PIVOTX['paths']['db_path']."ser_tags.php.log";
-    if( file_exists($time_stamp_filename) ){                
-        $file_time = (int)readAFile($time_stamp_filename);
-    }
     
-    $current_time = time();
-    $time_out = 60 * $PIVOTX['config']->get('tag_cache_timeout');
-    $file_exists = file_exists($PIVOTX['paths']['db_path']."ser_tags.php");
-    $time_delta = $current_time - $file_time; 
     
 
     // If the cached version is fresh enough, we restore that
-    if ( $file_exists  &&  $time_delta < $time_out ) 
-    {
+    if ( (file_exists($PIVOTX['paths']['db_path']."ser_tags.php"))  &&
+        (filectime($PIVOTX['paths']['db_path']."ser_tags.php") > (time() - (60 * $PIVOTX['config']->get('tag_cache_timeout') ))) ) {
 
         // Just load it..
         $data = loadSerialize($PIVOTX['paths']['db_path']."ser_tags.php");
@@ -164,8 +152,6 @@ function getTagCosmosFlat($max, $weblogname, $match, $exclude=[]) {
         $tagdir->close();
 
         saveSerialize($PIVOTX['paths']['db_path']."ser_tags.php", $tagcosmos);
-        // Update file last changed time:
-        writeFile($time_stamp_filename, (string)time());
 
         $tagcosmos = $tagcosmos[$weblogname];
     }

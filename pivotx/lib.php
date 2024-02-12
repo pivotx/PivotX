@@ -4261,9 +4261,10 @@ function trackbackFormat($text) {
 
 /**
  * Safely (using semaphor) reads a text file and returns it.
+ * Since there might be concurent writes to a file (especially with db)
+ * We must read with a mutex to avoid reading in the middle of a write.
  * 
- * If the file isn't readable (or doesn't exist) or reading it fails, 
- * false is returned. 
+ * Fails if the file isn't readable (or doesn't exist)  and false is returned. 
  *
  * @param string $filename
  * @param boolean $silent Set to true if you want an visible error.
@@ -4446,7 +4447,7 @@ function saveSerialize($filename, &$data) {
 
 
 /**
- *  Saves a file, and outputs some feedback, if wanted.
+ *  Saves a file with mutex, and outputs some feedback, if wanted.
  */
 function writeFile($filename, $output, $mode='w') {
     global $PIVOTX, $VerboseGenerate;
@@ -4618,8 +4619,7 @@ function safeString($str, $strict=false, $extrachars="") {
  */
 function makeURI($str, $type='entry') {
 
-    // FIXME: Safe string is likely erasing japanese/chinese characters.
-    $str = safeString($str);//Original:
+    $str = safeString($str);
 
     $str = str_replace(" ", "-", $str);
     $str = strtolower(preg_replace("/[^a-zA-Z0-9_-]/i", "", $str));
