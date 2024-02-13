@@ -31,8 +31,7 @@ class IPBlock {
         {
             $txt = safeFileRead($PIVOTX['paths']['db_path'] . "blocked_ips.txt.php");
             $this->blocklist = explode("\n", $txt);
-        }
-        else
+        } else {
             $this->blocklist[] = "0.0.0.0 # PivotX Blocklist";
         }        
         

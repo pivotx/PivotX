@@ -4292,19 +4292,19 @@ function safeFileRead($filename) {
         }
         return FALSE;
     }
-    if( !flock( $fh, LOCK_SH  ) ) {
+    if ( !flock( $fh, LOCK_SH  ) ) {
         _e('Lock Error. Could not lock file for reading').": ".$filename."<br />\n";
         fclose( $fh );
         return FALSE;
     }
     // reading!
     $contents = fread($fh, filesize($filename));
-    if( !$contents ) {
+    if ( !$contents ) {
         if ($VerboseGenerate) {
             _e('Read Error. Could not read file content').": ".$filename."<br />\n";
         }
     }
-    if( !flock( $fh, LOCK_UN )) {
+    if ( !flock( $fh, LOCK_UN )) {
         _e('Lock Error. Could not unlock file').": ".$filename."<br />\n";
     }
     fclose( $fh );
@@ -4396,7 +4396,7 @@ function saveSerialize($filename, &$data) {
     }
 
     // open the file and lock it.
-    if($fp=fopen($filename, "a")) {
+    ifÅ@($fp=fopen($filename, "a")) {
         
         if (flock( $fp, LOCK_EX )) {
 
