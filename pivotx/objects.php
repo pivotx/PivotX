@@ -276,7 +276,7 @@ class Config extends BaseConfig {
             return false;
         }
         // get the config file
-        $fh = safeFileRead( $pivotx_path.'pv_cfg_settings.php' );
+        $fh = safeFileRead($pivotx_path.'pv_cfg_settings.php');
 
         foreach ($fh as $fh_this) {
             @list($name, $val) = explode("!", $fh_this);
@@ -484,7 +484,7 @@ class Users extends BaseConfig {
             return false;
         }
         // get the config file
-        $fh = safeFileRead( $pivotx_path.'pv_cfg_settings.php' );
+        $fh = safeFileRead($pivotx_path.'pv_cfg_settings.php');
 
         foreach ($fh as $fh_this) {
             @list($name, $val) = explode("!", $fh_this);
@@ -1664,7 +1664,7 @@ class Categories extends BaseConfig {
             return false;
         }
         // get the config file
-        $fh = safeFileRead( $pivotx_path.'pv_cfg_settings.php' );
+        $fh = safeFileRead($pivotx_path.'pv_cfg_settings.php');
 
         foreach ($fh as $fh_this) {
             @list($name, $val) = explode("!", $fh_this);
