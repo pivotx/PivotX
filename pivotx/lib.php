@@ -4396,7 +4396,7 @@ function saveSerialize($filename, &$data) {
     }
 
     // open the file and lock it.
-    ifÅ@($fp=fopen($filename, "a")) {
+    if ($fp=fopen($filename, "a")) {
         
         if (flock( $fp, LOCK_EX )) {
 
