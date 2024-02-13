@@ -1038,8 +1038,6 @@ class Parser {
 
     }
 
-
-
     /**
      * The function that does the actual rendering of the smarty template
      *
@@ -1907,7 +1905,7 @@ EOM;
         global $feedtemplates, $PIVOTX;
 
         if (!isset($feedtemplates[$format])) {
-            $file = readAFile($PIVOTX['paths']['templates_path'].$format); 
+            $file = safeFileRead($PIVOTX['paths']['templates_path'].$format);
 
             // Execute the 'feed_rss_template' or 'feed_atom_template' hook, if present.
             if (strpos($format, "rss") !== false) {
@@ -2571,7 +2569,6 @@ function cms_tag_weblog($params, $format){
     //    $PIVOTX['template']->assign($key, $value);
     //}
     
-
     // Restore the old entry (if any)
     if (!is_null($old_entry)) {
         $PIVOTX['db']->set_entry($old_entry);

@@ -1872,7 +1872,7 @@ function loadTemplate($basename) {
     }
 
     if(file_exists($filename)) {
-        $filetext = readAFile($filename);
+        $filetext = safeFileRead($filename);
         $template_cache[$basename]=$filetext;
     }else {
         $filetext="";
@@ -2465,7 +2465,7 @@ function makeArchiveName($date='', $this_weblog='', $archive_unit='month') {
  * @return void
  */
 function addFileToZip(&$zipfile, $filename) {
-    $data = readAFile($filename);
+    $data = safeFileRead($filename);
     $zipfile->addFile($data, $filename);
 }
 
@@ -4258,20 +4258,18 @@ function trackbackFormat($text) {
     return (stripslashes($text));
 }
 
-
 /**
  * Safely (using semaphor) reads a text file and returns it.
  * Since there might be concurent writes to a file (especially with db)
  * We must read with a mutex to avoid reading in the middle of a write.
- * 
- * Fails if the file isn't readable (or doesn't exist)  and false is returned. 
+ *
+ * Fails if the file isn't readable (or doesn't exist)  and false is returned.
  *
  * @param string $filename
  * @param boolean $silent Set to true if you want an visible error.
  * @return mixed
  */
-function readAFile($filename) 
-{
+function safeFileRead($filename) {
     global $PIVOTX, $VerboseGenerate;
 
     if ($VerboseGenerate) {
@@ -4294,9 +4292,9 @@ function readAFile($filename)
         }
         return FALSE;
     }
-    if( !flock( $fh, LOCK_SH  ) ){
+    if( !flock( $fh, LOCK_SH  ) ) {
         _e('Lock Error. Could not lock file for reading').": ".$filename."<br />\n";
-        fclose( $fh );    
+        fclose( $fh );
         return FALSE;
     }
     // reading!
@@ -4308,10 +4306,11 @@ function readAFile($filename)
     }
     if( !flock( $fh, LOCK_UN )) {
         _e('Lock Error. Could not unlock file').": ".$filename."<br />\n";
-    }    
-    fclose( $fh );    
+    }
+    fclose( $fh );
     return $contents;
 }
+
 /**
  * Loads a serialized file, unserializes it, and returns it.
  * 
@@ -4355,7 +4354,7 @@ function loadSerialize($filename, $silent=false) {
         renderErrorpage(__("File is not readable!"), $message);
     }
 
-    $serialized_data = trim(readAFile($filename));
+    $serialized_data = trim(safeFileRead($filename));
 
     $serialized_data = str_replace("<?php /* pivot */ die(); ?>", "", $serialized_data);
 
@@ -4399,7 +4398,7 @@ function saveSerialize($filename, &$data) {
     // open the file and lock it.
     if($fp=fopen($filename, "a")) {
         
-        if (flock( $fp, LOCK_EX )) { 
+        if (flock( $fp, LOCK_EX )) {
 
             // Truncate the file (since we opened it for 'appending')
             ftruncate($fp, 0); 
@@ -4452,7 +4451,7 @@ function saveSerialize($filename, &$data) {
 function writeFile($filename, $output, $mode='w') {
     global $PIVOTX, $VerboseGenerate;
 
-    if( $mode != 'w' && $mode != 'w+' && $mode != 'a' && $mode != 'a+'){
+    if ( $mode != 'w' && $mode != 'w+' && $mode != 'a' && $mode != 'a+') {
         _e('Write Error. only "a", "a+", "w" and "w+" modes are allowed in this procedure').": ".$filename."<br />\n";
         return;
     }
@@ -4479,9 +4478,9 @@ function writeFile($filename, $output, $mode='w') {
         return;
     }
 
-    if( !flock( $fh, LOCK_EX  ) ){
+    if ( !flock( $fh, LOCK_EX  ) ) {
         _e('Lock Error. Could not lock file for writing').": ".$filename."<br />\n";
-        fclose( $fh );    
+        fclose( $fh );
         return;
     }
     // wrrrriting!
@@ -4491,7 +4490,7 @@ function writeFile($filename, $output, $mode='w') {
         }
     }
 
-    if( !flock( $fh, LOCK_UN )) {
+    if ( !flock( $fh, LOCK_UN )) {
         _e('Lock Error. Could not unlock file').": ".$filename."<br />\n";
     }
 

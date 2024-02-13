@@ -63,7 +63,7 @@ if (empty($db_path)) {
 // First, get the timestamp of the last invocation. If it's less than $scheduler['frequency']
 // ago, we just quit.
 if (file_exists($db_path."scheduler.txt")) {
-    $lastrun = readAFile( $db_path."scheduler.txt" );
+    $lastrun = safeFileRead( $db_path."scheduler.txt" );
     $lastrun = intval(trim($lastrun));
 } else {
     $lastrun = 0;

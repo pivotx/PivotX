@@ -293,8 +293,8 @@ class pivotx_hashcash
 
         $html = '';
 
-        if (is_file($fname)) {            
-            $lines = explode("\n", readAFile($fname));
+        if (is_file($fname)) {
+            $lines = explode("\n", safeFileRead($fname));
             $lines = array_reverse($lines);
 
             $html .= '<pre>';
@@ -762,7 +762,7 @@ function get_spamlog()  {
 
     if (file_exists($spamkiller_log))  {
 
-        $content = explode("\n", readAFile($spamkiller_log));
+        $content = explode("\n", safeFileRead($spamkiller_log));
         $nTotalLines = count($content);
         $fpHandle = fopen($spamkiller_log, "r");
         $sLogRows = "";
@@ -858,10 +858,10 @@ function trim_spamlog() {
     }
 
     // If it exists, and is larger than ~ 250kb.
-    if( file_exists($spamkiller_log) && (filesize($spamkiller_log)>250000) ) {
+    if (file_exists($spamkiller_log) && (filesize($spamkiller_log)>250000)) {
 
         // Read the file.
-        $logfile = explode("\n", readAFile($spamkiller_log)); 
+        $logfile = explode("\n", safeFileRead($spamkiller_log));
 
         // Slice off 1/3 of the file.
         $lines = count($logfile);
