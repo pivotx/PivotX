@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * Contains the Class that manages Extensions.
  *
@@ -88,7 +88,7 @@ class Extensions {
                             ob_start();
                             include_once($filename);
                             $output = ob_get_clean();
-                            if (strlen($output) > 0){
+                            if (strlen($output) > 0) {
                                 $name = str_replace($PIVOTX['paths']['pivotx_path'], '.../', $filename);
                                 debug("The file $filename contains white-space outside PHP blocks " .
                                     "which can be fatal. Please fix.");
@@ -113,7 +113,6 @@ class Extensions {
         $this->list = false;
 
         $this->hidearray = array();
-
     }
 
     /**
@@ -893,23 +892,15 @@ class Extensions {
             } else {
                 debug("Extensions: Couldn't run " . $hook['parameters'] . "(). Not defined.");
             }
-
         }
-
-
     }
-
-
-
 
     function executeWidget(&$output) {
 
         $temp_output = array();
-
         $my_hooks = $this->getHooks('widget');
 
         foreach($my_hooks as $hook) {
-
             if (function_exists($hook['parameters'])) {
                 $functionname = $hook['parameters'];
                 $temp_output[] = $functionname();
@@ -919,10 +910,7 @@ class Extensions {
         }
 
         $output .= implode("\n", $temp_output);
-
     }
-
-
 
     function executeMessages($action) {
 
@@ -1061,16 +1049,10 @@ class Extensions {
         $output = "\n<!-- start of widget -->\n";
 
         if($wrapstyle!="") {
-
             $output .= sprintf("<div class='%s'><div id='%s'></div></div>\n", $wrapstyle, $id);
-
         } else {
-
             $output .= sprintf("<div id='%s'></div>\n", $id);
-
         }
-
-
 
         switch ($mode) {
 
@@ -1079,12 +1061,9 @@ class Extensions {
              */
             case 'immediate_file':
 
-                if (file_exists($PIVOTX['paths']['extensions_path'].$target))
-                {
-                    $output .= safeFileRead($PIVOTX['paths']['extensions_path'].$target);
-                }
-                else
-                {
+                if (file_exists($PIVOTX['paths']['extensions_path'] . $target)) {
+                    $output .= safeFileRead($PIVOTX['paths']['extensions_path'] . $target);
+                } else {
                     $output .= "'$target' does not exist.";
                 }
 
@@ -1147,23 +1126,16 @@ class Extensions {
                    $id,
                    $target,
                    $id);
-
                 break;
-
-
 
             default:
                 $output .=  "'$mode' is not a valid mode.";
                 break;
         }
 
-
-
         $output .= "\n<!-- end of widget -->\n";
 
-        return $output;
-
-
+        return $outp
     }
 
 
@@ -1399,10 +1371,7 @@ EOM;
         $this->hidearray[$name] = true;
 
         $PIVOTX['template']->assign('hide', $this->hidearray);
-
-
     }
-
 }
 
 
@@ -1446,12 +1415,8 @@ function widgetSort($a, $b) {
     if (!isset($active[ $a['identifier'] ] )) { $active[ $a['identifier'] ] = 999; }
     if (!isset($active[ $b['identifier'] ] )) { $active[ $b['identifier'] ] = 999; }
 
-
     return ( $active[$a['identifier']] < $active[$b['identifier']] ) ? -1 : 1;
-
-
 }
-
 
 /**
  * Try to insert the includes for thickbox in the <head> section of the HTML
