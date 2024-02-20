@@ -274,6 +274,9 @@ function handlePostComment() {
         // send mail..
         sendMailComment($temp_comment, $notifications);
 
+        // execute a hook here after a comment is saved and the mails are sent
+        $PIVOTX['extensions']->executeHook('comment_after_save', $entry);
+
         // Don't display the 'preview' of the comment after posting.
         $temp_comment=array();
         unset($_POST);
@@ -298,17 +301,10 @@ function handlePostComment() {
         
     }
 
-
     // Set the 'you are previewing' message..
     if (isset($_POST['preview']) && empty($weblogmessage)) {
         $weblogmessage = __('You are previewing your comment. Be sure to click on "Post Comment" to store it.');
     }
-
-    // execute a hook here after a comment is saved and the mails are sent
-    $PIVOTX['extensions']->executeHook('comment_after_save', $entry);
-        
-    // After messing about with the comments, clear the cache.
-    $PIVOTX['cache']->cache['entries'] = array();
 }
 
 /**

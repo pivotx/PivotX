@@ -141,9 +141,6 @@ function handlePostTrackback($uri,$date) {
             $PIVOTX['template']->clear_cache();
         }
 
-        // After messing about with the trackbacks, clear the cache.
-        $PIVOTX['cache']->cache['entries'] = array();
-
         respondExit();
 
     } else {
