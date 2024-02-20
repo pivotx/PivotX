@@ -26,7 +26,7 @@ require_once(dirname(__FILE__)."/module_sql.php");
  */
 class EntriesSql {
 
-    private $sql;
+    public $sql;
 
     // the data for the current entry
     private $entry;
@@ -37,8 +37,8 @@ class EntriesSql {
     // tables
     private $categoriestable;
     private $chapterstable;
-    private $commentstable;
-    private $entriestable;
+    public $commentstable;
+    public $entriestable;
     private $extrafieldstable;
     private $pagestable;
     private $tagstable;

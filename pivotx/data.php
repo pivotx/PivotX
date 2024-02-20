@@ -879,7 +879,6 @@ function makePagesTable($sql) {
 </ul>
 <p><small>To change these links, edit ''<tt>Links</tt>'', under ''<tt>Pages</tt>'' in the PivotX backend.</small></p>', '', 5, '', 'publish', '%now%-01', '%now%-01', '%now%-01', 1, 10, '$username', 1, '');";
 
-
     $now = date("Y-m-d-H-i", getCurrentDate());
 
     $query2 = str_replace("%now%", $now, $query2);
@@ -890,8 +889,6 @@ function makePagesTable($sql) {
     $sql->query($query1);
     $sql->query($query2);
     $sql->query($query3);
-
-
 }
 
 
@@ -932,12 +929,11 @@ function makeChaptersTable($sql) {
     $query2 = "INSERT INTO `$tablename` (`uid`, `chaptername`, `description`, `sortorder`) VALUES
         (1, '%name%', '%desc%', 10);
     ";
-    $query2 = str_replace("%name%", mysqli_real_escape_string($sql->sql_link, __('Pages')), $query2);
-    $query2 = str_replace("%desc%", mysqli_real_escape_string($sql->sql_link, __('Add some pages here, or start a new chapter.')), $query2);
+    $query2 = str_replace("%name%", $sql->quote(__('Pages'), true), $query2);
+    $query2 = str_replace("%desc%", $sql->quote(__('Add some pages here, or start a new chapter.'), true), $query2);
 
     $sql->query($query1);
     $sql->query($query2);
-
 }
 
 
