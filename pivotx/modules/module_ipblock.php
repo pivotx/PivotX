@@ -27,8 +27,7 @@ class IPBlock {
     function __construct() {
         global $PIVOTX;
        
-        if (file_exists($PIVOTX['paths']['db_path'] . "blocked_ips.txt.php"))
-        {
+        if (file_exists($PIVOTX['paths']['db_path'] . "blocked_ips.txt.php")) {
             $txt = safeFileRead($PIVOTX['paths']['db_path'] . "blocked_ips.txt.php");
             $this->blocklist = explode("\n", $txt);
         } else {
