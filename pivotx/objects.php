@@ -15,6 +15,11 @@
 
 
 /**
+ * Including PivotX core functions
+ */
+require_once(dirname(__FILE__).'/lib.php');
+
+/**
  * Base Configuration Class
  *
  * Handle the loading and saving configuration data.
@@ -271,7 +276,7 @@ class Config extends BaseConfig {
             return false;
         }
         // get the config file
-        $fh = file($pivotx_path.'pv_cfg_settings.php');
+        $fh = safeFileRead($pivotx_path.'pv_cfg_settings.php');
 
         foreach ($fh as $fh_this) {
             @list($name, $val) = explode("!", $fh_this);
@@ -479,7 +484,7 @@ class Users extends BaseConfig {
             return false;
         }
         // get the config file
-        $fh = file($pivotx_path.'pv_cfg_settings.php');
+        $fh = safeFileRead($pivotx_path.'pv_cfg_settings.php');
 
         foreach ($fh as $fh_this) {
             @list($name, $val) = explode("!", $fh_this);
@@ -1659,7 +1664,7 @@ class Categories extends BaseConfig {
             return false;
         }
         // get the config file
-        $fh = file($pivotx_path.'pv_cfg_settings.php');
+        $fh = safeFileRead($pivotx_path.'pv_cfg_settings.php');
 
         foreach ($fh as $fh_this) {
             @list($name, $val) = explode("!", $fh_this);

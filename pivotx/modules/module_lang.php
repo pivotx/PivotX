@@ -118,7 +118,8 @@ function getFilteredWords( ) {
     
     if((''!=$theLang) && file_exists($PIVOTX['paths']['db_path'].'search/filtered_words_'.$theLang.'.txt')) {
 
-        $filtered_file = file($PIVOTX['paths']['db_path'].'search/filtered_words_'.$theLang.'.txt');
+        $txt = safeFileRead($PIVOTX['paths']['db_path'].'search/filtered_words_'.$theLang.'.txt');
+        $filtered_file = explode("\n", $txt);
         foreach( $filtered_file as $val ) {
             $filtered_words[] = trim( $val );
         }

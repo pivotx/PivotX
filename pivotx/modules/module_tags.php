@@ -126,7 +126,7 @@ function getTagCosmosFlat($max, $weblogname, $match, $exclude=[]) {
             if (getExtension($entry)=="tag") {
                 list($tagname) = explode(".", $entry);
                 $tagname = urldecode($tagname);
-                $tagfile = implode("",file($PIVOTX['paths']['db_path']."tagdata/".$entry));
+                $tagfile = safeFileRead($PIVOTX['paths']['db_path']."tagdata/".$entry);
                 $tagfile = explode(",", $tagfile);
                 if(!in_array($tagname, $exclude)) {
                     if ($tagname!="") {
@@ -512,7 +512,8 @@ function writeTag($tag, $entrycode) {
 
     if(file_exists($PIVOTX['paths']['db_path']."tagdata/$sFileName"))   {
 
-        $aFileArr = explode(",",implode("",file($PIVOTX['paths']['db_path']."tagdata/$sFileName")));
+        $txt = safeFileRead($PIVOTX['paths']['db_path']."tagdata/$sFileName");
+        $aFileArr = explode(",", $txt);
 
         if(!in_array($entrycode, $aFileArr))    {
 
@@ -575,9 +576,10 @@ function deleteTag($tag, $entrycode) {
         return "<b>ERROR: You must create ".$PIVOTX['paths']['db_path']."tagdata and set the permissions to world writable!!! Bailing out.";
     }
 
-    if(file_exists($PIVOTX['paths']['db_path']."tagdata/".$sFileName.".tag"))   {
+    if (file_exists($PIVOTX['paths']['db_path']."tagdata/".$sFileName.".tag")) {
 
-        $aFileArr = explode(",",implode("",file($PIVOTX['paths']['db_path']."tagdata/".$sFileName.".tag")));
+        $txt = safeFileRead($PIVOTX['paths']['db_path']."tagdata/".$sFileName.".tag");
+        $aFileArr = explode(",", $txt);
 
         if(in_array($entrycode, $aFileArr)) {
 
@@ -1012,7 +1014,8 @@ function makeRelatedTags($tag, $p_aAllTags)    {
     
         } else {
     
-            $aRelArray = explode(",", implode("", file($PIVOTX['paths']['db_path']."tagdata/$filename")));
+            $txt = safeFileRead($PIVOTX['paths']['db_path']."tagdata/$filename");
+            $aRelArray = explode(",", $txt);
             $bMustWrite = false;
     
             foreach($p_aAllTags as $sThisOne)   {

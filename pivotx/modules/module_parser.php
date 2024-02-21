@@ -1905,7 +1905,7 @@ EOM;
         global $feedtemplates, $PIVOTX;
 
         if (!isset($feedtemplates[$format])) {
-            $file = implode('', file( $PIVOTX['paths']['templates_path'].$format));
+            $file = safeFileRead($PIVOTX['paths']['templates_path'].$format);
 
             // Execute the 'feed_rss_template' or 'feed_atom_template' hook, if present.
             if (strpos($format, "rss") !== false) {
