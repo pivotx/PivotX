@@ -1,4 +1,4 @@
- <?php
+<?php
 /**
  * Contains the Class that manages Extensions.
  *
@@ -1135,7 +1135,7 @@ class Extensions {
 
         $output .= "\n<!-- end of widget -->\n";
 
-        return $outp
+        return $output;
     }
 
 
